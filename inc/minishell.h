@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/16 17:22:38 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/05/17 18:11:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 
 void	ft_putstr_fd(char *s, int fd);
 int		ft_echo(char **arg);
-char	*pwd(char **env);
-char	*get_env(char *name, char **env);
+int		pwd(void);
 
 
 #endif
