@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/16 17:22:38 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
+/*   Updated: 2024/05/17 16:37:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdlib.h>
-# include <../libft/libft.h>
+#include "../../inc/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd);
-int		ft_echo(char **arg);
-char	*pwd(char **env);
-char	*get_env(char *name, char **env);
+int	main (int ac, char **av, char **env)
+{
+	char	*line;
 
-
-#endif
+	(void)ac;
+	(void)av;
+	line = NULL;
+	while (1)
+	{
+		line = readline("minishell >> ");
+		if (line && *line)
+		{
+			pwd(env);
+			add_history(line);
+			free(line);
+			line = NULL;			
+		}
+	}
+	rl_clear_history();
+	return (0);
+}

@@ -6,14 +6,19 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 17:39:49 by aljulien          #+#    #+#              #
-#    Updated: 2024/05/14 17:20:30 by aljulien         ###   ########.fr        #
+#    Updated: 2024/05/17 17:01:12 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #RAJOUTER LES FLAGS DE COMPILIATION !!!!!!!!
 
-SRCS = 	minishell.c\
-		echo.c
+SRCDIR = sources
+BUILTIN_DIR = $(SRCDIR)/builtins
+MAIN_DIR = $(SRCDIR)/main
+
+SRCS = $(MAIN_DIR)/minishell.c \
+       $(BUILTIN_DIR)/echo.c \
+       $(BUILTIN_DIR)/pwd.c
 
 OBJS = ${SRCS:.c=.o}
 DEPS = ${SRCS:.c=.d}
