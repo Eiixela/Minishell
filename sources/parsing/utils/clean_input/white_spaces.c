@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   white_spaces.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/28 15:45:48 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/19 18:15:23 by saperrie          #+#    #+#             */
+/*   Updated: 2024/05/28 10:12:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../../../../inc/minishell.h"
 
-int	main (int ac, char **av, char **env)
+bool	is_white_space(char c)
 {
-	char	*str;
-	t_line	line;
-	
-	(void)av;
-	(void)ac;
-	(void)env;
-	str = NULL;
-	while (1)
-	{
-		str = readline("minishell >> ");
-		if (str && *str)
-		{
-			add_history(str);
-			big_parse(&line, &str);
-			pipex(env, line);
-		}
-	}
-	rl_clear_history();
-	return (0);
+	// if (c == '\0')
+	// 	return (false);
+	if (c == ' ' || c == '\t')
+		return (true);
+	return (false);
+}
+
+void	skip_white_spaces(const char **input)
+{
+	if (!*input || !**input || !input)
+		return ;
+	while (is_white_space(**input))
+		(*input)++;
 }

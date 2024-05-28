@@ -1,36 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   clean_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/28 15:45:48 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/21 22:10:46 by saperrie          #+#    #+#             */
+/*   Updated: 2024/05/28 10:12:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../../../../inc/minishell.h"
 
-int	main (int ac, char **av, char **env)
+bool	clean_input(const char **str)
 {
-	char	*str;
-	t_line	line;
-	
-	(void)av;
-	(void)ac;
-	(void)env;
-	str = NULL;
-	while (1)
-	{
-		str = readline("minishell >> ");
-		if (str && *str)
-		{
-			add_history(str);
-			big_parse(&line, &str);
-			pipex(env, line);
-		}
-	}
-	rl_clear_history();
-	return (0);
+	skip_white_spaces((const char **)str);
+	if (!*str)
+		return (false);
+	if (!quotes(*str))
+		return (false);
+	if (!good_redirections(*str))
+		return (false);
+	return (true);
 }

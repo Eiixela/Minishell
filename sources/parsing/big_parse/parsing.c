@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/14 17:19:00 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
+/*   Updated: 2024/05/28 10:12:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/minishell.h"
+#include "../../../inc/minishell.h"
 
-int	main (int ac, char **av, char **env)
+static bool	clean_surrounding_quotes(t_line *line)
 {
-	char	*line;
+	(void)line;
+	return (true);
+}
 
-	(void)ac;
-	(void)env;
-	line = NULL;
-	while (1)
-	{
-		line = readline("minishell >> ");
-		if (line && *line)
-		{
-			b_echo(av);
-			add_history(line);
-			free(line);
-			line = NULL;			
-		}
-	}
-	rl_clear_history();
-	return (0);
+bool	parse(t_line *line)
+{
+	if (!clean_surrounding_quotes(line))
+		return (printf("clean_quotes_failed"), false);
+	// tag_slots(line);
+	return (true);
 }

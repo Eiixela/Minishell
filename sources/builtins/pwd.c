@@ -14,8 +14,9 @@
 
 int	pwd(void)
 {
-	char	pwd;
+	char	*pwd;
 
+	pwd = NULL;
 	if (getcwd(pwd, sizeof(ft_strlen(pwd))))
 	{
 		ft_putstr_fd("cannot get pwd, sorry :(\n", STDOUT_FILENO);
