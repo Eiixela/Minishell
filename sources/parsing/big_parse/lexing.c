@@ -6,27 +6,44 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:08:18 by saperrie          #+#    #+#             */
-/*   Updated: 2024/05/28 15:29:33 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/05/31 17:13:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../../inc/minishell.h"
 
+// TODO turn this function into two
 t_line	*make_t_line_argv_node(const char *input, size_t len, t_line *line)
 {
-	if (line->argc > 0)
-		line->argv->prev = line->argv;
-	line->argv = malloc(sizeof(t_argv));
-	if (!line->argv)
-		return (NULL);
-	line->argv->node_index = line->token_index++;
-	line->argc += 1;
-	line->argv->av = ft_substr((const char *)input, 0, len);
-	if (!line->argv->av)
-		return (NULL);
-	if (line->argc == 0)
+	t_argv	*next_node;
+
+	if (!line->argc++)
+	{
+		line->argv = malloc(sizeof(t_argv));
+		if (!line->argv)
+			return (NULL);
+		line->lst_head = line->argv;
 		line->argv->prev = NULL;
-	line->argv->next = NULL;
+		line->argv->next = NULL;
+		line->argv->node_index = line->argc;
+		line->argv->av = ft_substr((const char *)input, 0, len);
+		if (!line->argv->av)
+			return (NULL);
+	}
+	else
+	{
+		next_node = malloc(sizeof(t_argv));
+		if (!next_node)
+			return (NULL);
+		next_node->prev = line->argv;
+		line->argv->next = next_node;
+		line->argv = next_node;
+		line->argv->next = NULL;
+		line->argv->node_index = line->argc;
+		line->argv->av = ft_substr((const char *)input, 0, len);
+		if (!line->argv->av)
+			return (NULL);
+	}
 	return (line);
 }
 
@@ -67,7 +84,6 @@ static	const char	*tokenise_argv(const char *input, t_line *line)
 static bool	make_tokens(const char *input, t_line *line)
 {
 	line->argc = 0;
-	line->token_index = 0;
 	while (*input)
 	{
 		skip_white_spaces(&input);

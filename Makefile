@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 17:39:49 by aljulien          #+#    #+#              #
-#    Updated: 2024/05/28 14:28:07 by aljulien         ###   ########.fr        #
+#    Updated: 2024/05/31 17:34:41 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,9 @@ SRCS = 	$(MAIN_DIR)/minishell.c \
 		$(CLEANINPUT_DIR)/white_spaces.c\
 		$(EXEC_DIR)/pipex.c\
 		$(EXEC_DIR)/execve.c\
-		$(EXEC_DIR)/get_path.c
+		$(EXEC_DIR)/get_path.c\
+		$(BIGPARSE_DIR)/expansion.c\
+		$(BIGPARSE_DIR)/path_check.c
 
 OBJS = ${SRCS:.c=.o}
 DEPS = ${SRCS:.c=.d}
@@ -52,7 +54,7 @@ LIBS = ${LIBFTPATH} ${INCPATH}
 # COMPILATION
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
 LIBFT = libft/libft.a
 
 .c.o:

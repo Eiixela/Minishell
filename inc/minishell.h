@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/28 14:25:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/05/31 17:32:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 
-
 enum e_TOKENS
 {
 	CMD,
@@ -37,16 +36,23 @@ enum e_TOKENS
 
 enum e_REDIR_OPERATOR
 {
-	IN_OPERATOR,
-	OUT_OPERATOR,
-	APPEND_OPERATOR,
-	HEREDOC_OPERATOR,
+	ZERO,
+	IN_REDIR,
+	OUT_REDIR,
+	APPEND,
+	HEREDOC,
 };
+
+typedef struct t_type
+{
+	char			redir_type;
+	char			*file_name;
+}	t_type;
 
 typedef struct s_redir
 {
-	int					type;
-	char				*arg;
+	t_type			*in;
+	t_type			*out;
 }	t_redir;
 
 typedef struct s_cmd
@@ -56,24 +62,31 @@ typedef struct s_cmd
 	struct s_cmd	*prev;
 }	t_cmd;
 
+typedef struct s_pipe
+{
+	t_cmd			*cmd;
+	t_redir			*redir;
+	struct s_pipe	*next;
+	struct s_pipe	*prev;
+}	t_pipe;
+
 typedef struct s_argv
 {
 	int				node_index;
 	char			*av;
 	struct s_argv	*next;
 	struct s_argv	*prev;
-	pid_t			pid;
 }	t_argv;
 
 typedef struct s_line
 {
-	t_argv	*argv;
-	int		argc;
-	char	token_index;
-	t_cmd	*cmd;
-	char	**env;
-	t_redir	*in_out;
+	t_argv			*argv;
+	int				argc;
+	t_argv			*lst_head;
+	t_pipe			*pipe;
+	char			**env;
 }	t_line;
+
 
 
 // =================================== PARSING ================================
@@ -82,7 +95,7 @@ int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
 bool		clean_input(const char **input);
 bool		lex(const char *input, t_line *line);
-// bool		parse(t_line *line);
+bool		parse(t_line *line);
 
 // W_SPACE
 bool		is_white_space(char c);
@@ -128,7 +141,7 @@ int		pwd(void);
 // =================================== EXEC ================================
 
 int		pipex(char **env, t_line line);
-void	execute_cmd(char **env, t_line line);
+void	execute_cmd(char **env, char *cmd);
 char	*get_path(char *cmd, char **env, int i);
 
 // =================================== EXEC ================================

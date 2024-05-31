@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 00:21:21 by saperrie          #+#    #+#             */
-/*   Updated: 2024/05/28 10:12:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:32:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,8 @@ static const char	*whos_bad(const char *str)
 	skip_white_spaces(&str);
 	if (!*str || !str)
 		return (NULL);
-	printf("\t%c\n", *str);
 	if (is_redirection_operator(str))
 		return (str);
-	printf("\tTOO\n");
 	while (is_valid_fd_name(*str))
 	{
 		if (*str == '\'' || *str == '"')
@@ -87,6 +85,8 @@ const char	*bad_redirection(const char *str)
 			if (is_redirection_operator(str))
 				return (str);
 		}
+		if (!*str)
+			return (NULL);
 		str++;
 	}
 	return (str);
@@ -97,6 +97,8 @@ bool	good_redirections(const char *str)
 	const char	*return_value;
 
 	return_value = bad_redirection(str);
+	if (!return_value)
+		return (false);
 	if (is_redirection_operator(--return_value) == 1)
 		return (printf("syntax error near unexpected token `<'\n"), false);
 	else if (is_redirection_operator(return_value) == 2)
