@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 11:29:43 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/31 12:27:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:54:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
+
+#if 0
+#include "minishell.h"
 
 // ================================ EXPAND_UTILS ==============================
 // handle_quote_dollar_sign(line);
@@ -32,25 +35,24 @@ static bool	is_env_var_name_format(char c)
 // 	char	*token_one;
 // 	char	*token_two;
 
-// 	subtoken = line->argv->av;
+// 	subtoken = line->argv->node;
 // 	while (*subtoken && is_env_var_name_format(*subtoken))
 // 		subtoken += 1;
-// 	token_one = ft_substr(line->argv->av, 0, subtoken - line->argv->av);
+// 	token_one = ft_substr(line->argv->node, 0, subtoken - line->argv->node);
 // 	if (!token_one || !*token_one)
 // 		return ;
-// 	while (*line->argv->av++)
+// 	while (*line->argv->node++)
 // 		;
-// 	token_two = ft_substr(subtoken, 0, line->argv->av - subtoken);
+// 	token_two = ft_substr(subtoken, 0, line->argv->node - subtoken);
 // 	if (!token_two || !*token_two)
 // 		return ;
 // }
-
-///static void	true_expand(t_line *line)
-//{
+static void	true_expand(t_line *line)
+{
 	// char	*var;
 	// char	*cpy;
 
-	// cpy = line->argv->av + 2;
+	// cpy = line->argv->node + 2;
 	// while (is_env_var_name_format(cpy))
 		// cpy++;
 	// if (!cpy || !*cpy)	?
@@ -58,16 +60,16 @@ static bool	is_env_var_name_format(char c)
 	// var = get_var_from_envp();
 	// if (!var)
 	// 	return ((void)printf("env_var not found"));
-	// ft_str_append(line->argv->av, var);
-//}
+	// ft_str_append(line->argv->node, var);
+}
 
 static bool	handle_dollar_sign(t_line *line)
 {
-	// line->argv->av += 1;
-	if ((*line->argv->av && !is_env_var_name_format(*(line->argv->av + 1)))
-		|| !*line->argv->av)
+	// line->argv->node += 1;
+	if ((*line->argv->node && !is_env_var_name_format(*(line->argv->node + 1)))
+		|| !*line->argv->node)
 		return (false);
-	// line->argv->av += 1;
+	// line->argv->node += 1;
 	// true_expand(line);
 	return (false);
 }
@@ -77,13 +79,15 @@ bool	expand(t_line *line)
 {
 	while (line->argv++)
 	{
-		while (*line->argv->av++)
+		while (*line->argv->node++)
 		{
-			if (*line->argv->av == '$')
+			if (*line->argv->node == '$')
 				if (!handle_dollar_sign(line))
 					return (false);
 		}
-		line->argv->av += 1;
+		line->argv->node += 1;
 	}
 	return (true);
 }
+
+#endif

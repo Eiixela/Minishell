@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 17:39:49 by aljulien          #+#    #+#              #
-#    Updated: 2024/05/31 17:34:41 by aljulien         ###   ########.fr        #
+#    Updated: 2024/06/04 10:47:48 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ EXEC_DIR = $(SRCDIR)/exec
 PARSING_DIR = $(SRCDIR)/parsing
 BIGPARSE_DIR = $(PARSING_DIR)/big_parse
 UTILSPARSE_DIR = $(PARSING_DIR)/utils
-CLEANINPUT_DIR = $(UTILSPARSE_DIR)/clean_input
 EXEC_DIR = $(SRCDIR)/exec
 
 
@@ -30,11 +29,9 @@ SRCS = 	$(MAIN_DIR)/minishell.c \
 		$(BIGPARSE_DIR)/big_parse.c\
 		$(BIGPARSE_DIR)/lexing.c\
 		$(BIGPARSE_DIR)/parsing.c\
-		$(UTILSPARSE_DIR)/token_utils.c\
-		$(CLEANINPUT_DIR)/clean_input.c\
-		$(CLEANINPUT_DIR)/clean_quotes.c\
-		$(CLEANINPUT_DIR)/clean_redirections.c\
-		$(CLEANINPUT_DIR)/white_spaces.c\
+		$(UTILSPARSE_DIR)/redirection_utils.c\
+		$(UTILSPARSE_DIR)/utils.c\
+		$(UTILSPARSE_DIR)/clean_quotes.c\
 		$(EXEC_DIR)/pipex.c\
 		$(EXEC_DIR)/execve.c\
 		$(EXEC_DIR)/get_path.c\

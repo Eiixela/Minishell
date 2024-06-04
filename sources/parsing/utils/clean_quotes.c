@@ -3,19 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   clean_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 00:07:21 by saperrie          #+#    #+#             */
-/*   Updated: 2024/05/31 15:00:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/03 06:40:33 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../../inc/minishell.h"
+#include "minishell.h"
 
-// static char	*turn_quote_content_negative(char *str)
-// {
-// 	;
-// }
+static void	memcpy_skips_quotes(char *str, int *dst, int *src)
+{
+	const char	quote = str[(*src)++];
+
+	while (str[*src] != quote && str[*src])
+	{
+	// printf("(%i) <- (%i) [%x]`%c'\n", *dst, *src, str[*src], str[*src]);
+		str[*dst] = str[*src];
+		*dst += 1;
+		*src += 1;
+	}
+	if (!str[(*src)])
+		return ;
+	(*src) += 1;
+}
+
+bool	clean_surrounding_quotes(t_line *line)
+{
+	int	dst;
+	int	src;
+
+	while (line->argv)
+	{
+		dst = 0;
+		src = 0;
+		while (line->argv->node[dst] && line->argv->node)
+		{
+			if (!line->argv->node[src])
+				line->argv->node[dst] = '\0';
+			else if (line->argv->node[src] == '"' \
+			|| line->argv->node[src] == '\'')
+				memcpy_skips_quotes(line->argv->node, &dst, &src);
+			else
+				line->argv->node[dst++] = line->argv->node[src++];
+		}
+		// printf("\tclean%i: %s\n", line->argv->node_index, line->argv->node);
+		line->argv = line->argv->next;
+	}
+	write(1, "\n\n", 2);
+	return (true);
+}
 
 const char	*find_matching_quote(const char *str, char quote)
 {
@@ -49,20 +86,9 @@ bool	even_quotes(const char *str)
 	return (true);
 }
 
-// static bool	terrible_input(const char *str)
-// {
-// 	while (*str && (*str == ' ' || *str == '\'' || *str == '"' || is_redirection_operator(str)))
-// 		str += 1;
-// 	if (!*str)
-// 		return (true);
-// 	return (false);
-// }
-
 bool	quotes(const char *str)
 {
 	if (!even_quotes(str))
 		return (printf("minishell: parsing error: missing quote\n"), (false));
-	// if (terrible_input(str))
-	// 	return (printf("nice try :)"), (false));
 	return (true);
 }

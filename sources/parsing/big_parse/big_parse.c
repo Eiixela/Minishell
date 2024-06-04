@@ -3,16 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/05/31 17:14:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:09:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-// TODO install todo tree / fix it
+// if heredoc limiter contains quote : cat << "H"D
+// 										<< $USER
+// 										<< HD
+// 				don't expand, result is : $USER 
+
+static bool	clean_input(const char **str)
+{
+	skip_white_spaces((const char **)str);
+	if (!*str)
+		return (false);
+	if (!quotes(*str))
+		return (false);
+	return (true);
+}
+
+// TODO turn all malloc into calloc
 bool	big_parse(t_line *line, char **input)
 {
 	char	*str;
@@ -23,19 +38,21 @@ bool	big_parse(t_line *line, char **input)
 		return (false);
 	str = *input;
 	if (clean_input((const char **)&str))
-		write(1, "CLEAN_INPUT\n\n", 13);
+		write(1, "CLEAN_INPUT\n", 12);
 	else
-		return (write(1, "BAD_INPUT\n\n", 11), false);
+		return (write(1, "BAD_INPUT\n", 10), false);
 	if (lex((const char *)str, line))
-		printf("GOOD_LEX\n\n");
+		printf("GOOD_LEX\n");
+	else
+		return (printf("BAD_LEX\n"), false);
 	if (parse(line))
-		printf("GOOD_PARSE\n\n");
+		printf("GOOD_PARSE\n");
+	else
+		return (printf("BAD_PARSE\n"), false);
+	// if (expand(line))
+	// 	printf("CHA CHING\nargc = %i\n", line->argc);
 	// else
-		// return (printf("BAD_LEX\n"), false);
-		// if (expand(line))
-		// printf("CASH_MONEY\nargc = %i\n", line->argc);
-	// else
-	// 	return (printf("BROKE_ASS\n"), false);
-		// check_path(intput);
+	// 	return (printf(">:(\n"), false);
+	// check_path(intput);
 	return (true);
 }

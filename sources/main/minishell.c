@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/31 17:05:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:00:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ int	main (int ac, char **av, char **env)
 		{
 			add_history(str);
 			big_parse(&line, &str);
-			line.argv = line.lst_head;
-			pipex(env, line);
+			//pipex(env, line);
 		}
 	}
-	rl_clear_history();
+	clear_history();
 	return (0);
-}
+} 

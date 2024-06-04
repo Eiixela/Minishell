@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/31 17:45:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:00:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,39 @@
 static int	parse_builtin(char **env, t_line line)
 {
 	(void)env;
-	if (!ft_strcmp(&line.argv->av[0], "echo"))
+	(void)line;
+	/* if (!ft_strncmp(&line.argv->node[0], "echo", 5))
 		printf("echo\n");	//ft_echo()
-	if (!ft_strcmp(&line.argv->av[0], "cd"))
+	if (!ft_strncmp(&line.argv->node[0], "cd", 3))
 		printf("cd\n");	//ft_cd()
-	if (!ft_strcmp(&line.argv->av[0], "pwd"))
+	if (!ft_strncmp(&line.argv->node[0], "pwd", 4))
 		printf("pwd\n");	//ft_pwd;
-	if (!ft_strcmp(&line.argv->av[0], "export"))
+	if (!ft_strncmp(&line.argv->node[0], "export", 7))
 		printf("export\n");	//ft_export()
-	if (!ft_strcmp(&line.argv->av[0], "unset"))
+	if (!ft_strncmp(&line.argv->node[0], "unset", 6))
 		printf("unset\n");	//ft_unset()
-	if (!ft_strcmp(&line.argv->av[0], "env"))
+	if (!ft_strncmp(&line.argv->node[0], "env", 4))
 		printf("env\n");	//ft_env()
-	if (!ft_strcmp(&line.argv->av[0], "exit"))
+	if (!ft_strncmp(&line.argv->node[0], "exit", 5))
 		printf("exit\n");	//ft_exit
 	else 
-		return (0);
-	return (1);
+		return (0);*/
+	printf("zebi\n");
+	return (0); 
 }
 
 static void	_child_action(char **env, t_line line, int pipefd[2])
 {
 	dup2(pipefd[1], STDERR_FILENO);
 	if (!parse_builtin(env, line))
-		execute_cmd(env, line.argv->av);
+		printf("%i\n", line.argv->node_index);
+		//execute_cmd(env, line.argv->node);
 }
 
-static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
+static int	first_child(char **env, int	pipefd[2], t_line line)
 {
 	pid_t	pid;
 
-	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
 		return (perror("minishell: pipe "), 0);
 	pid = fork();
@@ -87,8 +89,7 @@ static int	_call_childs(char **env, t_line line)
 	cmdnbr = 0;
 	if (cmdnbr == 1)
 	{
-		fprintf(stderr, "cc\n");
-		if(!first_child(env, pipefd, line, cmdnbr))
+		if(!first_child(env, pipefd, line))
 			return (0);
 		cmdnbr++;
 	}

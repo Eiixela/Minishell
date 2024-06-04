@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/31 17:32:33 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:29:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,18 @@ enum e_REDIR_OPERATOR
 	HEREDOC,
 };
 
-typedef struct t_type
-{
-	char			redir_type;
-	char			*file_name;
-}	t_type;
-
 typedef struct s_redir
 {
-	t_type			*in;
-	t_type			*out;
+	// int				redir_index;
+	char			type;
+	char			*filename;
+	// struct s_redir	*next;
+	// struct s_redir	*prev;
 }	t_redir;
-
-typedef struct s_cmd
-{
-	char			**arg;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-}	t_cmd;
 
 typedef struct s_pipe
 {
-	t_cmd			*cmd;
+	char			**arg;
 	t_redir			*redir;
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
@@ -73,16 +63,16 @@ typedef struct s_pipe
 typedef struct s_argv
 {
 	int				node_index;
-	char			*av;
+	char			*node;
 	struct s_argv	*next;
 	struct s_argv	*prev;
 }	t_argv;
 
 typedef struct s_line
 {
-	t_argv			*argv;
 	int				argc;
-	t_argv			*lst_head;
+	t_argv			*argv;
+	t_argv			*argv_head;
 	t_pipe			*pipe;
 	char			**env;
 }	t_line;
@@ -93,13 +83,12 @@ typedef struct s_line
 
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
-bool		clean_input(const char **input);
 bool		lex(const char *input, t_line *line);
 bool		parse(t_line *line);
 
 // W_SPACE
 bool		is_white_space(char c);
-void		skip_white_spaces(const char **input);
+size_t	skip_white_spaces(const char **input);
 // W_SPACE
 
 // QUOTES
@@ -127,6 +116,9 @@ const char		*bad_redirection(const char *str);
 bool		is_valid_fd_name(char c);
 char		is_redirection_operator(const char *str);
 char		skip_redirection_operator(const char **str);
+bool	clean_surrounding_quotes(t_line *line);
+
+bool	process_redir(t_line *line, char redir_operator);
 // REDIRECTIONS
 
 // =================================== PARSING ================================

@@ -3,184 +3,153 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/05/31 17:15:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:10:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
-/* 
-static bool	process_out(t_line *line, char redir_operator)
+//  FIXME this workin but 5 functions
+static char	extract_node(t_line *line)
 {
-	size_t	i;
-
-	i = 0;
-	line->pipe->redir->out = malloc(sizeof(t_type));
-	if (!line->pipe->redir->out)
-		return (false);
-	line->pipe->redir->out->redir_type = redir_operator;
-	line->pipe->redir->out->file_name = malloc(ft_strlen(line->argv->av));
-	while (line->argv->av[i])
-	{
-		line->pipe->redir->out->file_name[i] = line->argv->av[i];
-		i += 1;
-	}
-	return (true);
-}
-
-// NEED TO SKIP REDIR OP AND WSPACES BUT DO NOT INCREMENT THE POINTER SO THAT I CAN FREE IT LATER
-static bool	process_in(t_line *line, char redir_operator)
-{
-	size_t	i;
-
-	i = 0;
-	line->pipe->redir->in = malloc(sizeof(t_type));
-	if (!line->pipe->redir->in)
-		return (false);
-	line->pipe->redir->in->redir_type = redir_operator;
-	line->pipe->redir->in->file_name = malloc(ft_strlen(line->argv->av));
-	while (line->argv->av[i])
-	{
-		line->pipe->redir->in->file_name[i] = line->argv->av[i];
-		i += 1;
-	}
-	return (true);
-}
-
- static bool	process_redir(t_line *line, char redir_operator)
-{
-	line->pipe->redir = malloc(sizeof(t_redir));
-	if (!line->pipe->redir)
-		return (false);
-	if (redir_operator == IN_REDIR || redir_operator == HEREDOC)
-	{
-		if (!process_in(line, redir_operator))
-			return (false);
-	}
-	else if (redir_operator == OUT_REDIR || redir_operator == APPEND)
-	{
-		if (!process_out(line, redir_operator))
-			return (false);
-	}
-	return (true);
-} */
-/* 
-static bool	tag_redirections(t_line *line)
-{
-	char	redir_type;
-
-	redir_type = is_redirection_operator((line->argv->av));
-	if (redir_type == IN_REDIR)
-		process_redir(line, IN_REDIR);
-	else if (redir_type == OUT_REDIR)
-		process_redir(line, OUT_REDIR);
-	else if (redir_type == APPEND)
-		process_redir(line, APPEND);
-	else if (redir_type == HEREDOC)
-		process_redir(line, HEREDOC);
-	else
-		return (false);
-	return (true);
-} */
-
-/* //  TODO how the hell is this suppposed to be workin
-static bool	extract_node(t_line *line)
-{
-	t_argv	*tmp;
-
-	tmp = line->argv;
 	if (!line->argv->prev && !line->argv->next)
 	{
-		// free(tmp->av);
-		// free(tmp);
+		// free(line->argv->node);
+		// free(line->argv);
+		// line->argv = NULL;
+		return (3);
 	}
 	else if (!line->argv->prev && line->argv->next)
 	{
+		// printf("first node is redir and argv_head = second node\n");
 		line->argv = line->argv->next;
-		line->lst_head = line->argv;
-		// free(tmp->av);
-		// free(tmp);
+		line->argv_head = line->argv;
+		line->argv->prev = NULL;
+		// free(line->argv->node);
+		// free(line->argv);
 	}
 	else if (line->argv->prev && !line->argv->next)
 	{
-		// line->argv = line->argv->prev;
+		// printf("last node is redir and last node becomes null\n");
 		line->argv->prev->next = NULL;
-		// free(tmp->av);
-		// free(tmp);
+		free(line->argv->node);
+		// free(line->argv);
+		line->argv = NULL;
+		return (3);
 	}
 	else if (line->argv->prev && line->argv->next)
 	{
+		// printf("node is redir and argv = argv->next\n");
 		line->argv->prev->next = line->argv->next;
 		line->argv->next->prev = line->argv->prev;
-		printf("redir_node %i : %s\n", line->argv->node_index, line->argv->av);
 		line->argv = line->argv->next;
-		// free(tmp->av);
-		// free(tmp);
+		// free(line->argv->node);
+		// free(line->argv);
 	}
-	return (true);
-} */
+	return (1);
+}
 
-/* static bool	tag_tokens(t_line *line)
+static char	tag_redirection(t_line *line)
 {
+	char	operator;
+
+	operator = is_redirection_operator((line->argv->node));
+	if (operator == IN_REDIR && process_redir(line, IN_REDIR))
+		printf("\t    type: <\n\n");
+	else if (operator == OUT_REDIR && process_redir(line, OUT_REDIR))
+		printf("\t    type: >\n\n");
+	else if (operator == APPEND && process_redir(line, APPEND))
+		printf("\t    type: >>\n\n");
+	else if (operator == HEREDOC && process_redir(line, HEREDOC))
+		printf("\t    type: <<\n\n");
+	else if (!operator)
+		return (2);
+	else
+		return (0);
+	return (1);
+}
+
+static size_t	count_argv_nodes(t_line *line)
+{
+	size_t	node_count;
+
+	node_count = 0;
 	while (line->argv)
 	{
-		if (tag_redirections(line))
-			extract_node(line);
-		else if (line->argv)
-			line->argv = line->argv->next; // FIX THIS SHIT LINE NEXT THINGY
+		node_count += 1;
+		line->argv = line->argv->next;
 	}
-	// tag_cmd_and_arg();
-	return (true);
-} */
+	line->argv = line->argv_head;
+	return (node_count);
+}
 
-// TODO need to factorise this function for singles and doubles
-static bool	clean_surrounding_quotes(t_line *line)
+static bool	tag_cmd_and_arg(t_line *line)
 {
-	size_t	i;
-	size_t	j;
-	char	s_quote;
-	char	d_quote;
+	size_t	node_count;
 
-	s_quote = 0;
-	d_quote = 0;
-	if (!line->argv)
+	node_count = count_argv_nodes(line);
+	// if (!node_count)
+	// 	return (true);
+	line->pipe->arg = malloc(node_count + 1 * sizeof(char *));
+	if (!line->pipe->arg)
 		return (false);
-	while (line->argv)
+	while (line->argv && line->pipe->arg)
 	{
-		i = 0;
-		j = 0;
-		while (line->argv->av && line->argv->av[j]) // && line->argv->av[i])
-		{
-			if (line->argv->av[i] != '"')
-				line->argv->av[j++] = line->argv->av[i++];
-			else if (line->argv->av[i] == '"' && d_quote) // && line->argv->av[i])
-			{
-				d_quote = 0;
-				i++;
-			}
-			else if (line->argv->av[i] == '"' && !d_quote)
-			{
-				d_quote = 1;
-				i++;
-			}
-		}
-		printf("\tclean%i: %s\n", line->argv->node_index, line->argv->av);
+		*line->pipe->arg = ft_strdup(line->argv->node);
+		if (!*line->pipe->arg)
+			return (false);
+		printf("\t     ARG: %s\n", *line->pipe->arg);
+		*line->pipe->arg += 1;
 		line->argv = line->argv->next;
 	}
 	return (true);
 }
 
+static bool	handle_redir(t_line *line)
+{
+	char	return_value;
+	char	good_redir;
+
+	while (line->argv)
+	{
+		good_redir = tag_redirection(line);
+		if (good_redir == 1)
+		{
+			return_value = extract_node(line);
+			if (return_value == 3)
+				break ;
+			else if (return_value == 2)
+				return (false);
+			else if (return_value == 1)
+				continue ;
+			else if (!return_value)
+				return (false);
+		}
+		else if (!good_redir)
+			return (false);
+		else
+			line->argv = line->argv->next;
+	}
+	return (true);
+}
+
+//  FIXME fix clean_surrounding_quotes()
 bool	parse(t_line *line)
 {
-	line->argv = line->lst_head;
+	line->argv = line->argv_head;
 	if (!clean_surrounding_quotes(line))
 		return (printf("clean_quotes_failed\n"), false);
 	line->pipe = malloc(sizeof(t_pipe));
 	if (!line->pipe)
 		return (false);
-	line->argv = line->lst_head;
-	// tag_tokens(line);
+	line->argv = line->argv_head;
+	if (!handle_redir(line))
+		return (false);
+	line->argv = line->argv_head;
+	if (!tag_cmd_and_arg(line))
+		return (false);
+	// free_t_line_argv();
 	return (true);
-} 
+}
