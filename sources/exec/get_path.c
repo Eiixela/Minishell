@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/04 10:53:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/07 11:07:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ char	*get_path(char *cmd, char **env, int i)
 	char	**s_cmd;
 	char	*path_part;
 	char	**allpath;
-
+	
+	
 	if (ft_strchr(cmd, '/'))
 		return (check_command_in_path(cmd));
 	allpath = ft_split(get_env("PATH", env), ':');

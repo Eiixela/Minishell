@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 17:39:49 by aljulien          #+#    #+#              #
-#    Updated: 2024/06/04 10:47:48 by aljulien         ###   ########.fr        #
+#    Updated: 2024/06/07 10:15:15 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ LIBS = ${LIBFTPATH} ${INCPATH}
 # COMPILATION
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
+CFLAGS = -Wall -Werror -Wextra
 LIBFT = libft/libft.a
 
 .c.o:

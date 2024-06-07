@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/04 10:29:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/07 13:06:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
+#include <fcntl.h>
+
 
 enum e_TOKENS
 {
@@ -133,7 +135,7 @@ int		pwd(void);
 // =================================== EXEC ================================
 
 int		pipex(char **env, t_line line);
-void	execute_cmd(char **env, char *cmd);
+void	execute_cmd(char **env, char **cmd);
 char	*get_path(char *cmd, char **env, int i);
 
 // =================================== EXEC ================================

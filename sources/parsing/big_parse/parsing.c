@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/04 10:10:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/07 13:41:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	extract_node(t_line *line)
 	return (1);
 }
 
-static char	tag_redirection(t_line *line)
+static char	 tag_redirection(t_line *line)
 {
 	char	operator;
 
@@ -101,7 +101,6 @@ static bool	tag_cmd_and_arg(t_line *line)
 		if (!*line->pipe->arg)
 			return (false);
 		printf("\t     ARG: %s\n", *line->pipe->arg);
-		*line->pipe->arg += 1;
 		line->argv = line->argv->next;
 	}
 	return (true);

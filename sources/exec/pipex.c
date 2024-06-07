@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/04 11:00:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/07 15:42:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,88 @@
 static int	parse_builtin(char **env, t_line line)
 {
 	(void)env;
-	(void)line;
-	/* if (!ft_strncmp(&line.argv->node[0], "echo", 5))
+	if (!ft_strcmp(line.pipe->arg[0], "echo"))
 		printf("echo\n");	//ft_echo()
-	if (!ft_strncmp(&line.argv->node[0], "cd", 3))
+	if (!ft_strcmp(line.pipe->arg[0], "cd"))
 		printf("cd\n");	//ft_cd()
-	if (!ft_strncmp(&line.argv->node[0], "pwd", 4))
+	if (!ft_strcmp(line.pipe->arg[0], "pwd"))
 		printf("pwd\n");	//ft_pwd;
-	if (!ft_strncmp(&line.argv->node[0], "export", 7))
+	if (!ft_strcmp(line.pipe->arg[0], "export"))
 		printf("export\n");	//ft_export()
-	if (!ft_strncmp(&line.argv->node[0], "unset", 6))
+	if (!ft_strcmp(line.pipe->arg[0], "unset"))
 		printf("unset\n");	//ft_unset()
-	if (!ft_strncmp(&line.argv->node[0], "env", 4))
+	if (!ft_strcmp(line.pipe->arg[0], "env"))
 		printf("env\n");	//ft_env()
-	if (!ft_strncmp(&line.argv->node[0], "exit", 5))
+	if (!ft_strcmp(line.pipe->arg[0], "exit"))
 		printf("exit\n");	//ft_exit
 	else 
-		return (0);*/
-	printf("zebi\n");
-	return (0); 
+		return (0);
+	return (1);
 }
 
-static void	_child_action(char **env, t_line line, int pipefd[2])
+/* static int	open_file(t_line line, int in_or_out)
 {
-	dup2(pipefd[1], STDERR_FILENO);
+	int	fd;
+
+	if (in_or_out == 1)
+	{
+		fd = open(line.pipe->redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777); //664
+		if (fd == -1)
+		{
+			ft_putstr_fd("cannot open or create outfile", 2);
+			return (0);		
+		}
+	}
+	if (in_or_out == 2)
+	{
+		fd = open(line.pipe->redir->filename, O_RDONLY, 0777);
+		if (fd == -1)
+		{
+			ft_putstr_fd("cannot open or create outfile", 2);
+			return (0);		
+		}
+	}
+	return (fd);
+} */
+
+static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
+{
+	(void)pipefd;(void)cmdnbr;
+	/* 	int	fd_out = 0;
+	int	fd_in;
+	
+	if (line.pipe->redir->type == OUT_REDIR)
+	{
+		fd_out = open_file(line, 1);
+		if (dup2(fd_out, STDOUT_FILENO) == -1)
+		{
+			//close and free 
+			fprintf(stderr, "ca marche pas frr dans le dup2 du outredir child_action\n\n\n");
+			return ;
+		}
+		//close(fd_out);
+	}
+	if (line.pipe->redir->filename && line.pipe->redir->type == IN_REDIR)
+	{
+		fd_in = open_file(line, 2);
+		dup2(fd_in, STDIN_FILENO);
+		if (cmdnbr != 0)
+			close (pipefd[0]);
+	}
+ 	else if (cmdnbr != 0)
+		dup2 (pipefd[0], STDIN_FILENO); */
 	if (!parse_builtin(env, line))
-		printf("%i\n", line.argv->node_index);
-		//execute_cmd(env, line.argv->node);
+		execute_cmd(env, &line.pipe->arg[0]);
+/* 	if (cmdnbr != 0)
+		close (pipefd[0]); */
+	
 }
 
-static int	first_child(char **env, int	pipefd[2], t_line line)
+static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
 {
 	pid_t	pid;
 
+	cmdnbr = 0;
 	if (pipe(pipefd) == -1)
 		return (perror("minishell: pipe "), 0);
 	pid = fork();
@@ -56,7 +105,7 @@ static int	first_child(char **env, int	pipefd[2], t_line line)
 		return (perror("minishell: fork"), 0);
 	}
 	else if (pid == 0)
-		_child_action(env, line, pipefd);
+		_child_action(env, line, pipefd, cmdnbr);
 	close(pipefd[1]);
 	close(pipefd[0]);
 	return (1);
@@ -75,7 +124,7 @@ static int	first_child(char **env, int	pipefd[2], t_line line)
 		return (perror("minishell: fork"), 0);
 	}
 	else if (pid == 0)
-		_child_action(env, line, pipefd);
+		_child_action(env, line, pipefd, cmdnbr);
 	// else if 
 	//	_parent_action(env, line, pipefd);
 	return (1);
@@ -89,7 +138,8 @@ static int	_call_childs(char **env, t_line line)
 	cmdnbr = 0;
 	if (cmdnbr == 1)
 	{
-		if(!first_child(env, pipefd, line))
+		fprintf(stderr, "cc\n");
+		if(!first_child(env, pipefd, line, cmdnbr))
 			return (0);
 		cmdnbr++;
 	}
@@ -102,4 +152,4 @@ int	pipex(char **env, t_line line)
 	if(!_call_childs(env, line))
 		return (0);
 	return (1);
-}
+} 
