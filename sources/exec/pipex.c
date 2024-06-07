@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/07 15:42:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:22:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ static int	parse_builtin(char **env, t_line line)
 	return (1);
 }
 
-/* static int	open_file(t_line line, int in_or_out)
+static int	open_file(t_line line, int in_or_out)
 {
 	int	fd;
 
 	if (in_or_out == 1)
 	{
-		fd = open(line.pipe->redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777); //664
+		fd = open(line.pipe->redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777); //644
 		if (fd == -1)
 		{
 			ft_putstr_fd("cannot open or create outfile", 2);
@@ -57,16 +57,16 @@ static int	parse_builtin(char **env, t_line line)
 		}
 	}
 	return (fd);
-} */
+}
 
 static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 {
-	(void)pipefd;(void)cmdnbr;
-	/* 	int	fd_out = 0;
+	int	fd_out = 0;
 	int	fd_in;
 	
 	if (line.pipe->redir->type == OUT_REDIR)
 	{
+		fprintf(stderr, "cc1");
 		fd_out = open_file(line, 1);
 		if (dup2(fd_out, STDOUT_FILENO) == -1)
 		{
@@ -78,18 +78,18 @@ static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 	}
 	if (line.pipe->redir->filename && line.pipe->redir->type == IN_REDIR)
 	{
+		fprintf(stderr, "cc2");
 		fd_in = open_file(line, 2);
 		dup2(fd_in, STDIN_FILENO);
 		if (cmdnbr != 0)
 			close (pipefd[0]);
 	}
  	else if (cmdnbr != 0)
-		dup2 (pipefd[0], STDIN_FILENO); */
+		dup2 (pipefd[0], STDIN_FILENO); 	
 	if (!parse_builtin(env, line))
 		execute_cmd(env, &line.pipe->arg[0]);
-/* 	if (cmdnbr != 0)
-		close (pipefd[0]); */
-	
+ 	if (cmdnbr != 0)
+		close (pipefd[0]);
 }
 
 static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
