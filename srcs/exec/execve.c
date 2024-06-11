@@ -1,36 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/07 17:20:21 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
+/*   Updated: 2024/06/11 18:15:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	main (int ac, char **av, char **env)
+void	execute_cmd(char **env, char **cmd) 
 {
-	char	*str;
-	t_line	line;
+	char	*path;
 	
-	(void)av;
-	(void)ac;
-	(void)env;
-	str = NULL;
-	while (1)
+	if (!cmd || !cmd[0]) 
 	{
-		str = readline("minishell >> ");
-		if (str && *str)
-		{
-			add_history(str);
-			big_parse(&line, &str);
-			pipex(env, line);
-		}
+		ft_putstr_fd("minishell: command not found\n", 2);
+		return ;
 	}
-	clear_history();
-	return (0);
+	path = get_path(cmd[0], env, -1);
+	if (!path) 
+	{
+		fprintf(stderr, "minishell: %s: command not found\n", cmd[0]);
+		return ;
+	}
+	if (execve(path, cmd, env) == -1)
+		perror("execve");
 }

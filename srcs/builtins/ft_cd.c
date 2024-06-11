@@ -6,11 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/28 11:38:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/11 13:57:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "inc/minishell.h"
+#include "../../inc/minishell.h"
 
 # include <stdbool.h>
 # include <unistd.h>
@@ -35,16 +35,18 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+static	char	*get_value_by_key(char *key, char **env)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (s[i])
+	while(env)
 	{
-		write (fd, &s[i], 1);
+		if (strncmp(env[i], key, 4))
+			return (env[i]);
 		i++;
 	}
+	return (NULL);
 }
 
 static	void _cd_with_arg(char **av)
@@ -62,7 +64,30 @@ static	void _cd_with_arg(char **av)
 	}
 }
 
-void	ft_cd(char **av)
+static void	_cd_without_arg(char **env)
+{
+	char	*err_str;
+	char	*home;
+	int		r;
+
+	home = get_value_by_key("HOME", env);
+	if (!home)
+	{
+		ft_putstr_fd("minishelll: cd: HOME not set\n", 2);
+		return ;
+	}
+	r = chdir(home);
+	if (r == -1)
+	{
+		err_str = ft_strjoin("minishell: cd:", home);
+		if (!err_str)
+			return ; //exit et free
+		perror(err_str);
+		free(err_str);
+	}
+}
+
+void	ft_cd(char **av, char **env)
 {
 	char	*cwd;
 	char	*key;
@@ -70,32 +95,19 @@ void	ft_cd(char **av)
 
 	(void)av;
 	value = getcwd(NULL, 0);
-	_cd_with_arg(av);
+	if (av && av[0] && !av[1])
+		_cd_without_arg(env);
+	else
+		_cd_with_arg(av);
 	cwd = getcwd(NULL, 0);
-	if (ft_strncmp(cwd, value, 100) != 0)
+	if (ft_strcmp(cwd, value) != 0)
 	{
-		printf("wtf");
+		key = ft_strdup("OLDPWD");
 	}
+	else
+		fprintf(stderr, "free value in cd builtin");
+	key = ft_strdup("PWD");
+	value = getcwd(NULL, 0);
 	
-}
-
-int	main (int ac, char **av, char **env)
-{
-	char	*str;
-
-	(void)av;
-	(void)ac;
-	(void)env;
-	str = NULL;
-	while (1)
-	{
-		str = readline("minishell >> ");
-		if (str && *str)
-		{
-			ft_cd(av);
-			add_history(str);
-		}
-	}
-	rl_clear_history();
-	return (0);
+	
 }

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/07 17:22:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:19:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 static int	parse_builtin(char **env, t_line line)
 {
+
 	(void)env;
 	if (!ft_strcmp(line.pipe->arg[0], "echo"))
-		printf("echo\n");	//ft_echo()
+		ft_echo(line.pipe->arg);
 	if (!ft_strcmp(line.pipe->arg[0], "cd"))
-		printf("cd\n");	//ft_cd()
+		ft_cd(line.pipe->arg, env);
 	if (!ft_strcmp(line.pipe->arg[0], "pwd"))
-		printf("pwd\n");	//ft_pwd;
+		ft_pwd(line.pipe->arg);
 	if (!ft_strcmp(line.pipe->arg[0], "export"))
 		printf("export\n");	//ft_export()
 	if (!ft_strcmp(line.pipe->arg[0], "unset"))
 		printf("unset\n");	//ft_unset()
 	if (!ft_strcmp(line.pipe->arg[0], "env"))
-		printf("env\n");	//ft_env()
+		ft_env(env);
 	if (!ft_strcmp(line.pipe->arg[0], "exit"))
 		printf("exit\n");	//ft_exit
 	else 
@@ -66,7 +67,6 @@ static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 	
 	if (line.pipe->redir->type == OUT_REDIR)
 	{
-		fprintf(stderr, "cc1");
 		fd_out = open_file(line, 1);
 		if (dup2(fd_out, STDOUT_FILENO) == -1)
 		{
@@ -78,7 +78,6 @@ static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 	}
 	if (line.pipe->redir->filename && line.pipe->redir->type == IN_REDIR)
 	{
-		fprintf(stderr, "cc2");
 		fd_in = open_file(line, 2);
 		dup2(fd_in, STDIN_FILENO);
 		if (cmdnbr != 0)
@@ -86,9 +85,9 @@ static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 	}
  	else if (cmdnbr != 0)
 		dup2 (pipefd[0], STDIN_FILENO); 	
-	if (!parse_builtin(env, line))
-		execute_cmd(env, &line.pipe->arg[0]);
- 	if (cmdnbr != 0)
+	if (parse_builtin(env, line) == 0)
+		execute_cmd(env, line.pipe->arg);
+	if (cmdnbr != 0)
 		close (pipefd[0]);
 }
 
@@ -112,18 +111,17 @@ static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
 }
 
 //TODO parent action function and executon from parent if command is a builtins
- static int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr)
+static int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if(pid == -1)
+	pipefd[0] = fork();
+	printf("%i\n\n", pipefd[0]);
+	if (pipefd[0] == -1)
 	{	
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 		return (perror("minishell: fork"), 0);
 	}
-	else if (pid == 0)
+	else if (pipefd[1] == 0)
 		_child_action(env, line, pipefd, cmdnbr);
 	// else if 
 	//	_parent_action(env, line, pipefd);
@@ -138,7 +136,6 @@ static int	_call_childs(char **env, t_line line)
 	cmdnbr = 0;
 	if (cmdnbr == 1)
 	{
-		fprintf(stderr, "cc\n");
 		if(!first_child(env, pipefd, line, cmdnbr))
 			return (0);
 		cmdnbr++;

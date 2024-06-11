@@ -3,16 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/31 11:29:43 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/04 10:54:09 by aljulien         ###   ########.fr       */
+/*   Created: 2024/05/08 19:49:30 by saperrie          #+#    #+#             */
+/*   Updated: 2024/06/11 17:25:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../inc/minishell.h"
-
-#if 0
 #include "minishell.h"
 
 // ================================ EXPAND_UTILS ==============================
@@ -47,8 +44,8 @@ static bool	is_env_var_name_format(char c)
 // 	if (!token_two || !*token_two)
 // 		return ;
 // }
-static void	true_expand(t_line *line)
-{
+//static void	true_expand(/*t_line *line*/)
+//{
 	// char	*var;
 	// char	*cpy;
 
@@ -61,7 +58,7 @@ static void	true_expand(t_line *line)
 	// if (!var)
 	// 	return ((void)printf("env_var not found"));
 	// ft_str_append(line->argv->node, var);
-}
+//}
 
 static bool	handle_dollar_sign(t_line *line)
 {
@@ -77,7 +74,7 @@ static bool	handle_dollar_sign(t_line *line)
 
 bool	expand(t_line *line)
 {
-	while (line->argv++)
+	while (line->argv)
 	{
 		while (*line->argv->node++)
 		{
@@ -89,5 +86,3 @@ bool	expand(t_line *line)
 	}
 	return (true);
 }
-
-#endif

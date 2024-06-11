@@ -12,17 +12,25 @@
 
 #include "../../inc/minishell.h"
 
-int	pwd(void)
+void	ft_pwd(char **av)
 {
 	char	*pwd;
 
-	pwd = NULL;
-	if (getcwd(pwd, sizeof(ft_strlen(pwd))))
+	if (av && av[0] && av[1] && (ft_strlen(av[1]) >= 2) && (ft_strncmp(av[1], "-", 1) == 0))
 	{
-		ft_putstr_fd("cannot get pwd, sorry :(\n", STDOUT_FILENO);
-		return (1);
+		av[1][2] = '\0';
+		ft_putstr_fd("minishell: pwd: ", 2);
+		ft_putstr_fd(av[1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		return ;
 	}
-	ft_putstr_fd(pwd, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
-	return (0);
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		perror("minishell: pwd");
+	else
+	{
+		ft_putstr_fd(pwd, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		free(pwd);
+	}
 }

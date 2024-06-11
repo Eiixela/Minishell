@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/07 13:06:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:23:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 #include <fcntl.h>
-
 
 enum e_TOKENS
 {
@@ -76,51 +75,52 @@ typedef struct s_line
 	t_argv			*argv;
 	t_argv			*argv_head;
 	t_pipe			*pipe;
+	t_pipe			*pipe_head;
 	char			**env;
 }	t_line;
-
-
 
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
-bool		lex(const char *input, t_line *line);
+bool		lex(char *input, t_line *line);
 bool		parse(t_line *line);
 
 // W_SPACE
 bool		is_white_space(char c);
-size_t	skip_white_spaces(const char **input);
+size_t		skip_white_spaces(char **input);
 // W_SPACE
 
 // QUOTES
-bool		quotes(const char *str);
-const char		*find_matching_quote(const char *str, char quote);
-bool		even_quotes(const char *str);
+char		*find_matching_quote(char *str, char quote);
+bool		even_quotes(char *str);
 // QUOTES
 
 // TOKENS_UTILS
 bool		is_quote(char c, char quote);
-const char	*skip_quote_content(const char *str, char quote);
+char		*skip_quote_content(char *str, char quote);
+bool		clean_surrounding_quotes(t_line *line);
 // TOKENS_UTILS
 
 // EXPANSION
 bool		expand(t_line *line);
 // EXPANSION
 
+// PARSING_UTILS
+size_t		ft_tablen(char **str);
+// bool		extract_node(t_line *line);
+// PARSING_UTILS
+
 // STRUCT
-t_line		*make_t_line_argv_node(const char *input, size_t len, t_line *line);
+t_line		*make_argv_node(char *input, size_t len, t_line *line);
+size_t		count_argv_nodes(t_line *line);
 // STRUCT
 
 // REDIRECTIONS
-bool		good_redirections(const char *str);
-const char		*bad_redirection(const char *str);
-bool		is_valid_fd_name(char c);
-char		is_redirection_operator(const char *str);
-char		skip_redirection_operator(const char **str);
-bool	clean_surrounding_quotes(t_line *line);
-
-bool	process_redir(t_line *line, char redir_operator);
+bool		process_redir(t_line *line, char redir_operator);
+char		is_redirection_operator(char *str);
+char		skip_redirection_operator(char **str);
+char		redirection_offset(char redir_operator);
 // REDIRECTIONS
 
 // =================================== PARSING ================================
@@ -128,7 +128,9 @@ bool	process_redir(t_line *line, char redir_operator);
 //====================================BUILTINS=================================
 
 int		ft_echo(char **arg);
-int		pwd(void);
+void	ft_pwd(char **av);
+void	ft_cd(char **av, char **env);
+void	ft_env(char **env);
 
 //====================================BUILTINS=================================
 
