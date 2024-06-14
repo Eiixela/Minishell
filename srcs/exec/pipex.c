@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/11 18:19:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/14 09:28:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,14 @@ static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
 static int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr)
 {
 	pipefd[0] = fork();
-	printf("%i\n\n", pipefd[0]);
+	fprintf(stderr, "\n%i\n", pipefd[1]);
 	if (pipefd[0] == -1)
 	{	
 		if (cmdnbr != 0)
 			close(pipefd[0]);
 		return (perror("minishell: fork"), 0);
 	}
-	else if (pipefd[1] == 0)
+	else if (pipefd[0] == 0)
 		_child_action(env, line, pipefd, cmdnbr);
 	// else if 
 	//	_parent_action(env, line, pipefd);
