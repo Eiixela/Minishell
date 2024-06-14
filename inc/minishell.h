@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/11 18:23:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:57:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_redir
 	// int				redir_index;
 	char			type;
 	char			*filename;
+	int				fd_in;
+	int				fd_out;
 	// struct s_redir	*next;
 	// struct s_redir	*prev;
 }	t_redir;
@@ -59,6 +61,8 @@ typedef struct s_pipe
 	t_redir			*redir;
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
+	int				save_stdin;
+	int				save_stdout;
 }	t_pipe;
 
 typedef struct s_argv
@@ -77,6 +81,7 @@ typedef struct s_line
 	t_pipe			*pipe;
 	t_pipe			*pipe_head;
 	char			**env;
+	int				return_val;
 }	t_line;
 
 // =================================== PARSING ================================
@@ -139,6 +144,12 @@ void	ft_env(char **env);
 int		pipex(char **env, t_line line);
 void	execute_cmd(char **env, char **cmd);
 char	*get_path(char *cmd, char **env, int i);
+
+int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr);
+int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr);
+int	parse_builtin(char **env, t_line line);
+int	open_file(t_line line, int in_or_out);
+void	exit_child(char **env, t_line line, size_t cmdnbr);
 
 // =================================== EXEC ================================
 

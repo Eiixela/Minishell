@@ -6,36 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/14 09:28:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:27:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	parse_builtin(char **env, t_line line)
-{
-
-	(void)env;
-	if (!ft_strcmp(line.pipe->arg[0], "echo"))
-		ft_echo(line.pipe->arg);
-	if (!ft_strcmp(line.pipe->arg[0], "cd"))
-		ft_cd(line.pipe->arg, env);
-	if (!ft_strcmp(line.pipe->arg[0], "pwd"))
-		ft_pwd(line.pipe->arg);
-	if (!ft_strcmp(line.pipe->arg[0], "export"))
-		printf("export\n");	//ft_export()
-	if (!ft_strcmp(line.pipe->arg[0], "unset"))
-		printf("unset\n");	//ft_unset()
-	if (!ft_strcmp(line.pipe->arg[0], "env"))
-		ft_env(env);
-	if (!ft_strcmp(line.pipe->arg[0], "exit"))
-		printf("exit\n");	//ft_exit
-	else 
-		return (0);
-	return (1);
-}
-
-static int	open_file(t_line line, int in_or_out)
+int	open_file(t_line line, int in_or_out)
 {
 	int	fd;
 
@@ -53,14 +30,14 @@ static int	open_file(t_line line, int in_or_out)
 		fd = open(line.pipe->redir->filename, O_RDONLY, 0777);
 		if (fd == -1)
 		{
-			ft_putstr_fd("cannot open or create outfile", 2);
+			ft_putstr_fd("cannot open or create infile", 2);
 			return (0);		
 		}
 	}
 	return (fd);
 }
 
-static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
+/* void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 {
 	int	fd_out = 0;
 	int	fd_in;
@@ -89,56 +66,35 @@ static void	_child_action(char **env, t_line line, int pipefd[2], int cmdnbr)
 		execute_cmd(env, line.pipe->arg);
 	if (cmdnbr != 0)
 		close (pipefd[0]);
-}
+} */
 
-static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
-{
-	pid_t	pid;
 
-	cmdnbr = 0;
-	if (pipe(pipefd) == -1)
-		return (perror("minishell: pipe "), 0);
-	pid = fork();
-	if (pid == -1)
-	{
-		return (perror("minishell: fork"), 0);
-	}
-	else if (pid == 0)
-		_child_action(env, line, pipefd, cmdnbr);
-	close(pipefd[1]);
-	close(pipefd[0]);
-	return (1);
-}
 
 //TODO parent action function and executon from parent if command is a builtins
-static int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr)
-{
-	pipefd[0] = fork();
-	fprintf(stderr, "\n%i\n", pipefd[1]);
-	if (pipefd[0] == -1)
-	{	
-		if (cmdnbr != 0)
-			close(pipefd[0]);
-		return (perror("minishell: fork"), 0);
-	}
-	else if (pipefd[0] == 0)
-		_child_action(env, line, pipefd, cmdnbr);
-	// else if 
-	//	_parent_action(env, line, pipefd);
-	return (1);
-}
-
+//TODO remove all cmdnbr, not useful anymore
+//TODO check whats to free in middle child
 static int	_call_childs(char **env, t_line line)
 {
 	size_t	cmdnbr;
 	int		pipefd[2];
 
 	cmdnbr = 0;
-	if (cmdnbr == 1)
+	if (line.pipe->next != NULL)
 	{
 		if(!first_child(env, pipefd, line, cmdnbr))
 			return (0);
+		line.pipe = line.pipe->next;
 		cmdnbr++;
+	}
+	while (line.pipe->next != NULL)
+	{
+		if (!middle_child())
+		{
+			while (wait(NULL) > 0)
+				;
+			return(0); //free des trucs ??
+		}
+		line.pipe = line.pipe->next;
 	}
 	last_child(env, pipefd, line, cmdnbr);
 	return (1);
@@ -146,7 +102,12 @@ static int	_call_childs(char **env, t_line line)
 
 int	pipex(char **env, t_line line)
 {
+	//heredoc
 	if(!_call_childs(env, line))
 		return (0);
+	while (1)
+		if (wait(NULL) <= 0)
+			break;
+	//free des trucs ??
 	return (1);
 } 
