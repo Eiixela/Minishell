@@ -6,34 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/14 09:28:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/18 11:37:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-static int	parse_builtin(char **env, t_line line)
-{
-
-	(void)env;
-	if (!ft_strcmp(line.pipe->arg[0], "echo"))
-		ft_echo(line.pipe->arg);
-	if (!ft_strcmp(line.pipe->arg[0], "cd"))
-		ft_cd(line.pipe->arg, env);
-	if (!ft_strcmp(line.pipe->arg[0], "pwd"))
-		ft_pwd(line.pipe->arg);
-	if (!ft_strcmp(line.pipe->arg[0], "export"))
-		printf("export\n");	//ft_export()
-	if (!ft_strcmp(line.pipe->arg[0], "unset"))
-		printf("unset\n");	//ft_unset()
-	if (!ft_strcmp(line.pipe->arg[0], "env"))
-		ft_env(env);
-	if (!ft_strcmp(line.pipe->arg[0], "exit"))
-		printf("exit\n");	//ft_exit
-	else 
-		return (0);
-	return (1);
-}
 
 static int	open_file(t_line line, int in_or_out)
 {
@@ -110,23 +87,7 @@ static int	first_child(char **env, int	pipefd[2], t_line line, size_t cmdnbr)
 	return (1);
 }
 
-//TODO parent action function and executon from parent if command is a builtins
-static int	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr)
-{
-	pipefd[0] = fork();
-	fprintf(stderr, "\n%i\n", pipefd[1]);
-	if (pipefd[0] == -1)
-	{	
-		if (cmdnbr != 0)
-			close(pipefd[0]);
-		return (perror("minishell: fork"), 0);
-	}
-	else if (pipefd[0] == 0)
-		_child_action(env, line, pipefd, cmdnbr);
-	// else if 
-	//	_parent_action(env, line, pipefd);
-	return (1);
-}
+
 
 static int	_call_childs(char **env, t_line line)
 {
@@ -134,7 +95,7 @@ static int	_call_childs(char **env, t_line line)
 	int		pipefd[2];
 
 	cmdnbr = 0;
-	if (cmdnbr == 1)
+	if (line.pipe->next != NULL)
 	{
 		if(!first_child(env, pipefd, line, cmdnbr))
 			return (0);
@@ -146,6 +107,7 @@ static int	_call_childs(char **env, t_line line)
 
 int	pipex(char **env, t_line line)
 {
+	fprintf(stderr, "\n exec : \n\n\n\n");
 	if(!_call_childs(env, line))
 		return (0);
 	return (1);

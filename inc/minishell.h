@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/11 18:23:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/18 12:35:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ enum e_REDIR_OPERATOR
 	OUT_REDIR,
 	APPEND,
 	HEREDOC,
+	NULLOS,
 };
 
 typedef struct s_redir
@@ -49,6 +50,10 @@ typedef struct s_redir
 	// int				redir_index;
 	char			type;
 	char			*filename;
+	int				saved_stdin;
+	int				saved_stdout;
+	int				fd_in;
+	int				fd_out;
 	// struct s_redir	*next;
 	// struct s_redir	*prev;
 }	t_redir;
@@ -139,6 +144,8 @@ void	ft_env(char **env);
 int		pipex(char **env, t_line line);
 void	execute_cmd(char **env, char **cmd);
 char	*get_path(char *cmd, char **env, int i);
+void	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr);
+int		parse_builtin(char **env, t_line line);
 
 // =================================== EXEC ================================
 

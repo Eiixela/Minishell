@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/11 13:57:56 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/18 11:29:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	ft_cd(char **av, char **env)
 		key = ft_strdup("OLDPWD");
 	}
 	else
-		fprintf(stderr, "free value in cd builtin");
+		fprintf(stderr, "free value in cd builtin\n");
 	key = ft_strdup("PWD");
 	value = getcwd(NULL, 0);
 	
