@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 10:02:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 13:17:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ bool		clean_surrounding_quotes(t_line *line);
 bool		expand(t_line *line);
 // EXPANSION
 
-// PARSING_UTILS
+// PARSING_UTILSout
 size_t		ft_tablen(char **str);
 // bool		extract_node(t_line *line);
 // PARSING_UTILS
