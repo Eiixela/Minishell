@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 00:07:21 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/11 17:26:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 09:54:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 static void	memcpy_skips_quotes(char *str, int *dst, int *src)
 {
-	char	quote = str[(*src)++];
+	char	quote;
 
+	quote = str[(*src)++];
 	while (str[*src] != quote && str[*src])
 	{
 	// printf("(%i) <- (%i) [%x]`%c'\n", *dst, *src, str[*src], str[*src]);
@@ -39,8 +40,6 @@ bool	clean_surrounding_quotes(t_line *line)
 		src = 0;
 		while (line->argv->node[dst] && line->argv->node)
 		{
-			if (line->argv->node[src] == '$')
-				line->argv->node[src] *= -1;
 			if (!line->argv->node[src])
 				line->argv->node[dst] = '\0';
 			else if (line->argv->node[src] == '"' \
@@ -52,7 +51,6 @@ bool	clean_surrounding_quotes(t_line *line)
 		// printf("\tclean%i: %s\n", line->argv->node_index, line->argv->node);
 		line->argv = line->argv->next;
 	}
-	write(1, "\n\n", 2);
 	return (true);
 }
 

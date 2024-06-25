@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/11 18:07:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 10:45:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ int	main (int ac, char **av, char **env)
 		{
 			add_history(str);
 			big_parse(&line, &str);
-			pipex(env, line);
+			printf("\n\n");
+			if (!pipex(env, line))
+				perror("execve");
 		}
 	}
 	clear_history();

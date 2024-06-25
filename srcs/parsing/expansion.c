@@ -6,83 +6,97 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:49:30 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/11 17:25:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 09:53:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// ================================ EXPAND_UTILS ==============================
-// handle_quote_dollar_sign(line);
-
-
-										/*|| == '`' || == '-'*/
-static bool	is_env_var_name_format(char c)
+static bool	is_valid_varname(char c)
 {
-	if (c == '_' || ft_isalnum((int)c))
+	if (ft_isalnum(c) || c == '_')
 		return (true);
 	return (false);
 }
 
-
-// IN PROGRESS
-// static void	split_tokens(t_line *line)
+// static char	*get_env_value(t_line *line, char *ptr, size_t name_len)
 // {
-// 	char	*subtoken;
-// 	char	*token_one;
-// 	char	*token_two;
+// 	int		match_found;
+// 	size_t	i;
+// 	char	*value;
 
-// 	subtoken = line->argv->node;
-// 	while (*subtoken && is_env_var_name_format(*subtoken))
-// 		subtoken += 1;
-// 	token_one = ft_substr(line->argv->node, 0, subtoken - line->argv->node);
-// 	if (!token_one || !*token_one)
-// 		return ;
-// 	while (*line->argv->node++)
-// 		;
-// 	token_two = ft_substr(subtoken, 0, line->argv->node - subtoken);
-// 	if (!token_two || !*token_two)
-// 		return ;
+// 	match_found = 0;
+// 	i = 0;
+// 	while (line->env[i] && !match_found)
+// 		match_found = ft_strncmp(ptr, line->env[i++], name_len);
+// 	if (match_found)
+// 		value = ft_strdup(line->env[i - 1]);
+// 	else
+// 		value = ft_calloc(1, 1);
+// 	if (value)
+// 		return (value);
+// 	return (NULL);
 // }
-//static void	true_expand(/*t_line *line*/)
-//{
-	// char	*var;
-	// char	*cpy;
 
-	// cpy = line->argv->node + 2;
-	// while (is_env_var_name_format(cpy))
-		// cpy++;
-	// if (!cpy || !*cpy)	?
-		// return (false); ?
-	// var = get_var_from_envp();
-	// if (!var)
-	// 	return ((void)printf("env_var not found"));
-	// ft_str_append(line->argv->node, var);
-//}
-
-static bool	handle_dollar_sign(t_line *line)
+static char	*handle_dollar(t_line *line, char *ptr)
 {
-	// line->argv->node += 1;
-	if ((*line->argv->node && !is_env_var_name_format(*(line->argv->node + 1)))
-		|| !*line->argv->node)
-		return (false);
-	// line->argv->node += 1;
-	// true_expand(line);
-	return (false);
+	char	*s1;
+	char	*name;
+	char	*tmp;
+	char	*value;
+	char	*rest;
+	char	*new_node;
+	size_t	name_len;
+
+	name_len = 0;
+	s1 = NULL;
+	if (*ptr != *line->argv->node)
+		s1 = ft_substr(line->argv->node, 0, ptr - line->argv->node);
+	tmp = ptr + 1;
+	while (is_valid_varname(*(tmp++)))
+		name_len++;
+	name = ft_substr(ptr, 1, name_len);
+	printf("		NAME:%s\n", name);
+	if (!name)
+		return (NULL);
+	value = getenv(name);
+	printf("		VALUE:%s\n", value);
+	if (!value)
+		return (NULL);
+	if (name)
+		free(name);
+	rest = ft_strdup(&line->argv->node[name_len + 2]);
+	if (!rest)
+		return (NULL);
+	if (s1)
+		new_node = ft_strjoin(s1, ft_strjoin(value, rest));
+	else
+		new_node = ft_strjoin(value, rest);
+	if (!new_node)
+		return (NULL);
+	free(line->argv->node);
+	line->argv->node = new_node;
+	return (tmp);
 }
-// ================================ EXPAND_UTILS ==============================
 
 bool	expand(t_line *line)
 {
+	char	*ptr;
+
+	line->argv = line->argv_head;
 	while (line->argv)
 	{
-		while (*line->argv->node++)
+		ptr = line->argv->node;
+		while (*ptr)
 		{
-			if (*line->argv->node == '$')
-				if (!handle_dollar_sign(line))
-					return (false);
+			if (*ptr == '$')
+				ptr = handle_dollar(line, ptr);
+			if (!ptr)
+				return (false);
+			ptr += 1;
 		}
-		line->argv->node += 1;
+		line->argv = line->argv->next;
 	}
 	return (true);
 }
+

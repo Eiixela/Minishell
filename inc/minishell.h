@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/18 12:35:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 10:02:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,22 @@ enum e_REDIR_OPERATOR
 	OUT_REDIR,
 	APPEND,
 	HEREDOC,
-	NULLOS,
 };
 
 typedef struct s_redir
 {
 	// int				redir_index;
 	char			type;
-	char			*filename;
-	int				saved_stdin;
-	int				saved_stdout;
-	int				fd_in;
-	int				fd_out;
-	// struct s_redir	*next;
-	// struct s_redir	*prev;
+	char			*fd;
+	struct s_redir	*next;
+	struct s_redir	*prev;
 }	t_redir;
 
 typedef struct s_pipe
 {
 	char			**arg;
 	t_redir			*redir;
+	t_redir			*redir_head;
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
 }	t_pipe;
@@ -85,7 +81,6 @@ typedef struct s_line
 }	t_line;
 
 // =================================== PARSING ================================
-
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
 bool		lex(char *input, t_line *line);
@@ -122,7 +117,9 @@ size_t		count_argv_nodes(t_line *line);
 // STRUCT
 
 // REDIRECTIONS
-bool		process_redir(t_line *line, char redir_operator);
+bool		handle_redir(t_line *line, char	*first_redirection);
+bool		process_redir(t_line *line, char redir_operator, \
+	char *first_redirection);
 char		is_redirection_operator(char *str);
 char		skip_redirection_operator(char **str);
 char		redirection_offset(char redir_operator);
@@ -142,9 +139,8 @@ void	ft_env(char **env);
 // =================================== EXEC ================================
 
 int		pipex(char **env, t_line line);
-void	execute_cmd(char **env, char **cmd);
+int	execute_cmd(char **env, char **cmd);
 char	*get_path(char *cmd, char **env, int i);
-void	last_child(char **env, int pipefd[2], t_line line, size_t cmdnbr);
 int		parse_builtin(char **env, t_line line);
 
 // =================================== EXEC ================================

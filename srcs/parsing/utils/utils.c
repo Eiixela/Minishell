@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 22:10:09 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/11 17:26:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 09:54:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*skip_quote_content(char *str, char quote)
 	{
 		if (*str == '|')
 			*str *= -1;
-		if (quote == '"' && *str == '$')
+		if (quote == '\'' && *str == '$')
 			*str *= -1;
 		str++;
 	}

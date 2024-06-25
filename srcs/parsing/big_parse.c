@@ -6,11 +6,10 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/11 17:25:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 09:53:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 // if heredoc limiter contains quote : cat << "H"D
@@ -29,7 +28,8 @@ static	bool	dirty_redir(char *str)
 				return (ft_putstr_fd \
 			("syntax error near unexpected token `newline'\n", 2), false);
 		}
-		str += 1;
+		else
+			str += 1;
 	}
 	return (true);
 }
@@ -69,14 +69,14 @@ bool	big_parse(t_line *line, char **input)
 		printf("GOOD_LEX\n");
 	else
 		return (printf("BAD_LEX\n"), false);
+	if (expand(line))
+		printf("GOOD_EXPAND\n");
+	else
+		return (printf(">:(\n"), false);
 	if (parse(line))
 		printf("GOOD_PARSE\n");
 	else
 		return (printf("BAD_PARSE\n"), false);
-	// if (expand(line))
-	// 	printf("CHA CHING\nargc = %i\n", line->argc);
-	// else
-	// 	return (printf(">:(\n"), false);
 	// check_path(intput);
 	return (true);
 }
