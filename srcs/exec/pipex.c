@@ -6,69 +6,89 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 12:48:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 13:07:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-
-static int create_process(char **env, t_pipe *pipe_node, int input_fd, int output_fd)
+static int	first_child(char **env, t_line line, pid_t pid, int pipe_fd[2])
 {
-    pid_t pid = fork();
-    if (pid == -1)
-        return (perror("fork"), 0);
-    if (pid == 0)
-    {
-        if (input_fd != 0)
-        {
-            dup2(input_fd, 0);
-            close(input_fd);
-        }
-        if (output_fd != 1)
-        {
-            dup2(output_fd, 1);
-            close(output_fd);
-        }
-        if (!execute_cmd(env, pipe_node->arg))
-            exit(EXIT_FAILURE);
-    }
-    return pid;
+	pid = fork();
+	//pid error
+	if (pid == 0)
+	{
+		dup2(pipe_fd[1], 1);
+		close(pipe_fd[0]);
+		if (!execute_cmd(env, line.pipe->arg))
+			return (0);
+	}
+	return (1);
 }
 
-static int _call_childs(char **env, t_line line)
+static int	last_child(char **env, t_line line, pid_t pid, int pipe_fd[2])
 {
-    int		pipe_fd[2];
-    int		input_fd;
-    int 	status;
-    t_pipe	*current;
-    pid_t	pid;
+	pid = fork();
+	//pid_error
+	if (pid == 0)
+	{
+ 		dup2(pipe_fd[0], 0);
+		close(pipe_fd[1]);
+		if (!execute_cmd(env, line.pipe->arg))
+			return (0);
+	}
+	return (1);
+}
 
-	input_fd = 0;
-	current = line.pipe;
-   while (current != NULL)
-    {
-        if (current->next != NULL)
-        {
-            if (pipe(pipe_fd) == -1)
-                return (perror("pipe"), 0);
-            pid = create_process(env, current, input_fd, pipe_fd[1]);
-            close(pipe_fd[1]);
-            if (input_fd != 0)
-                close(input_fd);
-            input_fd = pipe_fd[0];
-        }
-        else
-        {
-            pid = create_process(env, current, input_fd, 1);
-            if (input_fd != 0)
-                close(input_fd);
-        }
-        current = current->next;
-    }
-    while (wait(&status) > 0)
-        ;
-    return (1);
+static int	middle_child(char **env, t_line line, int pipe_fd[2], pid_t pid)
+{
+	pid = fork();
+	//pid error
+	if (pid == 0)
+	{
+		dup2(pipe_fd[0], 0);
+		close (pipe_fd[1]);
+		if (!execute_cmd(env, line.pipe->arg))
+			return (0);
+	}
+	return (1);
+}
+
+static int	_call_childs(char **env, t_line line)
+{
+	int		pipe_fd[2];
+	pid_t	pid_first_child;
+	pid_t	pid_middle_child;
+	pid_t	pid_last_child;
+	int		status;
+	
+	pid_first_child = 0;
+	pid_middle_child = 0;
+	pid_last_child = 0;
+	if (line.pipe->next != NULL)
+	{
+		if (pipe(pipe_fd) == -1)
+			return (perror("pipe"), 0);
+		if (!first_child(env, line, pid_first_child, pipe_fd))
+			return (0);
+	}
+	if (line.pipe->next != NULL)
+		line.pipe = line.pipe->next;
+	if (line.pipe->next != NULL)
+	{
+		while(line.pipe->next && line.pipe->next != NULL)
+		{
+			if (!middle_child(env, line, pipe_fd, pid_middle_child))
+				return (0);
+			line.pipe = line.pipe->next;
+		}
+	}
+	if (!last_child(env, line, pid_last_child, pipe_fd))
+		return (0);
+	waitpid(pid_first_child, &status, 0);
+	waitpid(pid_middle_child, &status, 0);
+	waitpid(pid_last_child, &status, 0);
+	return (1);
 }
 
 int	pipex(char **env, t_line line)
