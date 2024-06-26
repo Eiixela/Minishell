@@ -1,15 +1,19 @@
+
+
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   big_parse.c                                        :+:      :+:    :+:   */
+/*   1_big_parse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/25 09:53:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/24 21:58:45 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 
 // if heredoc limiter contains quote : cat << "H"D

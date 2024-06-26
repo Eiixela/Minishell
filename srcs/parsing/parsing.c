@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/25 09:53:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 16:05:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ bool	handle_redir(t_line *line, char	*first_redirection)
 	else if (operator == HEREDOC && process_redir(line, HEREDOC, first_redirection))
 		printf("\ttype: <<\n");
 	else
-		return (0);
-	return (1);
+		return (false);
+	return (true);
 }
 
 static	bool	handle_pipe(t_line *line, char *first_redirection)
@@ -95,8 +95,8 @@ bool	parse(t_line *line)
 
 	first_redirection = 0;
 	line->argv = line->argv_head;
-	if (!clean_surrounding_quotes(line))
-		return (printf("clean_quotes_failed\n"), false);
+	// if (!clean_surrounding_quotes(line))
+	// 	return (printf("clean_quotes_failed\n"), false);
 	line->argv = line->argv_head;
 	if (!tag_tokens(line, &first_redirection))
 		return (false);

@@ -6,12 +6,27 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 15:20:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:11:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+static int  redir_append(t_pipe *pipe)
+{
+    int fd_file_append;
+
+    if (pipe->redir->fd)
+    {
+        fd_file_append = open(pipe->redir->fd, O_WRONLY | O_APPEND | O_CREAT, 0777);
+        if (fd_file_append == -1)
+            return (0);
+        if (dup2(fd_file_append, STDOUT_FILENO) == -1)
+            return (0);
+        close(fd_file_append);
+    }
+    return (1);
+}
 
 static int	redirection_in_pipe(t_pipe *pipe)
 {
@@ -21,6 +36,9 @@ static int	redirection_in_pipe(t_pipe *pipe)
     current_redir = pipe->redir;
     while (current_redir != NULL)
     {
+        if (current_redir->type == APPEND)
+            if(!redir_append(pipe))
+                return (perror("append function"), 0);
         if (current_redir->type == OUT_REDIR)
         {
             fd = open(current_redir->fd, O_WRONLY | O_CREAT | O_TRUNC, 0777);

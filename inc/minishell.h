@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 13:17:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/25 16:05:31 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@
 # include <sys/stat.h>
 #include <fcntl.h>
 
+enum e_EXPAND_CASES
+{
+	NO_VALUE,
+	PRINT_DOLLAR,
+	SINGLE_VALUE,
+	VALUE_REST,
+	S1_VALUE,
+	S1_S2,
+};
+
 enum e_TOKENS
 {
 	CMD,
@@ -46,7 +56,6 @@ enum e_REDIR_OPERATOR
 
 typedef struct s_redir
 {
-	// int				redir_index;
 	char			type;
 	char			*fd;
 	struct s_redir	*next;
@@ -81,6 +90,7 @@ typedef struct s_line
 }	t_line;
 
 // =================================== PARSING ================================
+
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
 bool		lex(char *input, t_line *line);
@@ -106,7 +116,7 @@ bool		clean_surrounding_quotes(t_line *line);
 bool		expand(t_line *line);
 // EXPANSION
 
-// PARSING_UTILSout
+// PARSING_UTILS
 size_t		ft_tablen(char **str);
 // bool		extract_node(t_line *line);
 // PARSING_UTILS
