@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 10:02:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:46:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	execute_cmd(char **env, char **cmd)
 		fprintf(stderr, "minishell: %s: command not found\n", cmd[0]);
 		return (0);
 	}
-
+	
 	if (execve(path, cmd, env) == -1)
 	{
 		perror("execve");

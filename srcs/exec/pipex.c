@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/26 17:11:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/26 18:00:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,10 @@ static int create_process(char **env, t_pipe *pipe_node, int input_fd, int outpu
             if (!redirection_in_pipe(pipe_node))
                 exit(EXIT_FAILURE);
         }
-        if (!execute_cmd(env, pipe_node->arg))
-            exit(EXIT_FAILURE);
+        if (!parse_builtin(env, pipe_node))
+            if (!execute_cmd(env, pipe_node->arg))
+                exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
     }
     return (pid);
 }

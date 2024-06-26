@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/25 16:02:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:38:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,13 @@ int	main (int ac, char **av, char **env)
 		if (str && *str)
 		{
 			add_history(str);
-			big_parse(&line, &str);
-			printf("\n");
-			if (!pipex(env, line))
-				perror("execve");
-			printf("\n");
+			if (big_parse(&line, &str) == true)
+			{
+				printf("\n");
+				if (!pipex(env, line))
+					perror("execve");
+				printf("\n");
+			}	
 		}
 	}
 	clear_history();

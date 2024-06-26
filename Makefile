@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/06/26 17:18:22 by aljulien         ###   ########.fr        #
+#    Updated: 2024/06/26 17:53:24 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,3 +81,4 @@ fclean: clean
 .PHONY: re
 re: fclean
 	@make --no-print-directory all
+

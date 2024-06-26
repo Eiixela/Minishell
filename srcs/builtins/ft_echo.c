@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 17:18:07 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/17 16:37:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:59:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static int	count_nb_arg(char **arg)
 //function return 0 if all went well, 1 if problems occured
 int	ft_echo(char **arg)
 {
+	printf("Entering ft_echo\n");
 	int	indice_flag;
 	int	i;
 
@@ -60,5 +61,6 @@ int	ft_echo(char **arg)
 	}
 	if (indice_flag == 0)
 		write(1, "\n", 1);
+	printf("Exiting ft_echo\n");
 	return (0);
 }
