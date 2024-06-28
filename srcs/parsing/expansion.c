@@ -6,17 +6,28 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:49:30 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/25 16:04:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 09:51:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static size_t	_strlen(char const *str)
+{
+	size_t	string_length;
+
+	string_length = 0;
+	if (!str)
+		return (0);
+	while (str[string_length])
+		string_length++;
+	return (string_length);
+}
+
 static bool	is_valid_varname(char c)
 {
 	if (ft_isalnum(c) || c == '_')
 		return (true);
-	printf("c:%c\n", c);
 	return (false);
 }
 
@@ -46,18 +57,18 @@ static	char	*get_new_node(char *s1, char *value, char *rest)
 	return (ft_strjoin(value, rest));
 }
 
-static	size_t	get_name_length(char *tmp)
-{
-	size_t	length;
+// static	size_t	get_name_length(char *tmp)
+// {
+// 	size_t	length;
 
-	length = 0;
-	while (is_valid_varname(*tmp))
-	{
-		length += 1;
-		tmp += 1;
-	}
-	return (length);
-}
+// 	length = 0;
+// 	while (is_valid_varname(*++tmp))
+// 	{
+// 		length += 1;
+// 		// tmp += 1;
+// 	}
+// 	return (length);
+// }
 
 static char	*get_s1_for_strjoin(t_line *line, char *ptr)
 {
@@ -77,8 +88,12 @@ static char	*handle_dollar(t_line *line, char *ptr, char *tmp, char *new_node)
 	char	*rest;
 	size_t	name_len;
 
+	name_len = 0;
 	s1 = get_s1_for_strjoin(line, ptr);
-	name_len = get_name_length(tmp);
+	tmp = ptr;
+	while (is_valid_varname(*(++tmp)))
+		name_len += 1;
+	// name_len = get_name_length(tmp);
 	name = ft_substr(ptr, 1, name_len);
 	// printf("		NAME: %s\n", name);
 	if (!name)
@@ -89,7 +104,7 @@ static char	*handle_dollar(t_line *line, char *ptr, char *tmp, char *new_node)
 		return (NULL);
 	if (name)
 		free(name);
-	rest = ft_strdup(&line->argv->node[name_len + ft_strlen(s1) + 1]);
+	rest = ft_strdup(&line->argv->node[name_len + _strlen(s1) + 1]);
 	if (!rest)
 		return (NULL);
 	// printf("		REST: %s\n", rest);
@@ -108,12 +123,13 @@ bool	expand(t_line *line)
 	char	*tmp;
 	char	*new_node;
 
+	tmp = NULL;
 	new_node = NULL;
 	line->argv = line->argv_head;
 	while (line->argv)
 	{
 		ptr = line->argv->node;
-		tmp = ptr;
+		// tmp = ptr;
 		while (*ptr)
 		{
 			if (*ptr == '$')
