@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/18 11:29:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 14:18:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,57 +35,68 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-static	char	*get_value_by_key(char *key, char **env)
+static char *get_value_by_key(const char *key, char **env)
 {
-	int	i;
+    int i = 0;
+    size_t key_len = strlen(key);
 
-	i = 0;
-	while(env)
-	{
-		if (strncmp(env[i], key, 4))
-			return (env[i]);
-		i++;
-	}
-	return (NULL);
+    while (env && env[i])
+    {
+        if (strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
+            return env[i] + key_len + 1;
+        i++;
+    }
+    return NULL;
 }
 
-static	void _cd_with_arg(char **av)
+void update_pwd(char **env)
 {
-	int	r;
+    char *oldpwd = get_value_by_key("PWD", env);
+    char *new_pwd = getcwd(NULL, 0);
 
-	if(av && av[1] && av[2])
-	{
-		r = chdir(av[2]);
-		if (r == -1)
-		{
-			ft_putstr_fd("minishell: cd: ", 2);
-			perror(av[2]);
-		}
-	}
+    if (oldpwd)
+    {
+        // Here you would set the environment variable OLDPWD
+        setenv("OLDPWD", oldpwd, 1);
+    }
+    // Set the environment variable PWD
+    setenv("PWD", new_pwd, 1);
+    free(new_pwd);
 }
 
-static void	_cd_without_arg(char **env)
+static void _cd_with_arg(char **av, char **env)
 {
-	char	*err_str;
-	char	*home;
-	int		r;
-
-	home = get_value_by_key("HOME", env);
-	if (!home)
-	{
-		ft_putstr_fd("minishelll: cd: HOME not set\n", 2);
-		return ;
-	}
-	r = chdir(home);
-	if (r == -1)
-	{
-		err_str = ft_strjoin("minishell: cd:", home);
-		if (!err_str)
-			return ; //exit et free
-		perror(err_str);
-		free(err_str);
-	}
+    if (av && av[1])
+    {
+        if (chdir(av[1]) == -1)
+        {
+            perror("minishell: cd");
+        }
+        else
+        {
+            update_pwd(env);
+        }
+    }
 }
+
+static void _cd_without_arg(char **env)
+{
+    char *home = get_value_by_key("HOME", env);
+    if (!home)
+    {
+        ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+        return;
+    }
+    if (chdir(home) == -1)
+    {
+        perror("minishell: cd");
+    }
+    else
+    {
+        update_pwd(env);
+    }
+}
+
 
 void	ft_cd(char **av, char **env)
 {
@@ -98,12 +109,10 @@ void	ft_cd(char **av, char **env)
 	if (av && av[0] && !av[1])
 		_cd_without_arg(env);
 	else
-		_cd_with_arg(av);
+		_cd_with_arg(av, env);
 	cwd = getcwd(NULL, 0);
 	if (ft_strcmp(cwd, value) != 0)
-	{
 		key = ft_strdup("OLDPWD");
-	}
 	else
 		fprintf(stderr, "free value in cd builtin\n");
 	key = ft_strdup("PWD");

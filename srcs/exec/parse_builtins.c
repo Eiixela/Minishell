@@ -6,29 +6,28 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/26 17:47:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:03:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	parse_builtin(char **env, t_pipe *pipe)
-{ 
+int	parse_builtin (t_pipe *pipe)
+{
 	if (!ft_strcmp(pipe->arg[0], "echo"))
-		ft_echo(pipe->arg);
-	if (!ft_strcmp(pipe->arg[0], "cd"))
-		ft_cd(pipe->arg, env);
-	if (!ft_strcmp(pipe->arg[0], "pwd"))
-		ft_pwd(pipe->arg);
-	if (!ft_strcmp(pipe->arg[0], "export"))
-		printf("export\n");	//ft_export()
-	if (!ft_strcmp(pipe->arg[0], "unset"))
-		printf("unset\n");	//ft_unset()
-	if (!ft_strcmp(pipe->arg[0], "env"))
-		ft_env(env);
-	if (!ft_strcmp(pipe->arg[0], "exit"))
-		printf("exit\n");	//ft_exit
-	else 
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "cd"))
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "pwd"))
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "export"))
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "unset"))
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "env"))
+		return (1);
+	else if (!ft_strcmp(pipe->arg[0], "exit"))
+		return (1);
+	else
 		return (0);
-	return (1);
 }

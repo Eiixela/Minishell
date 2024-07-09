@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/28 09:51:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:39:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static bool	tag_arg(t_line *line)
 		return (false);
 	ft_memcpy(line->pipe->arg, cpy, tablen * sizeof(char *));
 	line->pipe->arg[tablen] = line->argv->node;
-	printf("\t     ARG: %s\n", line->argv->node);
 	return (true);
 }
 
@@ -36,11 +35,11 @@ bool	handle_redir(t_line *line, char	*first_redirection)
 
 	operator = is_redirection_operator((line->argv->node));
 	if (operator == IN_REDIR && process_redir(line, IN_REDIR, first_redirection))
-		printf("\ttype: <\n");
+		;
 	else if (operator == OUT_REDIR && process_redir(line, OUT_REDIR, first_redirection))
-		printf("\ttype: >\n");
+		;
 	else if (operator == APPEND && process_redir(line, APPEND, first_redirection))
-		printf("\ttype: >>\n");
+		;
 	else if (operator == HEREDOC && process_redir(line, HEREDOC, first_redirection))
 		printf("\ttype: <<\n");
 	else
@@ -56,7 +55,6 @@ static	bool	handle_pipe(t_line *line, char *first_redirection)
 	line->pipe->next->prev = line->pipe;
 	line->pipe = line->pipe->next;
 	*first_redirection = 0;
-	printf("PIPE\n");
 	return (true);
 }
 
@@ -95,8 +93,8 @@ bool	parse(t_line *line)
 
 	first_redirection = 0;
 	line->argv = line->argv_head;
-	// if (!clean_surrounding_quotes(line))
-	// 	return (printf("clean_quotes_failed\n"), false);
+	if (!clean_surrounding_quotes(line))
+		return (false);
 	line->argv = line->argv_head;
 	if (!tag_tokens(line, &first_redirection))
 		return (false);

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:08:18 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/25 09:53:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:26:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static char	*fill_argv(char *input, t_line *line, size_t token_len)
 	line = make_argv_node(input, token_len, line);
 	if (!line || !line->argv)
 		return (NULL);
-	printf("\tAV%i: %s\n", line->argv->node_index, line->argv->node);
 	return (input);
 }
 
@@ -66,7 +65,7 @@ static char	*tokenise(char *ptr, t_line *line)
 	if (skip_redirection_operator(&cpy))
 		skip_white_spaces(&cpy);
 	if (is_redirection_operator(cpy))
-		return (printf("redir into %c\n", *cpy), NULL);
+		return (NULL);
 	while (*cpy && !is_white_space(*cpy) && !is_redirection_operator(cpy) \
 		&& *cpy != '|')
 	{
@@ -118,6 +117,6 @@ static bool	make_tokens(char *input, t_line *line)
 bool	lex(char *input, t_line *line)
 {
 	if (!make_tokens(input, line))
-		return (printf("BAD_TOKEN\n"), false);
+		return (false);
 	return (true);
 }

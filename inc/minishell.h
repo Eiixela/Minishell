@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/26 17:49:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:23:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,10 @@ void	ft_env(char **env);
 
 // =================================== EXEC ================================
 
-int		pipex(char **env, t_line line);
-int		execute_cmd(char **env, char **cmd);
+int		pipex(char **env, t_line *line);
+int		execute_cmd(char **env, t_pipe *pipe);
 char	*get_path(char *cmd, char **env, int i);
-int		parse_builtin(char **env, t_pipe *pipe);
+int		parse_builtin(t_pipe *pipe);
 
 // =================================== EXEC ================================
 

@@ -6,32 +6,53 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/26 17:46:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:35:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	execute_cmd(char **env, char **cmd) 
+static int	execute_builtins(char **env, t_pipe *pipe)
+{
+	if (!ft_strcmp(pipe->arg[0], "echo"))
+		return(ft_echo(pipe->arg), 0);
+ 	if (!ft_strcmp(pipe->arg[0], "cd"))
+		return(ft_cd(pipe->arg, env), 0);
+	if (!ft_strcmp(pipe->arg[0], "pwd"))
+		return (ft_pwd(pipe->arg), 0);
+	if (!ft_strcmp(pipe->arg[0], "export"))
+		return (printf("export\n"), 0); //ft_export()
+	if (!ft_strcmp(pipe->arg[0], "unset"))
+		return (printf("unset\n"), 0); //ft_unset()
+	if (!ft_strcmp(pipe->arg[0], "env"))
+		return (ft_env(env), 0);
+	if (!ft_strcmp(pipe->arg[0], "exit"))
+		return (printf("exit\n"), 0); //ft_exit
+	else
+		return (1);
+	return (0);
+}
+
+int	execute_cmd(char **env, t_pipe *pipe)
 {
 	char	*path;
-	
-	if (!cmd || !cmd[0]) 
+
+	path = NULL;
+	if (!pipe->arg || !pipe->arg[0])
+		return (ft_putstr_fd("minishell: command not found\n", 2), 0);
+	if (execute_builtins(env, pipe) == 1)
 	{
-		ft_putstr_fd("minishell: command not found\n", 2);
-		return (0);
-	}
-	path = get_path(cmd[0], env, -1);
-	if (!path) 
-	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd[0]);
-		return (0);
-	}
-	
-	if (execve(path, cmd, env) == -1)
-	{
-		perror("execve");
-		return (0);
+		path = get_path(pipe->arg[0], env, -1);
+		if (path == NULL)
+		{
+			fprintf(stderr, "minishell: %s: no such file or directory\n", pipe->arg[0]);
+			return (0);
+		}
+		if (execve(path, pipe->arg, env) == -1)
+		{
+			fprintf(stderr, "\nHere!\n");
+			return (perror("execve"), 0);
+		}
 	}
 	return (1);
 }

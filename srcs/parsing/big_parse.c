@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/28 09:52:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:39:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,21 @@ bool	big_parse(t_line *line, char **input)
 		return (false);
 	str = *input;
 	if (clean_input((char **)&str))
-		write(1, "CLEAN_INPUT\n", 12);
+		;
 	else
-		return (write(1, "BAD_INPUT\n", 10), false);
+		return (false);
 	if (lex((char *)str, line))
-		printf("GOOD_LEX\n");
+		;
 	else
-		return (printf("BAD_LEX\n"), false);
+		return (false);
 	if (expand(line))
-		printf("GOOD_EXPAND\n");
+		;
 	else
-		return (printf(">:(\n"), false);
+		return (false);
 	if (parse(line))
-		printf("GOOD_PARSE\n");
+		;
 	else
-		return (printf("BAD_PARSE\n"), false);
+		return (false);
 	// check_path(intput);
 	return (true);
 }
