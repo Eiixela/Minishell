@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/28 16:01:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:07:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ static	int	_call_childs(char **env, t_line *line)
 	t_pipe	*current;
 	pid_t	pid;
 
+	(void)pid;
 	current = line->pipe;
 	input_fd = 0;
 	while (current != NULL)

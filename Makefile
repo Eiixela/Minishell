@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/06/26 17:53:24 by aljulien         ###   ########.fr        #
+#    Updated: 2024/07/12 09:11:19 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3 
 IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 DFLAGS = -MMD -MP
 LFLAGS = -L$(LIBFT_DIR) -lft -lreadline

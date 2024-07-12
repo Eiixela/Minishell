@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/28 14:18:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:07:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	ft_cd(char **av, char **env)
 	char	*key;
 	char	*value;
 
+    (void)key;
 	(void)av;
 	value = getcwd(NULL, 0);
 	if (av && av[0] && !av[1])
@@ -111,7 +112,7 @@ void	ft_cd(char **av, char **env)
 	else
 		_cd_with_arg(av, env);
 	cwd = getcwd(NULL, 0);
-	if (ft_strcmp(cwd, value) != 0)
+	if (ft_strncmp(cwd, value, 100) != 0)
 		key = ft_strdup("OLDPWD");
 	else
 		fprintf(stderr, "free value in cd builtin\n");
