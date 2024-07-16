@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/28 15:23:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:40:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
-#include <fcntl.h>
+# include <fcntl.h>
+
+#define EXIT_SHELL 42
+
+extern int	g_ret;
 
 enum e_EXPAND_CASES
 {
@@ -87,6 +91,7 @@ typedef struct s_line
 	t_pipe			*pipe;
 	t_pipe			*pipe_head;
 	char			**env;
+	int				nm_arg;
 }	t_line;
 
 // =================================== PARSING ================================
@@ -143,6 +148,7 @@ int		ft_echo(char **arg);
 void	ft_pwd(char **av);
 void	ft_cd(char **av, char **env);
 void	ft_env(char **env);
+int	ft_exit (t_pipe *pipe);
 
 //====================================BUILTINS=================================
 
@@ -152,12 +158,13 @@ int		pipex(char **env, t_line *line);
 int		execute_cmd(char **env, t_pipe *pipe);
 char	*get_path(char *cmd, char **env, int i);
 int		parse_builtin(t_pipe *pipe);
+void	handle_exit_status_child(t_line *line, int status);
 
 // =================================== EXEC ================================
 
 
 //====================================OTHERS===================================
-void	ft_putstr_fd(char *s, int fd);
+int	ft_putstr_fd(char *s, int fd);
 
 
 

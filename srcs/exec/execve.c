@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/28 15:35:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:08:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	execute_builtins(char **env, t_pipe *pipe)
 	if (!ft_strcmp(pipe->arg[0], "env"))
 		return (ft_env(env), 0);
 	if (!ft_strcmp(pipe->arg[0], "exit"))
-		return (printf("exit\n"), 0); //ft_exit
+		return (ft_exit(pipe), 0);
 	else
 		return (1);
 	return (0);
@@ -46,13 +46,13 @@ int	execute_cmd(char **env, t_pipe *pipe)
 		if (path == NULL)
 		{
 			fprintf(stderr, "minishell: %s: no such file or directory\n", pipe->arg[0]);
-			return (0);
+			exit(127);
 		}
 		if (execve(path, pipe->arg, env) == -1)
 		{
-			fprintf(stderr, "\nHere!\n");
-			return (perror("execve"), 0);
+			perror("execve");
+			exit(126);
 		}
 	}
-	return (1);
+	return (0);
 }

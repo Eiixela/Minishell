@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/28 15:39:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:54:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,12 @@ static	bool	tag_tokens(t_line *line, char	*first_redirection)
 	line->pipe_head = line->pipe;
 	line->pipe->prev = NULL;
 	line->pipe->next = NULL;
+	line->nm_arg = 1;
 	while (line->argv)
 	{
 		if (*line->argv->node == '|')
 		{
+			line->nm_arg++;
 			if (!handle_pipe(line, first_redirection))
 				return (false);
 		}

@@ -6,23 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 17:18:07 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/28 13:53:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:40:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		write (fd, &s[i], 1);
-		i++;
-	}
-}
 
 static int	count_nb_arg(char **arg)
 {
@@ -52,7 +40,8 @@ int	ft_echo(char **arg)
 		}
 		while (arg[i])
 		{
-			ft_putstr_fd(arg[i], 1);
+			if (ft_putstr_fd(arg[i], 1) == 1)
+				exit(2);
 			if (arg[i + 1] && arg[i][0] != '\0')
 				write (1, " ", 1);
 			i++;

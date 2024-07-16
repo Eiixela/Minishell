@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/12 09:07:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:57:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	redirection_in_pipe(t_pipe *pipe)
 static int	create_process(char **env, t_pipe *pipe_node, int input_fd, int output_fd)
 {
 	pid_t	pid;
-	
+
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 0);
@@ -104,11 +104,9 @@ static int	create_process(char **env, t_pipe *pipe_node, int input_fd, int outpu
 			if (!redirection_in_pipe(pipe_node))
 				exit(EXIT_FAILURE);
 		}
-		if (!execute_cmd(env, pipe_node))
-		{
-			exit(EXIT_FAILURE);
-		}
-		exit(EXIT_SUCCESS);
+		if (execute_cmd(env, pipe_node))
+				exit(g_ret); 
+		exit(g_ret);
 	}
 	return (pid);
 }
@@ -145,13 +143,19 @@ static	int	_call_childs(char **env, t_line *line)
 		current = current->next;
 	}
 	while (wait(&status) > 0)
-		;
+	{
+		handle_exit_status_child(line, status);
+	}
 	return (1);
 }
 
 int	pipex(char **env, t_line *line)
 {
 	if (!_call_childs(env, line))
+	{
+		printf("exit_status = %i\n", g_ret);
 		return (0);
+	}
+	printf("exit_status = %i\n", g_ret);
 	return (1);
 }
