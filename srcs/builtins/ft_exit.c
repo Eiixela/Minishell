@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 14:52:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:54:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 {
 	(void)pipe;
-	rl_clear_history();
+	clear_history();
 	/* if (y && (*lst) && (*lst)->env)
 		env_freelst(&(*lst)->env);
 	if (lst && (*lst))
@@ -54,11 +54,11 @@ static bool	not_num(char *str)
 	size_t	i;
 
 	i = 0;
-	if (isdigit(str[i]) || str[i] == '+' || str[i] == '-')
+	if (ft_isdigit(str[i]) || str[i] == '+' || str[i] == '-')
 		i++;
 	while (str[i])
 	{
-		if (!isdigit(str[i]))
+		if (!ft_isdigit(str[i]))
 			return (false);
 		i++;
 	}

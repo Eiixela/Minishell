@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/10 10:25:02 by aljulien          #+#    #+#              #
-#    Updated: 2024/07/16 13:53:36 by aljulien         ###   ########.fr        #
+#    Updated: 2024/07/16 21:01:38 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

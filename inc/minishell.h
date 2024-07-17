@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 13:40:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/17 21:15:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ int		execute_cmd(char **env, t_pipe *pipe);
 char	*get_path(char *cmd, char **env, int i);
 int		parse_builtin(t_pipe *pipe);
 void	handle_exit_status_child(t_line *line, int status);
+void	handle_exit_status_in_pipe(t_line *line);
 
 // =================================== EXEC ================================
 

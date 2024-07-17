@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 14:57:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/17 21:16:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,8 @@ static	int	_call_childs(char **env, t_line *line)
 		current = current->next;
 	}
 	while (wait(&status) > 0)
-	{
 		handle_exit_status_child(line, status);
-	}
+	handle_exit_status_in_pipe(line);
 	return (1);
 }
 

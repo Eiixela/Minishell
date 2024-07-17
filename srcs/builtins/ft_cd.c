@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/12 09:07:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:53:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 static char *get_value_by_key(const char *key, char **env)
 {
     int i = 0;
-    size_t key_len = strlen(key);
+    size_t key_len = ft_strlen(key);
 
     while (env && env[i])
     {
-        if (strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
+        if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
             return env[i] + key_len + 1;
         i++;
     }
