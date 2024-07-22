@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/17 21:16:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:26:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static int	create_process(char **env, t_pipe *pipe_node, int input_fd, int outpu
 				exit(EXIT_FAILURE);
 		}
 		if (execute_cmd(env, pipe_node))
-				exit(g_ret); 
+			exit(g_ret); 
 		exit(g_ret);
 	}
 	return (pid);
@@ -151,10 +151,6 @@ static	int	_call_childs(char **env, t_line *line)
 int	pipex(char **env, t_line *line)
 {
 	if (!_call_childs(env, line))
-	{
-		printf("exit_status = %i\n", g_ret);
 		return (0);
-	}
-	printf("exit_status = %i\n", g_ret);
 	return (1);
 }

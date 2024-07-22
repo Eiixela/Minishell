@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/17 21:34:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:27:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_exit_status_child(t_line *line, int status)
 {
 	(void)line;
 	(void)status;
- 	if (line->nm_arg == 1)
+ 	if (line->nm_arg == 1 && !ft_strcmp(line->pipe->arg[0], "exit"))
 		exit(g_ret);
 	if (WIFEXITED(status))
 		g_ret = WEXITSTATUS(status);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 14:08:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:09:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	execute_builtins(char **env, t_pipe *pipe)
 int	execute_cmd(char **env, t_pipe *pipe)
 {
 	char	*path;
+
 
 	path = NULL;
 	if (!pipe->arg || !pipe->arg[0])
