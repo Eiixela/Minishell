@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/23 14:52:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:47:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static int	parse_and_execute_solo_buitlins(t_line *line)
 		{
 			redirection_in_pipe(line->pipe, &saved_output);
 			if (!ft_strcmp(line->pipe->arg[0], "echo"))
-				ft_echo(line->pipe->arg);
+				return(ft_echo(line->pipe->arg), 0);
 			else if (!ft_strcmp(line->pipe->arg[0], "cd"))
 				return(0); //ft_cd(line->pipe->arg, env), 
 			else if (!ft_strcmp(line->pipe->arg[0], "pwd"))
@@ -120,7 +120,7 @@ static int	parse_and_execute_solo_buitlins(t_line *line)
                 close(saved_output);
 		}
 	}
-	return (0);
+	return (1);
 }
 
 
