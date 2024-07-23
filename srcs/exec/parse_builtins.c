@@ -6,11 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/09 13:03:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:16:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
 int	parse_builtin (t_pipe *pipe)
 {

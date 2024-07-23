@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/07/23 09:47:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:38:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	handle_redir(t_line *line, char	*first_redirection)
 	else if (operator == APPEND && process_redir(line, APPEND, first_redirection))
 		;
 	else if (operator == HEREDOC && process_redir(line, HEREDOC, first_redirection))
-		printf("\ttype: <<\n");
+		;
 	else
 		return (false);
 	return (true);
@@ -51,6 +51,7 @@ static	bool	handle_pipe(t_line *line, char *first_redirection)
 	line->pipe->next = ft_calloc(1, sizeof(t_pipe));
 	if (!line->pipe->next)
 		return (false);
+	line->pipe->arg = NULL;
 	line->pipe->next->prev = line->pipe;
 	line->pipe = line->pipe->next;
 	line->pipe->ret_val = 1;
