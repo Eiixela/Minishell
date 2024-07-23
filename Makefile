@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/07/16 11:20:55 by aljulien         ###   ########.fr        #
+#    Updated: 2024/07/23 10:42:55 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,10 +74,14 @@ $(LIBFT)::
 .PHONY: clean
 clean:
 	rm -rf $(OBJECT_DIR)
+	@make --no-print-directory -C $(LIBFT_DIR) clean
+
 
 .PHONY: fclean
 fclean: clean
 	rm -f $(NAME)
+	@make --no-print-directory -C $(LIBFT_DIR) fclean
+
 
 .PHONY: re
 re: fclean

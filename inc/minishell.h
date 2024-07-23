@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/17 21:15:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:42:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_pipe
 	t_redir			*redir_head;
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
+	int				ret_val;
 }	t_pipe;
 
 typedef struct s_argv
@@ -148,7 +149,7 @@ int		ft_echo(char **arg);
 void	ft_pwd(char **av);
 void	ft_cd(char **av, char **env);
 void	ft_env(char **env);
-int	ft_exit (t_pipe *pipe);
+int		ft_exit (t_pipe *pipe);
 
 //====================================BUILTINS=================================
 

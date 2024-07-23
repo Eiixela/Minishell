@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/22 09:27:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:44:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	handle_exit_status_child(t_line *line, int status)
 	(void)line;
 	(void)status;
  	if (line->nm_arg == 1 && !ft_strcmp(line->pipe->arg[0], "exit"))
-		exit(g_ret);
+		exit(line->pipe->ret_val);
 	if (WIFEXITED(status))
-		g_ret = WEXITSTATUS(status);
+		line->pipe->ret_val = WEXITSTATUS(status);
 }
 
 void	handle_exit_status_in_pipe(t_line *line)
@@ -30,7 +30,7 @@ void	handle_exit_status_in_pipe(t_line *line)
 	while (current != NULL)
 	{
 		if (ft_strcmp(current->arg[0], "exit") == 0)
-			g_ret = (unsigned char)ft_atoll(current->arg[1]);
+			line->pipe->ret_val = (unsigned char)ft_atoll(current->arg[1]);
 		current = current->next;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/22 09:26:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 10:15:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	redirection_in_pipe(t_pipe *pipe)
 
 
 
-static int	create_process(char **env, t_pipe *pipe_node, int input_fd, int output_fd)
+static int	create_process(char **env, t_pipe *pipe, int input_fd, int output_fd)
 {
 	pid_t	pid;
 
@@ -99,16 +99,44 @@ static int	create_process(char **env, t_pipe *pipe_node, int input_fd, int outpu
 				return (perror("dup2 output_fd"), 0);
 			close(output_fd);
 		}
-		if (pipe_node->redir != NULL)
+		if (pipe->redir != NULL)
 		{
-			if (!redirection_in_pipe(pipe_node))
+			if (!redirection_in_pipe(pipe))
 				exit(EXIT_FAILURE);
 		}
-		if (execute_cmd(env, pipe_node))
-			exit(g_ret); 
-		exit(g_ret);
+		if (execute_cmd(env, pipe))
+			exit(pipe->ret_val); 
+		exit(pipe->ret_val);
 	}
 	return (pid);
+}
+
+//TODO make struct env for ome builtins
+static int	parse_and_execute_solo_buitlins(t_line *line)
+{
+	if (line->pipe->next != NULL)
+		return (1);
+	else
+	{
+		if (!ft_strcmp(line->pipe->arg[0], "echo"))
+		return(ft_echo(line->pipe->arg), 0);
+ 	if (!ft_strcmp(line->pipe->arg[0], "cd"))
+		return(0); //ft_cd(line->pipe->arg, env), 
+	if (!ft_strcmp(line->pipe->arg[0], "pwd"))
+		return (ft_pwd(line->pipe->arg), 0);
+	if (!ft_strcmp(line->pipe->arg[0], "export"))
+		return (printf("export\n"), 0); //ft_export()
+	if (!ft_strcmp(line->pipe->arg[0], "unset"))
+		return (printf("unset\n"), 0); //ft_unset()
+	if (!ft_strcmp(line->pipe->arg[0], "env"))
+		return (0); //ft_env(env), 0
+	if (!ft_strcmp(line->pipe->arg[0], "exit"))
+		return (ft_exit(line->pipe), 0);
+	else
+		return (1);
+	return (0);
+	}
+	
 }
 
 static	int	_call_childs(char **env, t_line *line)
@@ -122,6 +150,8 @@ static	int	_call_childs(char **env, t_line *line)
 	(void)pid;
 	current = line->pipe;
 	input_fd = 0;
+	if (!parse_and_execute_solo_buitlins(line))
+		return (1);
 	while (current != NULL)
 	{
 		if (current->next != NULL)

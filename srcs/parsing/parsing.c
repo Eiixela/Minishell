@@ -6,13 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/07/16 14:54:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:47:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdbool.h>
-
 
 static bool	tag_arg(t_line *line)
 {
@@ -54,6 +53,7 @@ static	bool	handle_pipe(t_line *line, char *first_redirection)
 		return (false);
 	line->pipe->next->prev = line->pipe;
 	line->pipe = line->pipe->next;
+	line->pipe->ret_val = 1;
 	*first_redirection = 0;
 	return (true);
 }

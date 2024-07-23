@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 20:54:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:43:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 		;
 		//print_error(0, error_message);
 	if (arg_of_exit > 0)
-		exit(g_ret);
+		exit(pipe->ret_val);
 	else
 		exit(EXIT_SUCCESS);
 }
@@ -100,7 +100,6 @@ int ft_exit (t_pipe *pipe)
 {
 	unsigned long long int	arg_of_exit = 0;
 
-	ft_putstr_fd("exit\n", STDERR_FILENO);
 	//if(line)
 	//		free(line);
 	if (pipe && pipe->arg[1])
@@ -111,10 +110,10 @@ int ft_exit (t_pipe *pipe)
 		else
 		{
 			arg_of_exit = ft_atoll(pipe->arg[1]);
-			g_ret = (unsigned char)arg_of_exit;
-			return(lethal_exit(pipe, g_ret, NULL), g_ret);
+			pipe->ret_val = (unsigned char)arg_of_exit;
+			return(lethal_exit(pipe, pipe->ret_val, NULL), pipe->ret_val);
 		}
 	}
-	arg_of_exit = g_ret;
+	arg_of_exit = pipe->ret_val;
 	return (lethal_exit(pipe, arg_of_exit, NULL), arg_of_exit);
 }
