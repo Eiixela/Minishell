@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 15:01:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:20:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,11 @@ void	handle_exit_status_child(t_line *line, int status)
 		line->pipe->ret_val = WEXITSTATUS(status);
 }
 
-/* void	handle_exit_status_in_pipe(t_line *line)
+void	handle_exit_status_in_pipe(t_line *line)
 {
 	t_pipe	*current;
 	
 	current = line->pipe_head;
-	fprintf(stderr, "\n%s\n", current->arg[0]);
 	while (current != NULL)
 	{
 		if (ft_strcmp(current->arg[0], "exit") == 0)
@@ -36,4 +35,4 @@ void	handle_exit_status_child(t_line *line, int status)
 		}
 		current = current->next;
 	}
-} */
+}
