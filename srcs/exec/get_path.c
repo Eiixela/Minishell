@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 15:00:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 16:28:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*get_env(char *name, char **env)
 	return (NULL);
 }
 
-char	*get_path(char *cmd, char **env, int i)
+/* char	*get_path(char *cmd, char **env, int i)
 {
 	char	*exec;
 	char	**s_cmd;
@@ -88,5 +88,29 @@ char	*get_path(char *cmd, char **env, int i)
 		free(exec);
 	}
 	free_all_tab(s_cmd, allpath);
+	return (NULL);
+} */
+
+char	*get_path(char **cmd, char **env, int i)
+{
+	char	*exec;
+	char	*path_part;
+	char	**allpath;
+
+	if (ft_strchr(cmd[0], '/'))
+		return (check_command_in_path(cmd[0]));
+	allpath = ft_split(get_env("PATH", env), ':');
+	if (!allpath)
+		return (NULL);
+	while (allpath[++i])
+	{
+		path_part = ft_strjoin(allpath[i], "/");
+		exec = ft_strjoin(path_part, cmd[0]);
+		free(path_part);
+		if (access(exec, F_OK | X_OK) == 0)
+			return (free_all_tab(cmd, allpath), exec);
+		free(exec);
+	}
+	free_all_tab(cmd, allpath);
 	return (NULL);
 }

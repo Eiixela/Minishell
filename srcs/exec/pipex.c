@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 14:54:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:52:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ static int parse_and_execute_solo_buitlins(t_line *line)
                 perror("dup2");
             close(saved_output);
         }
-        return (1); // Successfully executed the command
+        return (0); // Successfully executed the command
     }
     return (1); // No built-in command found
 }
