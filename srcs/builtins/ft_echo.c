@@ -1,28 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 17:18:07 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/14 17:20:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:10:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/minishell.h"
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		write (fd, &s[i], 1);
-		i++;
-	}
-}
+#include "../../inc/minishell.h"
 
 static int	count_nb_arg(char **arg)
 {
@@ -36,7 +24,7 @@ static int	count_nb_arg(char **arg)
 
 //echo builting
 //function return 0 if all went well, 1 if problems occured
-int	b_echo(char **arg)
+int	ft_echo(char **arg)
 {
 	int	indice_flag;
 	int	i;
@@ -52,7 +40,8 @@ int	b_echo(char **arg)
 		}
 		while (arg[i])
 		{
-			ft_putstr_fd(arg[i], 1);
+			if (ft_putstr_fd(arg[i], 1) == 1)
+				exit(2);
 			if (arg[i + 1] && arg[i][0] != '\0')
 				write (1, " ", 1);
 			i++;

@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/05/14 17:19:00 by aljulien         ###   ########.fr       */
+/*   Created: 2023/11/22 15:07:49 by aljulien          #+#    #+#             */
+/*   Updated: 2023/11/27 16:42:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/minishell.h"
+#include "libft.h"
 
-int	main (int ac, char **av, char **env)
+t_list	*ft_lstnew(void *content)
 {
-	char	*line;
+	t_list	*new;
 
-	(void)ac;
-	(void)env;
-	line = NULL;
-	while (1)
-	{
-		line = readline("minishell >> ");
-		if (line && *line)
-		{
-			b_echo(av);
-			add_history(line);
-			free(line);
-			line = NULL;			
-		}
-	}
-	rl_clear_history();
-	return (0);
+	new = (t_list *)malloc(sizeof(t_list));
+	if (!new)
+		return (NULL);
+	new->content = content;
+	new->next = NULL;
+	return (new);
 }

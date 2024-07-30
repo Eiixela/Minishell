@@ -5,61 +5,85 @@
 #                                                     +:+ +:+         +:+      #
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/05/13 17:39:49 by aljulien          #+#    #+#              #
-#    Updated: 2024/05/14 17:20:30 by aljulien         ###   ########.fr        #
+#    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
+#    Updated: 2024/07/30 14:48:22 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#RAJOUTER LES FLAGS DE COMPILIATION !!!!!!!!
-
-SRCS = 	minishell.c\
-		echo.c
-
-OBJS = ${SRCS:.c=.o}
-DEPS = ${SRCS:.c=.d}
-
-# INCLUDES
-INCPATH = -I inc/ -I libft/
-
-# LIBRAIRIES
-LIBFTPATH = -L libft/ -lft
-LIBS = ${LIBFTPATH} ${INCPATH} -lm
-
-# COMPILATION
-NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
-LIBFT = libft/libft.a
 
-.c.o:
-		${CC} ${CFLAGS} ${INCPATH} -MMD -c $< -o ${<:.c=.o}
+INCLUDE_DIR = inc/
+LIBFT_DIR = libft/
 
-${NAME}:	${OBJS} ${LIBFT}
-		${CC} -o ${NAME} ${CFLAGS} ${OBJS} ${LIBS} -lreadline ${LIBFT}
+CFLAGS = -Wall -Wextra -Werror -g3 
+IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
+DFLAGS = -MMD -MP
+LFLAGS = -L$(LIBFT_DIR) -lft -lreadline
+
+OBJECT_DIR = .obj/
+
+OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
+		srcs/main/minishell.c\
+		srcs/parsing/big_parse.c\
+		srcs/parsing/lexing.c\
+		srcs/parsing/expansion.c\
+		srcs/parsing/parsing.c\
+		srcs/parsing/path_check.c\
+		srcs/parsing/utils/parsing_utils.c \
+		srcs/parsing/utils/clean_quotes.c\
+		srcs/parsing/utils/utils.c\
+		srcs/parsing/utils/redirection_utils.c\
+		srcs/builtins/ft_echo.c\
+		srcs/builtins/ft_pwd.c\
+		srcs/builtins/ft_cd.c\
+		srcs/builtins/ft_env.c\
+		srcs/builtins/ft_export.c\
+		srcs/builtins/ft_exit.c\
+		srcs/builtins/ft_unset.c\
+		srcs/exec/pipex.c\
+		srcs/exec/get_path.c\
+		srcs/exec/execve.c\
+		srcs/exec/parse_builtins.c\
+		srcs/exec/signal.c\
+							)
+
+OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))
+
+DEPENDENCIES = $(OBJECTS:.o=.d)
+
+LIBFT = $(LIBFT_DIR)libft.a
+NAME = minishell
+
+.PHONY: all
+all: $(NAME)
+
+-include $(DEPENDENCIES)
+
+$(NAME): $(OBJECTS) | $(LIBFT)
+	$(CC) $(CFLAGS) $(IFLAGS) $(DFLAGS) -o $@ $(OBJECTS) $(LFLAGS)
+
+$(OBJECT_DIR)%.o: srcs/%.c | $(OBJECT_DIR)
+	$(CC) $(CFLAGS) $(IFLAGS) $(DFLAGS) -o $@ -c $<
+
+$(OBJECT_DIR):
+	mkdir -p ${OBJ_SUBDIRS}
+
+$(LIBFT)::
+	@make --no-print-directory -C $(LIBFT_DIR)
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJECT_DIR)
+	@make --no-print-directory -C $(LIBFT_DIR) clean
 
 
-${LIBFT}: FORCE
-	+$(MAKE) -C libft/
+.PHONY: fclean
+fclean: clean
+	rm -f $(NAME)
+	@make --no-print-directory -C $(LIBFT_DIR) fclean
 
-clean:	
-		rm -f ${OBJS} ${DEPS}
-		+$(MAKE) -C libft/ clean
 
-fclean:	clean;
-		+$(MAKE) -C libft/ fclean
-		rm -f ${NAME}
+.PHONY: re
+re: fclean
+	@make --no-print-directory all
 
-all:	${NAME}
-
-FORCE: 
-
-bonus:	${NAME}
-
-re:	fclean all
-
-norminette:
-		norminette srcs/
-
--include ${DEPS}
-
-.PHONY: all clean fclean re norminette
