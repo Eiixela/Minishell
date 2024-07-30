@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/07/23 11:11:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:51:01 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,13 @@ bool	big_parse(t_line *line, char **input)
 	if (!**input)
 		return (false);
 	str = *input;
-	if (clean_input((char **)&str))
-		;
-	else
+	if (!clean_input((char **)&str))
 		return (false);
-	if (lex((char *)str, line))
-		;
-	else
+	if (!lex((char *)str, line))
 		return (false);
-	if (expand(line))
-		;
-	else
+	if (!expand(line))
 		return (false);
-	if (parse(line))
-		;
-	else
+	if (!parse(line))
 		return (false);
-	// check_path(intput);
 	return (true);
 }

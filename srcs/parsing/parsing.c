@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/07/23 12:38:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:56:23 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdbool.h>
 
 static bool	tag_arg(t_line *line)
 {
@@ -59,7 +58,8 @@ static	bool	handle_pipe(t_line *line, char *first_redirection)
 	return (true);
 }
 
-static	bool	tag_tokens(t_line *line, char	*first_redirection)
+//TODO this too big, first part could be a function
+static	bool	tag_tokens(t_line *line, char *first_redirection)
 {
 	line->pipe = ft_calloc(1, sizeof(t_pipe));
 	if (!line->pipe)
