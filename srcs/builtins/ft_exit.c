@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/23 09:43:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 11:29:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 	if (error_message)
 		;
 		//print_error(0, error_message);
+	printf("exit");
 	if (arg_of_exit > 0)
 		exit(pipe->ret_val);
 	else
