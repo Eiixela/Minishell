@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 15:36:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:54:31 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static int redirection_in_pipe(t_pipe *pipe, int *saved_output)
 {
     t_redir *current_redir;
     t_redir *last_out_redir = NULL;
-    int     fd;
-    int     flags;
+    int fd;
+    int flags;
 
     *saved_output = dup(STDOUT_FILENO);
     if (*saved_output == -1)
@@ -127,7 +127,7 @@ static int parse_and_execute_solo_buitlins(t_line *line)
                 perror("dup2");
             close(saved_output);
         }
-        return (0); // Successfully executed the command
+        return (1); // Successfully executed the command
     }
     return (1); // No built-in command found
 }
@@ -204,7 +204,6 @@ static	int	_call_childs(char **env, t_line *line)
 	}
 	while (wait(&status) > 0)
 		handle_exit_status_child(line, status);
-	handle_exit_status_in_pipe(line);
 	return (1);
 }
 
