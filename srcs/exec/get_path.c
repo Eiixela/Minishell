@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 16:28:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:14:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,19 @@ static char	*check_command_in_path(char *cmd)
 	if (access(cmd, F_OK | X_OK) == 0)
 		return (ft_strdup(cmd));
 	return (NULL);
+}
+
+static void free_double_tab(char **s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+	{
+		free(s[i]);
+		i++;
+	}
+	free(s);
 }
 
 static void	free_all_tab(char **s_cmd, char **allpath)
@@ -63,54 +76,28 @@ static char	*get_env(char *name, char **env)
 	return (NULL);
 }
 
-/* char	*get_path(char *cmd, char **env, int i)
-{
-	char	*exec;
-	char	**s_cmd;
-	char	*path_part;
-	char	**allpath;
-
-	if (ft_strchr(cmd, '/'))
-		return (check_command_in_path(cmd));
-	allpath = ft_split(get_env("PATH", env), ':');
-	if (!allpath)
-		return (NULL);
-	s_cmd = ft_split(cmd, ' ');
-	if (!s_cmd)
-		return (NULL);
-	while (allpath[++i])
-	{
-		path_part = ft_strjoin(allpath[i], "/");
-		exec = ft_strjoin(path_part, s_cmd[0]);
-		free(path_part);
-		if (access(exec, F_OK | X_OK) == 0)
-			return (free_all_tab(s_cmd, allpath), exec);
-		free(exec);
-	}
-	free_all_tab(s_cmd, allpath);
-	return (NULL);
-} */
-
-char	*get_path(char **cmd, char **env, int i)
+char	*get_path(t_pipe *pipe, char **env, int i)
 {
 	char	*exec;
 	char	*path_part;
 	char	**allpath;
-
-	if (ft_strchr(cmd[0], '/'))
-		return (check_command_in_path(cmd[0]));
+	if (ft_strchr(pipe->arg[0], '/'))
+		return (check_command_in_path(pipe->arg[0]));
 	allpath = ft_split(get_env("PATH", env), ':');
 	if (!allpath)
 		return (NULL);
 	while (allpath[++i])
 	{
 		path_part = ft_strjoin(allpath[i], "/");
-		exec = ft_strjoin(path_part, cmd[0]);
+		exec = ft_strjoin(path_part, pipe->arg[0]);
 		free(path_part);
 		if (access(exec, F_OK | X_OK) == 0)
-			return (free_all_tab(cmd, allpath), exec);
+		{
+			free_double_tab(allpath);
+			return (exec);
+		}
 		free(exec);
 	}
-	free_all_tab(cmd, allpath);
+	free_all_tab(pipe->arg, allpath);
 	return (NULL);
 }

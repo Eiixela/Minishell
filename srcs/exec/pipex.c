@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 15:52:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:06:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ static int	create_process(char **env, t_pipe *pipe, int input_fd, int output_fd)
 {
 	pid_t	pid;
 	int		saved_output;
-
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 0);
@@ -161,8 +160,11 @@ static int	create_process(char **env, t_pipe *pipe, int input_fd, int output_fd)
 				exit(EXIT_FAILURE);
         }
 	 	if (execute_cmd(env, pipe))
+        { 
+            
 			exit(pipe->ret_val);
-		exit(pipe->ret_val);
+        }
+        exit(pipe->ret_val);
 	}
 	return (pid);
 }
@@ -179,7 +181,6 @@ static	int	_call_childs(char **env, t_line *line)
 	(void)pid;
 	current = line->pipe;
 	input_fd = 0;
-
  	if (parse_and_execute_solo_buitlins(line) == 0)
 		return (1);
 	while (current != NULL)

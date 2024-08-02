@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 16:28:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:08:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int		ft_exit (t_pipe *pipe);
 
 int		pipex(char **env, t_line *line);
 int		execute_cmd(char **env, t_pipe *pipe);
-char	*get_path(char **cmd, char **env, int i);
+char	*get_path(t_pipe *pipe, char **env, int i);
 int		parse_builtin(t_pipe *pipe);
 void	handle_exit_status_child(t_line *line, int status);
 
