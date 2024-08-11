@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/02 16:47:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:24:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,14 +160,17 @@ int		execute_cmd(char **env, t_pipe *pipe);
 char	*get_path(t_pipe *pipe, char **env, int i);
 int		parse_builtin(t_pipe *pipe);
 void	handle_exit_status_child(t_line *line, int status);
-int parse_and_execute_solo_buitlins(t_line *line);
+int parse_and_execute_solo_builtins(t_pipe *pipe);
 int redirection_in_pipe(t_pipe *pipe, int *saved_output);
+int	_call_childs(char **env, t_line *line);
+int create_process(char **env, t_pipe *pipe, int input_fd, int output_fd);
 
 // =================================== EXEC ================================
 
 
 //====================================OTHERS===================================
 int	ft_putstr_fd(char *s, int fd);
+void	sigend(void);
 
 
 

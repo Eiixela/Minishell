@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_builtins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/02 16:47:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:39:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,32 +35,32 @@ int	parse_builtin (t_pipe *pipe)
 }
 
 //TODO make struct env for ome builtins
-int parse_and_execute_solo_buitlins(t_line *line)
+int parse_and_execute_solo_builtins(t_pipe *pipe)
 {
     int saved_output = -1;
-    if (parse_builtin(line->pipe) == 1 && line->pipe->arg)
+    if (parse_builtin(pipe) == 1 && pipe->arg)
     {
-        if (line->pipe->redir != NULL)
+        if (pipe->redir != NULL)
         {
-            if (!redirection_in_pipe(line->pipe, &saved_output))
-               return (0);
+            if (!redirection_in_pipe(pipe, &saved_output))
+                return (0);
         }
-        if (!ft_strcmp(line->pipe->arg[0], "echo"))
-            ft_echo(line->pipe->arg); // Directly call the echo function
-        else if (!ft_strcmp(line->pipe->arg[0], "cd"))
+        if (!ft_strcmp(pipe->arg[0], "echo"))
+            ft_echo(pipe->arg); // Directly call the echo function
+        else if (!ft_strcmp(pipe->arg[0], "cd"))
             ; // Implement cd logic
-        else if (!ft_strcmp(line->pipe->arg[0], "pwd"))
-            ft_pwd(line->pipe->arg);
-        else if (!ft_strcmp(line->pipe->arg[0], "export"))
+        else if (!ft_strcmp(pipe->arg[0], "pwd"))
+            ft_pwd(pipe->arg);
+        else if (!ft_strcmp(pipe->arg[0], "export"))
             printf("export\n");
-        else if (!ft_strcmp(line->pipe->arg[0], "unset"))
+        else if (!ft_strcmp(pipe->arg[0], "unset"))
             printf("unset\n");
-        else if (!ft_strcmp(line->pipe->arg[0], "env"))
+        else if (!ft_strcmp(pipe->arg[0], "env"))
             ; // Implement env logic
-        else if (!ft_strcmp(line->pipe->arg[0], "exit"))
-            ft_exit(line->pipe);
+        else if (!ft_strcmp(pipe->arg[0], "exit"))
+            ft_exit(pipe);
         else
-    		return 1; // Command not recognized
+            return 1; // Command not recognized
         if (saved_output != -1)
         {
             if (dup2(saved_output, STDOUT_FILENO) == -1)
@@ -71,3 +71,4 @@ int parse_and_execute_solo_buitlins(t_line *line)
     }
     return (1); // No built-in command found
 }
+
