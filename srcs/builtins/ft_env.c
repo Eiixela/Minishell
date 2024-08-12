@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 14:21:45 by aljulien          #+#    #+#             */
-/*   Updated: 2024/06/18 10:34:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:42:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,26 @@ void	ft_env(char **env)
 		i++;
 	}
 }
+
+/* int	env(t_input *in)
+{
+	t_env	*env;
+
+	env = in->env;
+	if (in->data[1])
+		return (verror("minishell: ", "env: ", strerror(E2BIG)));
+	while (env)
+	{
+		if (g_sig == SIGPIPE || ft_putendl_fd(env->env, STDOUT_FILENO) == -1)
+			return (verror("minishell: ", "env: ", strerror(errno)));
+		env = env->next;
+	}
+	return (0);
+} */
+
+/* typedef struct s_env
+{
+	char			*env;
+	struct s_env	*prev;
+	struct s_env	*next;
+}	t_env; */
