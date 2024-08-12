@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/30 11:29:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:41:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 		input_freelst(lst); */
 	if (error_message)
 		;
-		//print_error(0, error_message);
-	printf("exit");
+		//print_error(0, error_message)
 	if (arg_of_exit > 0)
 		exit(pipe->ret_val);
 	else
@@ -89,6 +88,7 @@ static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit)
 {
 	if (not_num(pipe->arg[1]) == 0 || overflow(pipe->arg[1]) == 0)
 	{
+		printf("exit\n");
 		print_error_message("minishell: exit: ", pipe->arg[1], \
 		": numeric argument required");
 		arg_of_exit = 2;
@@ -107,7 +107,7 @@ int ft_exit (t_pipe *pipe)
 	{
 		is_arg_valid(pipe, 0);
 		if (ft_dstrlen(pipe->arg) > 2)
-			return(perror("minishell: exit "), 1);
+			return(printf("exit\nbash: exit: too many arguments\n"), 1);
 		else
 		{
 			arg_of_exit = ft_atoll(pipe->arg[1]);

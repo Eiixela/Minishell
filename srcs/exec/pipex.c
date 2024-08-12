@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/12 09:42:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:01:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,12 @@ static int redirection_in(t_redir *current_redir)
     
     fd = open(current_redir->fd, O_RDONLY);
 	if (fd == -1)
-		return (perror("opening input file"), 0);
-	if (dup2(fd, STDIN_FILENO) == -1)
+    {
+        ft_putstr_fd("minishell: ", STDOUT_FILENO);
+        ft_putstr_fd(current_redir->fd, STDOUT_FILENO);
+		return (perror(" "), 0);
+    }
+    if (dup2(fd, STDIN_FILENO) == -1)
 		return (perror("dup2 input"), 0);
     close(fd);
 	return (1);
