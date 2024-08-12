@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/05 15:55:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 10:27:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ int	main(int ac, char **av, char **env)
 			add_history(str);
 			if (big_parse(&line, &str) == true)
 			{
+				/* line.pipe = line.pipe_head;
+				while (line.pipe != NULL)
+				{
+					if (line.pipe->arg)
+						fprintf(stderr, "\n%s\n", line.pipe->arg[0]);
+					line.pipe = line.pipe->next;
+				}
+				line.pipe = line.pipe_head; */
 				if (!pipex(env, &line))
 					perror("execve");
 			}
