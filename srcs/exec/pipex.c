@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/12 15:01:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:27:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static t_redir  *redirection_append_and_out(t_redir *current_redir)
 static int redirection_in(t_redir *current_redir)
 {
     int fd;
-    
+
     fd = open(current_redir->fd, O_RDONLY);
 	if (fd == -1)
     {
@@ -165,6 +165,7 @@ int create_process(char **env, t_pipe *pipe, int input_fd, int output_fd)
         }
         else
         {
+            fprintf(stderr, "here!");
             if (execute_cmd(env, pipe))
                 exit(pipe->ret_val);
         }

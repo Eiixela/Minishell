@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_builtins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/05 12:39:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:20:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ int	parse_builtin (t_pipe *pipe)
 //TODO make struct env for ome builtins
 int parse_and_execute_solo_builtins(t_pipe *pipe)
 {
-    int saved_output = -1;
-    if (parse_builtin(pipe) == 1 && pipe->arg)
+    int saved_output;
+
+    saved_output = -1;
+    if (pipe->next == NULL && parse_builtin(pipe) == 1 && pipe->arg)
     {
         if (pipe->redir != NULL)
-        {
             if (!redirection_in_pipe(pipe, &saved_output))
                 return (0);
-        }
         if (!ft_strcmp(pipe->arg[0], "echo"))
             ft_echo(pipe->arg); // Directly call the echo function
         else if (!ft_strcmp(pipe->arg[0], "cd"))
