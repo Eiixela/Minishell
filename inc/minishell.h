@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/05 16:24:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:42:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ typedef struct s_redir
 	struct s_redir	*prev;
 }	t_redir;
 
+typedef struct s_env
+{
+	char			*env;
+	struct s_env	*prev;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_pipe
 {
 	char			**arg;
@@ -74,6 +81,7 @@ typedef struct s_pipe
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
 	int				ret_val;
+	t_env			*env;
 }	t_pipe;
 
 typedef struct s_argv
@@ -94,6 +102,7 @@ typedef struct s_line
 	char			**env;
 	int				nm_arg;
 }	t_line;
+
 
 // =================================== PARSING ================================
 
@@ -143,35 +152,49 @@ char		redirection_offset(char redir_operator);
 
 // =================================== PARSING ================================
 
-//====================================BUILTINS=================================
+//======================================EXEC===================================
 
+//BUILTINS
 int		ft_echo(char **arg);
 void	ft_pwd(char **av);
 void	ft_cd(char **av, char **env);
-void	ft_env(char **env);
+int		ft_env(t_env *env, t_pipe *pipe);
 int		ft_exit (t_pipe *pipe);
-
-//====================================BUILTINS=================================
-
-// =================================== EXEC ================================
-
-int		pipex(char **env, t_line *line);
-int		execute_cmd(char **env, t_pipe *pipe);
-char	*get_path(t_pipe *pipe, char **env, int i);
 int		parse_builtin(t_pipe *pipe);
+char	**arenvlst(t_env	*env);
+
+//ERROR
+void	*errjoin(int error_code, char *error_message);
+void	*print_error(int error_code, char *error_message);
+int		print_error_message(char *s1, char *s2, char *s3);
+
+//FREE
+void	env_freelst(t_env **env);
+void	env_addback(t_env **env, t_env *node);
+t_env	*env_newnode(char *data);
+void	free_all_tab(char **s_cmd, char **allpath);
+void	free_double_tab(char **s);
+
+//SIGNALS
+char	*send_eof(char *line);
+void	siglisten(void);
+void	sigend(void);
+void	sighandler(int sig);
 void	handle_exit_status_child(t_line *line, int status);
-int parse_and_execute_solo_builtins(t_pipe *pipe);
-int redirection_in_pipe(t_pipe *pipe, int *saved_output);
-int	_call_childs(char **env, t_line *line);
-int create_process(char **env, t_pipe *pipe, int input_fd, int output_fd);
+
+//REDIRECTIONS
+int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
+
+//EXECUTING
+int		pipex(t_env *env, t_line *line);
+int		execute_cmd(t_env *env, t_pipe *pipe);
+char	*get_path(t_pipe *pipe, char **env, int i);
+int		parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe);
+int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd);
+void	create_env(char **envp, t_env **env);
+int		_call_childs(t_env *env, t_line *line);
+int		execute_builtins(t_env *env, t_pipe *pipe);
 
 // =================================== EXEC ================================
-
-
-//====================================OTHERS===================================
-int	ft_putstr_fd(char *s, int fd);
-void	sigend(void);
-
-
 
 #endif

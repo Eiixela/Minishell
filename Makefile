@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/02 11:58:11 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/13 12:35:09 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,11 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/exec/pipex.c\
 		srcs/exec/get_path.c\
 		srcs/exec/execve.c\
-		srcs/exec/parse_builtins.c\
+		srcs/exec/parse_and_execute_builtins.c\
 		srcs/exec/signal.c\
+		srcs/exec/redirections.c\
+		srcs/exec/error.c\
+		srcs/exec/free.c\
 							)
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))

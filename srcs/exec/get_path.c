@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/02 16:50:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:32:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,38 +19,7 @@ static char	*check_command_in_path(char *cmd)
 	return (NULL);
 }
 
-static void free_double_tab(char **s)
-{
-	size_t	i;
 
-	i = 0;
-	while (s[i])
-	{
-		free(s[i]);
-		i++;
-	}
-	free(s);
-}
-
-static void	free_all_tab(char **s_cmd, char **allpath)
-{
-	size_t	i;
-
-	i = 0;
-	while (s_cmd[i])
-	{
-		free(s_cmd[i]);
-		i++;
-	}
-	free(s_cmd);
-	i = 0;
-	while (allpath[i])
-	{
-		free(allpath[i]);
-		i++;
-	}
-	free(allpath);
-}
 
 static char	*get_env(char *name, char **env)
 {

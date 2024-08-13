@@ -1,26 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/11 22:41:08 by alexie            #+#    #+#             */
-/*   Updated: 2024/08/13 10:40:22 by aljulien         ###   ########.fr       */
+/*   Created: 2024/08/13 12:32:12 by aljulien          #+#    #+#             */
+/*   Updated: 2024/08/13 12:32:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-ssize_t	ft_putendl_fd(char *s, int fd)
+void free_double_tab(char **s)
 {
-	ssize_t	len;
+	size_t	i;
 
-	len = write(fd, s, ft_strlen(s));
-	if (len == -1)
-		return (len);
-	len += write(fd, "\n", 1);
-	if (len == -1)
-		return (len);
-	return (len);
+	i = 0;
+	while (s[i])
+	{
+		free(s[i]);
+		i++;
+	}
+	free(s);
+}
+
+void	free_all_tab(char **s_cmd, char **allpath)
+{
+	size_t	i;
+
+	i = 0;
+	while (s_cmd[i])
+	{
+		free(s_cmd[i]);
+		i++;
+	}
+	free(s_cmd);
+	i = 0;
+	while (allpath[i])
+	{
+		free(allpath[i]);
+		i++;
+	}
+	free(allpath);
 }

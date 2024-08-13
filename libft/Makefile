@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/10 10:25:02 by aljulien          #+#    #+#              #
-#    Updated: 2024/07/16 21:01:38 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/13 12:22:31 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ SRC = ft_atoi.c\
 	ft_strcmp.c\
 	ft_dstrlen.c\
 	ft_atoll.c\
+	ft_free_dtab.c\
 
 SRC_B =	ft_lstnew_bonus.c\
 	ft_lstadd_front_bonus.c\

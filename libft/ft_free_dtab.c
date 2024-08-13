@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*   ft_free_dtab.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/11 22:41:08 by alexie            #+#    #+#             */
-/*   Updated: 2024/08/13 10:40:22 by aljulien         ###   ########.fr       */
+/*   Created: 2024/08/13 12:22:05 by aljulien          #+#    #+#             */
+/*   Updated: 2024/08/13 12:22:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-ssize_t	ft_putendl_fd(char *s, int fd)
+void	free_dtab(char **dtab)
 {
-	ssize_t	len;
+	size_t	i;
 
-	len = write(fd, s, ft_strlen(s));
-	if (len == -1)
-		return (len);
-	len += write(fd, "\n", 1);
-	if (len == -1)
-		return (len);
-	return (len);
+	i = 0;
+	if (!dtab)
+		return ;
+	while (dtab[i])
+	{
+		free(dtab[i]);
+		i++;
+	}
+	free(dtab);
+	dtab = NULL;
+	return ;
 }

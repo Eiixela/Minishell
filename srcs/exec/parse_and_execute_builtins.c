@@ -1,16 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_builtins.c                                   :+:      :+:    :+:   */
+/*   parse_and_execute_builtins.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/12 17:20:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:37:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	execute_builtins(t_env *env, t_pipe *pipe)
+{
+	if (!ft_strcmp(pipe->arg[0], "echo"))
+		return(ft_echo(pipe->arg), 0);
+ 	if (!ft_strcmp(pipe->arg[0], "cd"))
+		return(printf("cd"), 0); //ft_cd(pipe->arg, env)
+	if (!ft_strcmp(pipe->arg[0], "pwd"))
+		return (ft_pwd(pipe->arg), 0);
+	if (!ft_strcmp(pipe->arg[0], "export"))
+		return (printf("export\n"), 0); //ft_export()
+	if (!ft_strcmp(pipe->arg[0], "unset"))
+		return (printf("unset\n"), 0); //ft_unset()
+	if (!ft_strcmp(pipe->arg[0], "env"))
+		return (ft_env(env, pipe), 0);
+	if (!ft_strcmp(pipe->arg[0], "exit"))
+		return (ft_exit(pipe), 0);
+	else
+		return (1);
+	return (0);
+}
 
 int	parse_builtin (t_pipe *pipe)
 {
@@ -35,7 +56,7 @@ int	parse_builtin (t_pipe *pipe)
 }
 
 //TODO make struct env for ome builtins
-int parse_and_execute_solo_builtins(t_pipe *pipe)
+int parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe)
 {
     int saved_output;
 
@@ -46,9 +67,9 @@ int parse_and_execute_solo_builtins(t_pipe *pipe)
             if (!redirection_in_pipe(pipe, &saved_output))
                 return (0);
         if (!ft_strcmp(pipe->arg[0], "echo"))
-            ft_echo(pipe->arg); // Directly call the echo function
+            ft_echo(pipe->arg);
         else if (!ft_strcmp(pipe->arg[0], "cd"))
-            ; // Implement cd logic
+            printf("cd\n");
         else if (!ft_strcmp(pipe->arg[0], "pwd"))
             ft_pwd(pipe->arg);
         else if (!ft_strcmp(pipe->arg[0], "export"))
@@ -56,19 +77,19 @@ int parse_and_execute_solo_builtins(t_pipe *pipe)
         else if (!ft_strcmp(pipe->arg[0], "unset"))
             printf("unset\n");
         else if (!ft_strcmp(pipe->arg[0], "env"))
-            ; // Implement env logic
+            ft_env(env, pipe);
         else if (!ft_strcmp(pipe->arg[0], "exit"))
             ft_exit(pipe);
         else
-            return 1; // Command not recognized
+            return (1);
         if (saved_output != -1)
         {
             if (dup2(saved_output, STDOUT_FILENO) == -1)
                 perror("dup2");
             close(saved_output);
         }
-        return (0); // Successfully executed the command
+        return (0);
     }
-    return (1); // No built-in command found
+    return (1);
 }
 

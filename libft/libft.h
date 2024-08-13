@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 21:24:23 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 13:42:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:22:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int		ft_toupper(int c);
 void	*ft_calloc(size_t count, size_t size);
 char	*ft_itoa(int n);
 void	ft_putchar_fd(char c, int fd);
-void	ft_putendl_fd(char *s, int fd);
+ssize_t	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_putstr_fd(char *s, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -70,5 +70,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int		ft_strcmp(char *s1, char *s2);
 size_t	ft_dstrlen(char **s);
 unsigned long long int	ft_atoll(char *nptr);
+void	free_dtab(char **dtab);
 
 #endif

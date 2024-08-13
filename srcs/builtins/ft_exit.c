@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/12 15:41:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 10:38:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static bool	not_num(char *str)
 	return (true);
 }
 
-static int	print_error_message(char *s1, char *s2, char *s3)
+int	print_error_message(char *s1, char *s2, char *s3)
 {
 	char	*tmp;
 	char	*error_message;
