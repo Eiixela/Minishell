@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:33:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:05:46 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_line
 	t_argv			*argv_head;
 	t_pipe			*pipe;
 	t_pipe			*pipe_head;
-	char			**env;
+	t_env			*env;
 	int				nm_arg;
 }	t_line;
 
@@ -90,7 +90,7 @@ typedef struct s_line
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
 bool		lex(char *input, t_line *line);
-bool		expand(t_line *line);
+char		*super_expand(char *input, t_line *line);
 bool		parse(t_line *line);
 
 // W_SPACE

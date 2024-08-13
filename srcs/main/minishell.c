@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:34:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 20:09:26 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	main(int ac, char **av, char **envp)
 		return(print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
 		return (1);
+	line.env = env;
+	printf("%p ENV ADDR\n%s VALUE\n", line.env, line.env->env);
 	while (1)
 	{
 		sigend();

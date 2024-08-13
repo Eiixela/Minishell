@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:08:18 by saperrie          #+#    #+#             */
-/*   Updated: 2024/07/30 16:11:32 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:03:42 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ static	char	*which_token(char *input, t_line *line)
 		ptr = fill_argv(input, line, 1);
 		ptr += 1;
 	}
+	else if (*ptr == '$')
+		ptr = super_expand(input, line);
 	else
 		ptr = tokenise(ptr, line);
 	if (!ptr)
