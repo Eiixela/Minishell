@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:31:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 13:53:28 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd)
             close(output_fd);
         }
         if (pipe->redir != NULL)
+		{
             if (!redirection_in_pipe(pipe, &saved_output))
                 return (exit(EXIT_FAILURE), pid);
-
-        if (parse_builtin(pipe))
+		}
+		if (parse_builtin(pipe))
         {
-            if (!parse_and_execute_solo_builtins(env, pipe))
+            if (!execute_builtins(env, pipe))
                 exit(EXIT_SUCCESS);
         }
         else
