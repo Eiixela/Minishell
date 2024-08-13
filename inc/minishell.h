@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/13 15:15:03 by aljulien         ###   ########.fr       */
+=======
+/*   Updated: 2024/07/30 16:27:49 by saperrie         ###   ########.fr       */
+>>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +31,9 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-#define EXIT_SHELL 42
+# define EXIT_SHELL 42
 
 extern int	g_ret;
-
-enum e_EXPAND_CASES
-{
-	NO_VALUE,
-	PRINT_DOLLAR,
-	SINGLE_VALUE,
-	VALUE_REST,
-	S1_VALUE,
-	S1_S2,
-};
-
-enum e_TOKENS
-{
-	CMD,
-	ARG,
-	REDIR_OP,
-	PIPE,
-};
 
 enum e_REDIR_OPERATOR
 {
@@ -108,6 +94,7 @@ typedef struct s_line
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
 bool		lex(char *input, t_line *line);
+bool		expand(t_line *line);
 bool		parse(t_line *line);
 
 // W_SPACE
@@ -127,7 +114,8 @@ bool		clean_surrounding_quotes(t_line *line);
 // TOKENS_UTILS
 
 // EXPANSION
-bool		expand(t_line *line);
+size_t		_strlen(char const *str);
+bool		is_valid_varname(char c);
 // EXPANSION
 
 // PARSING_UTILS
@@ -153,6 +141,7 @@ char		redirection_offset(char redir_operator);
 
 //======================================EXEC===================================
 
+<<<<<<< HEAD
 //BUILTINS
 int		ft_echo(char **arg);
 void	ft_pwd(char **av);
@@ -180,6 +169,24 @@ void	siglisten(void);
 void	sigend(void);
 void	sighandler(int sig);
 void	handle_exit_status_child(t_line *line, int status);
+=======
+int			ft_echo(char **arg);
+void		ft_pwd(char **av);
+void		ft_cd(char **av, char **env);
+void		ft_env(char **env);
+int			ft_exit (t_pipe *pipe);
+
+//====================================BUILTINS=================================
+
+// =================================== EXEC ================================
+
+int			pipex(char **env, t_line *line);
+int			execute_cmd(char **env, t_pipe *pipe);
+char		*get_path(char *cmd, char **env, int i);
+int			parse_builtin(t_pipe *pipe);
+void		handle_exit_status_child(t_line *line, int status);
+void		handle_exit_status_in_pipe(t_line *line);
+>>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 
 //REDIRECTIONS
 int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
@@ -196,4 +203,13 @@ int		execute_builtins(t_env *env, t_pipe *pipe);
 
 // =================================== EXEC ================================
 
+<<<<<<< HEAD
+=======
+
+//====================================OTHERS===================================
+int			ft_putstr_fd(char *s, int fd);
+
+
+
+>>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 #endif

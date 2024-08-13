@@ -6,7 +6,11 @@
 /*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/05 16:24:44 by aljulien         ###   ########.fr       */
+=======
+/*   Updated: 2024/07/30 15:20:25 by aljulien         ###   ########.fr       */
+>>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +29,11 @@ void	handle_exit_status_child(t_line *line, int status)
 	}
 }
 
-/* void	handle_exit_status_in_pipe(t_line *line)
+void	handle_exit_status_in_pipe(t_line *line)
 {
 	t_pipe	*current;
 	
 	current = line->pipe_head;
-	fprintf(stderr, "\n%s\n", current->arg[0]);
 	while (current != NULL)
 	{
 		if (ft_strcmp(current->arg[0], "exit") == 0)
@@ -39,6 +42,7 @@ void	handle_exit_status_child(t_line *line, int status)
 		}
 		current = current->next;
 	}
+<<<<<<< HEAD
 } */
 
 static int	get_nonull(void)
@@ -71,4 +75,6 @@ char	*send_eof(char *line)
 	if (!line)
 		return (NULL);
 	return (line);
+=======
+>>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 }
