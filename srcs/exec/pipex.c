@@ -6,11 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/13 13:53:28 by aljulien         ###   ########.fr       */
-=======
-/*   Updated: 2024/07/30 15:36:45 by aljulien         ###   ########.fr       */
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
+/*   Updated: 2024/08/13 15:35:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +22,7 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd)
         return (perror("fork"), 0);
     if (pid == 0)
     {
-<<<<<<< HEAD
         if (input_fd != STDIN_FILENO)
-=======
-        line_heredoc = readline("> ");
-        if (ft_strcmp(line_heredoc, pipe->redir->fd) == 0)
-            return (1);
-    }
-	return (0);
-}
-
-static int redirection_in_pipe(t_pipe *pipe, int *saved_output)
-{
-    t_redir *current_redir;
-    t_redir *last_out_redir = NULL;
-    int     fd;
-    int     flags;
-
-    *saved_output = dup(STDOUT_FILENO);
-    if (*saved_output == -1)
-        return (perror("dup"), 0);
-    current_redir = pipe->redir;
-    while (current_redir != NULL)
-    {
-        if (current_redir->type == OUT_REDIR || current_redir->type == APPEND)
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
         {
             if (dup2(input_fd, STDIN_FILENO) == -1)
                 return (perror("dup2 input_fd"), 0);
@@ -77,32 +49,6 @@ static int redirection_in_pipe(t_pipe *pipe, int *saved_output)
             if (execute_cmd(env, pipe))
                 exit(pipe->ret_val);
         }
-<<<<<<< HEAD
-=======
-        if (!ft_strcmp(line->pipe->arg[0], "echo"))
-            ft_echo(line->pipe->arg); // Directly call the echo function
-        else if (!ft_strcmp(line->pipe->arg[0], "cd"))
-            ; // Implement cd logic
-        else if (!ft_strcmp(line->pipe->arg[0], "pwd"))
-            ft_pwd(line->pipe->arg);
-        else if (!ft_strcmp(line->pipe->arg[0], "export"))
-            printf("export\n");
-        else if (!ft_strcmp(line->pipe->arg[0], "unset"))
-            printf("unset\n");
-        else if (!ft_strcmp(line->pipe->arg[0], "env"))
-            ; // Implement env logic
-        else if (!ft_strcmp(line->pipe->arg[0], "exit"))
-            ft_exit(line->pipe);
-        else
-    		return 1; // Command not recognized
-        if (saved_output != -1)
-        {
-            if (dup2(saved_output, STDOUT_FILENO) == -1)
-                perror("dup2");
-            close(saved_output);
-        }
-        return (0); // Successfully executed the command
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
     }
     return (pid);
 }
@@ -142,7 +88,6 @@ int	_call_childs(t_env *env, t_line *line)
 	}
 	while (wait(&status) > 0)
 		handle_exit_status_child(line, status);
-	handle_exit_status_in_pipe(line);
 	return (1);
 }
 

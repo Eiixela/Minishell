@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/13 15:19:30 by aljulien         ###   ########.fr       */
-=======
-/*   Updated: 2024/07/30 18:04:01 by saperrie         ###   ########.fr       */
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
+/*   Updated: 2024/08/13 15:34:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +32,6 @@ int	main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
-	line.env = env;
 	str = NULL;
 	if (ac != 1)
 		return(print_error(errno, "minishell: too many arguments"), 1);

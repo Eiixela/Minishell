@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/05 16:24:44 by aljulien         ###   ########.fr       */
-=======
-/*   Updated: 2024/07/30 15:20:25 by aljulien         ###   ########.fr       */
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
+/*   Updated: 2024/08/13 15:35:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +25,7 @@ void	handle_exit_status_child(t_line *line, int status)
 	}
 }
 
-void	handle_exit_status_in_pipe(t_line *line)
+/* void	handle_exit_status_in_pipe(t_line *line)
 {
 	t_pipe	*current;
 	
@@ -42,7 +38,6 @@ void	handle_exit_status_in_pipe(t_line *line)
 		}
 		current = current->next;
 	}
-<<<<<<< HEAD
 } */
 
 static int	get_nonull(void)
@@ -75,6 +70,4 @@ char	*send_eof(char *line)
 	if (!line)
 		return (NULL);
 	return (line);
-=======
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 }

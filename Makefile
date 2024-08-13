@@ -3,14 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2024/08/13 12:35:09 by aljulien         ###   ########.fr        #
-=======
-#    Updated: 2024/07/30 16:31:55 by saperrie         ###   ########.fr        #
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
+#    Updated: 2024/08/13 15:33:19 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,14 +45,10 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/exec/execve.c\
 		srcs/exec/parse_and_execute_builtins.c\
 		srcs/exec/signal.c\
-<<<<<<< HEAD
 		srcs/exec/redirections.c\
 		srcs/exec/error.c\
 		srcs/exec/free.c\
 							)
-=======
-)
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))
 

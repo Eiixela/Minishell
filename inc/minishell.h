@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/13 15:15:03 by aljulien         ###   ########.fr       */
-=======
-/*   Updated: 2024/07/30 16:27:49 by saperrie         ###   ########.fr       */
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
+/*   Updated: 2024/08/13 15:33:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +137,6 @@ char		redirection_offset(char redir_operator);
 
 //======================================EXEC===================================
 
-<<<<<<< HEAD
 //BUILTINS
 int		ft_echo(char **arg);
 void	ft_pwd(char **av);
@@ -169,24 +164,6 @@ void	siglisten(void);
 void	sigend(void);
 void	sighandler(int sig);
 void	handle_exit_status_child(t_line *line, int status);
-=======
-int			ft_echo(char **arg);
-void		ft_pwd(char **av);
-void		ft_cd(char **av, char **env);
-void		ft_env(char **env);
-int			ft_exit (t_pipe *pipe);
-
-//====================================BUILTINS=================================
-
-// =================================== EXEC ================================
-
-int			pipex(char **env, t_line *line);
-int			execute_cmd(char **env, t_pipe *pipe);
-char		*get_path(char *cmd, char **env, int i);
-int			parse_builtin(t_pipe *pipe);
-void		handle_exit_status_child(t_line *line, int status);
-void		handle_exit_status_in_pipe(t_line *line);
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 
 //REDIRECTIONS
 int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
@@ -203,13 +180,4 @@ int		execute_builtins(t_env *env, t_pipe *pipe);
 
 // =================================== EXEC ================================
 
-<<<<<<< HEAD
-=======
-
-//====================================OTHERS===================================
-int			ft_putstr_fd(char *s, int fd);
-
-
-
->>>>>>> a81b1ccc477598d27c263152b8076dd68edcd30a
 #endif

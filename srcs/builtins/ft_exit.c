@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:25:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 16:32:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,15 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 {
 	(void)pipe;
 	clear_history();
-	fprintf(stderr, "here 9 !\n");
 	/* if (y && (*lst) && (*lst)->env)
 		env_freelst(&(*lst)->env);
 	if (lst && (*lst))
 		input_freelst(lst); */
+	printf("exit\n");
 	if (error_message)
 		print_error(0, error_message);
-	fprintf(stderr, "here 10 !\n");
 	if (arg_of_exit > 0)
-	{
-		printf("exit\n");
 		exit(pipe->ret_val);
-	}
 	else
 		exit(EXIT_SUCCESS);
 }
@@ -42,7 +38,7 @@ static bool	overflow(char *str)
 	ft_strlcpy(too_big, "9223372036854775807", 20);
 	if (!str)
 		return (true);
-	if (ft_strlen(str) > ft_strlen(too_big))
+	if (ft_strlen(str) >= ft_strlen(too_big))
 		return (false);
 	if (ft_strlen(str) == ft_strlen(too_big))
 	{
@@ -90,16 +86,13 @@ int	print_error_message(char *s1, char *s2, char *s3)
 
 static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit)
 {
-	fprintf(stderr, "here 2 !\n");
 	if (not_num(pipe->arg[1]) == 0 || overflow(pipe->arg[1]) == 0)
 	{
-		fprintf(stderr, "here 3 !\n");
 		printf("exit\n");
 		print_error_message("minishell: exit: ", pipe->arg[1], \
 		": numeric argument required");
 		arg_of_exit = 2;
 		lethal_exit(pipe, arg_of_exit, NULL);
-		fprintf(stderr, "here 4 !\n");
 	}
 }
 
@@ -111,23 +104,16 @@ int ft_exit (t_pipe *pipe)
 	//		free(line);
 	if (pipe && pipe->arg[1])
 	{
-		fprintf(stderr, "here 1 !\n");
 		is_arg_valid(pipe, 0);
-		fprintf(stderr, "here 5 !\n");
 		if (ft_dstrlen(pipe->arg) > 2)
 			return(printf("exit\nbash: exit: too many arguments\n"), 1);
 		else
 		{
-			fprintf(stderr, "here 6 !\n");
 			arg_of_exit = ft_atoll(pipe->arg[1]);
-			fprintf(stderr, "here 7 !\n");
 			pipe->ret_val = (unsigned char)arg_of_exit;
-			fprintf(stderr, "here 8 !\n");
 			return(lethal_exit(pipe, pipe->ret_val, NULL), pipe->ret_val);
 		}
 	}
-	fprintf(stderr, "here 12 !\n");
 	arg_of_exit = pipe->ret_val;
-	fprintf(stderr, "here 13 !\n");
 	return (lethal_exit(pipe, arg_of_exit, NULL), arg_of_exit);
 }
