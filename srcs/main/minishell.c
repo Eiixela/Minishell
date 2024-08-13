@@ -6,11 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:24:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 15:19:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
 int	g_ret = 0;
 

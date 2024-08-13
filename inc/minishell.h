@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:42:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 15:15:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ typedef struct s_pipe
 	struct s_pipe	*next;
 	struct s_pipe	*prev;
 	int				ret_val;
-	t_env			*env;
 }	t_pipe;
 
 typedef struct s_argv

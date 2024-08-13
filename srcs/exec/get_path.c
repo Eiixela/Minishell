@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:32:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/13 15:01:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	*get_path(t_pipe *pipe, char **env, int i)
 	char	*exec;
 	char	*path_part;
 	char	**allpath;
+
 	if (ft_strchr(pipe->arg[0], '/'))
 		return (check_command_in_path(pipe->arg[0]));
 	allpath = ft_split(get_env("PATH", env), ':');
@@ -67,6 +68,6 @@ char	*get_path(t_pipe *pipe, char **env, int i)
 		}
 		free(exec);
 	}
-	free_all_tab(pipe->arg, allpath);
+	free_double_tab(allpath);
 	return (NULL);
 }
