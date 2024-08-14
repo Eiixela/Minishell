@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/13 15:33:19 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/14 12:12:20 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/main/minishell.c\
 		srcs/parsing/big_parse.c\
 		srcs/parsing/lexing.c\
-		srcs/parsing/expansion.c\
+		srcs/parsing/expand.c\
 		srcs/parsing/parsing.c\
 		srcs/parsing/utils/parsing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
