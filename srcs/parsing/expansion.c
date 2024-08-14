@@ -5,95 +5,67 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/13 01:03:34 by marvin            #+#    #+#             */
-/*   Updated: 2024/08/13 20:33:24 by saperrie         ###   ########.fr       */
+/*   Created: 2024/05/08 19:49:30 by saperrie          #+#    #+#             */
+/*   Updated: 2024/07/30 18:05:56 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	str_contains_wspace(char *str)
+static	char	*get_new_node(char *s1, char *value, char *rest)
 {
-	while (*str)
-	{
-		if (*str == ' ' || *str == '\t')
-			return (true);
-	}
-	return (false);
-}
-
-int		get_namelen(char *input)
-{
-	int	length;
-
-	length = 0;
-	while (*input)
-	{
-		if (ft_isalnum(*input) || *input == '_')
-			length += 1;
-		else
-			break ;
-		input++;
-	}
-	return (length);
+	if (s1)
+		return (ft_strjoin(s1, ft_strjoin(value, rest)));
+	return (ft_strjoin(value, rest));
 }
 
 static char	*get_env_value(t_line *line, char *name)
 {
-	// char	**env;
+	char	**env;
 	char	*value;
 	int		name_len;
 
-	// env = line->env;
+	env = line->env;
 	name_len = ft_strlen(name);
-	while (line->env)
+	while (*env)
 	{
-		if (!ft_strncmp(name, line->env->env, name_len) && *(line->env->env + name_len) == '=')
+		if (!ft_strncmp(name, *env, name_len) && *(*env + name_len) == '=')
 		{
-			value = ft_strdup(line->env->env + name_len + 1);
+			value = ft_strdup(*env + name_len + 1);
 			if (!value)
 				return (NULL);
 			return (value);
 		}
-		line->env = line->env->next;
+		env++;
 	}
 	return (ft_calloc(1, 1));
 }
 
-t_line	*make_new_nodes(char **new_nodes, t_line *line)
+static char	*get_s1_for_strjoin(t_line *line, char *ptr)
 {
-	while (*new_nodes)
-	{
-		line = make_argv_node(*new_nodes, ft_strlen(*new_nodes), line);
-		if (!line)
-			return (NULL);
-		(*new_nodes)++;
-	}
-	return (line);
+	char	*s1;
+
+	s1 = NULL;
+	if (*ptr != *line->argv->node)
+		s1 = ft_substr(line->argv->node, 0, ptr - line->argv->node);
+	return (s1);
 }
 
-// FIXME Handle single $ (or $+ $= )
-//							 + = / . , : ~ ` ! # $ % ^ ( ) { } [ ] PRINT DOLLAR
-
-char	*which_expand(char *input, t_line *line)
+static char	*handle_dollar(t_line *line, char *ptr, char *tmp, char *new_node)
 {
+	char	*s1;
 	char	*name;
 	char	*value;
-	char	**new_nodes;
-	int		namelen;
+	char	*rest;
+	size_t	name_len;
 
-	namelen = get_namelen(input);
-	if (namelen == -1)
-		return (ft_calloc(1, 1));
-	++input;
-	// if (namelen == 0)
-	// {
-	// 	line = make_argv_node("$", 1, line);
-	// 	if (!line)
-	// 		return (NULL);
-	// 	return (input);
-	// }
-	name = ft_substr(input, 0, namelen);
+	name_len = 0;
+	s1 = get_s1_for_strjoin(line, ptr);
+	tmp = ptr;
+	while (is_valid_varname(*(++tmp)))
+		name_len += 1;
+	// name_len = get_name_length(tmp);
+	name = ft_substr(ptr, 1, name_len);
 	if (!name)
 		return (NULL);
 	value = get_env_value(line, name);
@@ -101,25 +73,40 @@ char	*which_expand(char *input, t_line *line)
 		return (NULL);
 	if (name)
 		free(name);
-	if (!str_contains_wspace(value))
-	{
-		line = make_argv_node(value, namelen, line);
-		if (!line)
-			return (NULL);
-	}
-	else
-	{
-		new_nodes = ft_split(value, ' ');
-		if (!new_nodes)
-			return (NULL);
-		line = make_new_nodes(new_nodes, line);
-		if (!line)
-			return (NULL);
-	}
-	return (input + namelen);
+	rest = ft_strdup(&line->argv->node[name_len + _strlen(s1) + 1]);
+	if (!rest)
+		return (NULL);
+	new_node = get_new_node(s1, value, rest);
+	if (!new_node)
+		return (NULL);
+	free(line->argv->node);
+	line->argv->node = new_node;
+	return (new_node - 1);
 }
 
-char	*super_expand(char *input, t_line *line)
+bool	expand(t_line *line)
 {
-	if (input[0] == '$' && (!ft_isalnum(input[1]) || input[1] != '_')
+	char	*ptr;
+	char	*tmp;
+	char	*new_node;
+
+	tmp = NULL;
+	new_node = NULL;
+	line->argv = line->argv_head;
+	while (line->argv)
+	{
+		ptr = line->argv->node;
+		// tmp = ptr;
+		while (*ptr)
+		{
+			if (*ptr == '$' && (ptr[1] != '+' || ptr[1] != '=')) /* + = / . , : ~ ` ! # $ % ^ ( ) { } [ ] \ PRINT DOLLAR*/ // FOR OTHERS SPECIAL CHARACTERS DON'T (AND )
+				ptr = handle_dollar(line, ptr, tmp, new_node);
+			if (!ptr)
+				return (false);
+			ptr += 1;
+		}
+		line->argv = line->argv->next;
+	}
+	line->argv = line->argv_head;
+	return (true);
 }
