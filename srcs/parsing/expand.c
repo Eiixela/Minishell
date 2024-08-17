@@ -6,29 +6,11 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/17 17:18:31 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/17 18:09:58 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*_strdup(const char *s)
-{
-	char	*p;
-	size_t	i;
-
-	i = 0;
-	p = (char *)malloc(sizeof(*s) * _strlen(s) + 1);
-	if (p == NULL)
-		return (NULL);
-	while (s[i])
-	{
-		p[i] = s[i];
-		i++;
-	}
-	p[i] = '\0';
-	return (p);
-}
 
 // THERE'S GOTTA BE A LEAK IN THERE SOMEWHERE
 char	*actual_expand(char *s1, char *value, char *rest)
@@ -51,7 +33,7 @@ char	*get_env_value(t_line *line, char *name)
 		if (!ft_strncmp(name, *env, name_len) && *(*env + name_len) == '=')
 		{
 			if (*(*env + name_len + 1) == '\0')
-				return (write(2, "OKOKOK", 6), ft_calloc(1, 1));
+				return (ft_calloc(1, 1));
 			value = ft_strdup(*env + name_len + 1);
 			if (!value)
 				return (NULL);
@@ -95,8 +77,6 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	if (!final_input)
 		return (false);
 	// free_s1_value_rest(s1, value, rest);
-	// printf("INPUTPUT: %s\n", final_input);
-	// pause();
 	return (final_input);
 }
 
@@ -107,14 +87,12 @@ char	*expand(char *input, t_line *line)
 	str_head = input;
 	while (*input)
 	{
-		if (input[0] == '$' && (input[1] != '+' || input[1] != '=')) /* + = / . , : ~ ` ! # $ % ^ ( ) { } [ ] \ PRINT DOLLAR*/ // FOR OTHERS SPECIAL CHARACTERS DON'T (AND )
+		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_'))
 		{
 			input = towards_expand(input, line, str_head);
 			str_head = input;
 			continue ;
-		}	
-		// else if (*input == '$' && (input[1] == '+' || input[1] == '=')) /* + = / . , : ~ ` ! # $ % ^ ( ) { } [ ] \ PRINT DOLLAR*/ // FOR OTHERS SPECIAL CHARACTERS DON'T (AND )
-		// 	PRINT_DOLLAR_AND_FRIENDS();
+		}
 		if (!input)
 			return (NULL);
 		input += 1;

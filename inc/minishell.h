@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/14 17:02:14 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/17 18:02:10 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,11 @@ char		*skip_quote_content(char *str, char quote);
 bool		clean_surrounding_quotes(t_line *line);
 // TOKENS_UTILS
 
-// EXPANSION
+// EXPAND_UTILS
 size_t		_strlen(char const *str);
 bool		is_valid_varname(char c);
-// EXPANSION
+char		*_strdup(const char *s);
+// EXPAND_UTILS
 
 // PARSING_UTILS
 size_t		ft_tablen(char **str);
