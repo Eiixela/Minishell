@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/14 17:22:56 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/17 17:18:31 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ char	*get_env_value(t_line *line, char *name)
 	{
 		if (!ft_strncmp(name, *env, name_len) && *(*env + name_len) == '=')
 		{
+			if (*(*env + name_len + 1) == '\0')
+				return (write(2, "OKOKOK", 6), ft_calloc(1, 1));
 			value = ft_strdup(*env + name_len + 1);
 			if (!value)
 				return (NULL);
@@ -60,39 +62,33 @@ char	*get_env_value(t_line *line, char *name)
 	return (ft_calloc(1, 1));
 }
 
-char	*get_value(char	*dollar_index, t_line *line)
+char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 {
-	char	*ptr;
+	char	*final_input;
+	char	*s1;
 	char	*name;
 	char	*value;
-	size_t	name_len;
+	char	*rest;
+	char	*name_ptr;
+	int		name_len;
 
 	name_len = 0;
-	ptr = dollar_index;
-	while (is_valid_varname(*(++ptr)))
+	final_input = ft_strdup(str_head);
+	if (!final_input)
+		return (false);
+	s1 = ft_substr(str_head, 0, dollar_index - str_head);
+	name_ptr = dollar_index;
+	while (is_valid_varname(*(++name_ptr)))
 		name_len += 1;
 	name = ft_substr(dollar_index, 1, name_len);
 	if (!name) // THERE SHOULD BE MORE TO THIS THAN JUST NULL CHECK
 		return (NULL);
 	value = get_env_value(line, name);
-	return (value);
-}
-
-char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
-{
-	char	*final_input;
-	char	*s1;
-	char	*value;
-	char	*rest;
-
-	final_input = ft_strdup(str_head);
-	if (!final_input)
-		return (false);
-	s1 = ft_substr(str_head, 0, dollar_index - str_head);
-	value = get_value(dollar_index, line);
 	if (!value)
 		return (false);
-	rest = _strdup(dollar_index + 1 + _strlen(value));
+	if (name)
+		free(name);
+	rest = _strdup(dollar_index + 1 + name_len);
 	if (!rest)
 		return (false);
 	final_input = actual_expand(s1, value, rest);
