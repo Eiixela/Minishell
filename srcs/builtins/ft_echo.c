@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 17:18:07 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/12 11:10:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/19 20:22:15 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ int	ft_echo(char **arg)
 					return (1);
 		}
 		if (indice_flag == false)
-			if (write(1, "\n'", 1) == -1)
+			if (write(1, "\n", 1) == -1)
 				return (1);
 	}
+	else
+		write(1, "\n", 1);
 	return (0);
 }
