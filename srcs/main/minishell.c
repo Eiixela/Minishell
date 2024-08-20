@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/14 12:02:57 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:01:48 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int ac, char **av, char **envp)
 		return(print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
 		return (1);
-	line.env = envp;
+	line.env = env;
 	// printf("%p ENV ADDR\n%s VALUE\n", line.env, line.env->env);
 	while (1)
 	{

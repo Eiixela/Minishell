@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 17:18:07 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/19 20:22:15 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:12:40 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	count_nb_arg(char *arg)
 int	ft_echo(char **arg)
 {
 	bool	indice_flag;
-	int	i;
+	int		i;
 
 	i = 0;
 	indice_flag = false;
