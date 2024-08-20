@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/20 21:08:06 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:19:39 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,16 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 char	*expand(char *input, t_line *line)
 {
 	char	*str_head;
+	short	squote_mode;
 
 	str_head = input;
+	squote_mode = -1;
 	while (*input)
 	{
-		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_'))
+		if (input[0] == '\'')
+			squote_mode *= -1;
+		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
+			&& squote_mode == -1)
 		{
 			input = towards_expand(input, line, str_head);
 			str_head = input;
