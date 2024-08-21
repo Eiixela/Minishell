@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/21 20:34:22 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:51:18 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,16 @@ void	turn_extra_dollar_negative(char	**s1)
 char	*actual_expand(char *s1, char *value, char *rest)
 {
 	char	*final_input;
+	char	*s2;
 
 	if (s1)
 	{
 		turn_extra_dollar_negative(&s1);
-		final_input = ft_strjoin(s1, ft_strjoin(value, rest));
+		s2 = ft_strjoin(value, rest);
+		if (!s2)
+			return (NULL);
+		final_input = ft_strjoin(s1, s2);
+		free(s2);
 		return (final_input);
 	}
 	final_input = ft_strjoin(value, rest);
@@ -65,6 +70,18 @@ char	*get_env_value(t_line *line, char *name)
 	return (ft_calloc(1, 1));
 }
 
+void	free_s1_value_rest_name(char *s1, char *value, char *rest, char *name)
+{
+	if (s1)
+		free(s1);
+	if (value)
+		free(value);
+	if (rest)
+		free(rest);
+	if (name)
+		free(name);
+}
+
 char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 {
 	char	*final_input;
@@ -76,9 +93,6 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	int		name_len;
 
 	name_len = 0;
-	final_input = ft_strdup(str_head);
-	if (!final_input)
-		return (false);
 	s1 = ft_substr(str_head, 0, dollar_index - str_head);
 	name_ptr = dollar_index;
 	while (is_valid_varname(*(++name_ptr)))
@@ -89,15 +103,13 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	value = get_env_value(line, name);
 	if (!value)
 		return (false);
-	if (name)
-		free(name);
 	rest = _strdup(dollar_index + 1 + name_len);
 	if (!rest)
 		return (false);
 	final_input = actual_expand(s1, value, rest);
 	if (!final_input)
 		return (false);
-	// free_s1_value_rest(s1, value, rest);
+	free_s1_value_rest_name(s1, value, rest, name);
 	return (final_input);
 }
 

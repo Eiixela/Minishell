@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/14 17:20:45 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/21 21:20:55 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,12 @@ bool	big_parse(t_line *line, char **input)
 	str = *input;
 	if (!clean_input((char **)&str))
 		return (false);
-	// printf("INITIAL: %s\n\n", str);
 	str = expand(str, line);
 	if (!str)
 		return (false);
-	// printf("FINAL: %s\n%p\n", str, str);
-	// pause();
 	if (!lex((char *)str, line))
 		return (false);
+	free(str);
 	if (!parse(line))
 		return (false);
 	return (true);
