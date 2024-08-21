@@ -6,18 +6,39 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/20 21:19:39 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:34:22 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	turn_extra_dollar_negative(char	**s1)
+{
+	char	*head;
+
+	head = *s1;
+	while (**s1)
+	{
+		if (**s1 == '$')
+			**s1 *= -1;
+		*s1 += 1;
+	}
+	*s1 = head;
+}
+
 // THERE'S GOTTA BE A LEAK IN THERE SOMEWHERE
 char	*actual_expand(char *s1, char *value, char *rest)
 {
+	char	*final_input;
+
 	if (s1)
-		return (ft_strjoin(s1, ft_strjoin(value, rest)));
-	return (ft_strjoin(value, rest));
+	{
+		turn_extra_dollar_negative(&s1);
+		final_input = ft_strjoin(s1, ft_strjoin(value, rest));
+		return (final_input);
+	}
+	final_input = ft_strjoin(value, rest);
+	return (final_input);
 }
 
 char	*get_env_value(t_line *line, char *name)
@@ -92,7 +113,7 @@ char	*expand(char *input, t_line *line)
 		if (input[0] == '\'')
 			squote_mode *= -1;
 		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
-			&& squote_mode == -1)
+			&& squote_mode == -1 && input[1] != '$' && (input [1] != '\'' || input [1] != '"'))
 		{
 			input = towards_expand(input, line, str_head);
 			str_head = input;
