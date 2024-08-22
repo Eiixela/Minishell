@@ -3,110 +3,91 @@
 /*                                                        :::      ::::::::   */
 /*   super_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/08 19:49:30 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/22 09:07:47 by aljulien         ###   ########.fr       */
+/*   Created: 2024/07/18 01:03:09 by saperrie          #+#    #+#             */
+/*   Updated: 2024/07/19 01:51:53 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	char	*get_new_node(char *s1, char *value, char *rest)
+bool	rearrange_prev_next_in_argv_nodes(t_line *line, char **strs)
 {
-	if (s1)
-		return (ft_strjoin(s1, ft_strjoin(value, rest)));
-	return (ft_strjoin(value, rest));
+	t_line	*new_line;
+
+	new_line = ft_calloc(1, sizeof(t_line));
+	if (!new_line)
+		return (false);
+	new_line->argc = 0;
+	while (*strs)
+		make_argv_node(*strs++, ft_strlen(*strs), new_line);
 }
 
-static char	*get_env_value(t_line *line, char *name)
+static bool	insert_new_nodes(t_line *line, char **new_nodes, int node_index)
 {
-	char	**env;
-	char	*value;
-	int		name_len;
+	bool	rearranged;
 
-	env = line->env;
-	name_len = ft_strlen(name);
-	while (*env)
-	{
-		if (!ft_strncmp(name, *env, name_len) && *(*env + name_len) == '=')
-		{
-			value = ft_strdup(*env + name_len + 1);
-			if (!value)
-				return (NULL);
-			return (value);
-		}
-		env++;
-	}
-	return (ft_calloc(1, 1));
-}
-
-static char	*get_s1_for_strjoin(t_line *line, char *ptr)
-{
-	char	*s1;
-
-	s1 = NULL;
-	if (*ptr != *line->argv->node)
-		s1 = ft_substr(line->argv->node, 0, ptr - line->argv->node);
-	return (s1);
-}
-
-static char	*handle_dollar(t_line *line, char *ptr, char *tmp, char *new_node)
-{
-	char	*s1;
-	char	*name;
-	char	*value;
-	char	*rest;
-	size_t	name_len;
-
-	name_len = 0;
-	s1 = get_s1_for_strjoin(line, ptr);
-	tmp = ptr;
-	while (is_valid_varname(*(++tmp)))
-		name_len += 1;
-	// name_len = get_name_length(tmp);
-	name = ft_substr(ptr, 1, name_len);
-	if (!name)
-		return (NULL);
-	value = get_env_value(line, name);
-	if (!value)
-		return (NULL);
-	if (name)
-		free(name);
-	rest = ft_strdup(&line->argv->node[name_len + _strlen(s1) + 1]);
-	if (!rest)
-		return (NULL);
-	new_node = get_new_node(s1, value, rest);
-	if (!new_node)
-		return (NULL);
+	rearranged = false;
+	while (node_index != line->argv->node_index)
+		line->argv = line->argv->next;
 	free(line->argv->node);
-	line->argv->node = new_node;
-	return (new_node - 1);
+	line->argv->node = *new_nodes;
+	rearranged = rearrange_prev_next_in_argv_nodes(line, new_nodes);
+	if (!rearranged)
+		return (true);
+	return (false);
 }
 
-bool	expand(t_line *line)
+static bool	wspace_within_quotes(t_line *line)
 {
-	char	*ptr;
-	char	*tmp;
-	char	*new_node;
+	char	*str;
+	bool	inside_quote;
 
-	tmp = NULL;
-	new_node = NULL;
-	line->argv = line->argv_head;
+	inside_quote = -1;
+	str = line->argv->node;
+	while (str)
+	{
+		if (*str == '"')
+			inside_quote *= -1;
+		if (inside_quote == 1 && (*str == ' ' || *str == '\t'))
+			return (true);
+		str += 1;
+	}
+	return (false);
+}
+
+bool	str_contains_wspace(char *str)
+{
+	while (*str)
+	{
+		if (*str == ' ')
+			return (true);
+	}
+	return (false);
+}
+
+bool	potential_split_after_expand(t_line *line)
+{
+	char	**new_nodes;
+
 	while (line->argv)
 	{
-		ptr = line->argv->node;
-		// tmp = ptr;
-		while (*ptr)
+		if (!str_contains_wspace(line->argv->node))
 		{
-			if (*ptr == '$' && (ptr[1] != '+' || ptr[1] != '=')) /* + = / . , : ~ ` ! # $ % ^ ( ) { } [ ] \ PRINT DOLLAR*/ // FOR OTHERS SPECIAL CHARACTERS DON'T (AND )
-				ptr = handle_dollar(line, ptr, tmp, new_node);
-			if (!ptr)
+			line->argv = line->argv->next;
+			if (!line->argv)
+				return (true);
+			continue ;
+		}
+		if (wspace_within_quotes(line))
+		{
+			new_nodes = ft_split(line->argv->node, ' '); // TODO ADD CHARSET FOR WSPACES
+			if (!new_nodes)
 				return (false);
-			ptr += 1;
+			insert_new_nodes(line, new_nodes, line->argv->node_index);
 		}
 		line->argv = line->argv->next;
 	}
-	line->argv = line->argv_head;
 	return (true);
 }
