@@ -6,13 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:02:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 12:43:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_cmd(t_env *env, t_pipe *pipe)
+int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 {
 	char	*path;
 	char	**env_now;
@@ -21,7 +21,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe)
 	path = NULL;
 	if (!pipe->arg || !pipe->arg[0])
 		return (printf("minishell: %s:command not found\n", pipe->arg[0]), 0);
-	if (execute_builtins(env, pipe) == 1)
+	if (execute_builtins(env, pipe, line) == 1)
 	{
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)

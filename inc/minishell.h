@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 10:40:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 13:01:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,25 +143,28 @@ char		redirection_offset(char redir_operator);
 //BUILTINS
 int		ft_echo(char **arg);
 void	ft_pwd(char **av);
-int	ft_cd(t_env *env, t_line *line);
+int		ft_cd(t_env *env, t_line *line);
 int		ft_env(t_env *env, t_pipe *pipe);
 int		ft_exit (t_pipe *pipe);
+int		ft_unset(t_line **line, t_env *env);
 int		parse_builtin(t_pipe *pipe);
 char	**arenvlst(t_env	*env);
-int	check_directory(char *var, char *path);
-int	pwds(t_env *env, char *path);
+int		check_directory(char *var, char *path);
+int		pwds(t_env *env, char *path);
 char	*check_len(char	*path, t_env *env);
 char	*prep_path(char *var, char *path);
 char	*find_var_env(t_env *env, char *var);
 size_t	ft_arrlen(char **arr);
 char	*split_wsep(char *str, char sep);
 void	*exprt_inenv(t_env **env, char *data);
+int	export(t_pipe **pipe, t_env *env);
+int	sort_env(t_env	*env);
 
 //ERROR
 void	*errjoin(int error_code, char *error_message);
 void	*print_error(int error_code, char *error_message);
 int		print_error_message(char *s1, char *s2, char *s3);
-int	verror(char *s1, char *s2, char *s3);
+int		verror(char *s1, char *s2, char *s3);
 
 //FREE
 void	env_freelst(t_env **env);
@@ -182,13 +185,13 @@ int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
 
 //EXECUTING
 int		pipex(t_env *env, t_line *line);
-int		execute_cmd(t_env *env, t_pipe *pipe);
+int		execute_cmd(t_env *env, t_pipe *pipe, t_line *line);
 char	*get_path(t_pipe *pipe, char **env, int i);
 int		parse_and_execute_solo_builtins(t_env *env, t_line *line);
-int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd);
+int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line);
 void	create_env(char **envp, t_env **env);
 int		_call_childs(t_env *env, t_line *line);
-int		execute_builtins(t_env *env, t_pipe *pipe);
+int		execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 
 // =================================== EXEC ================================
 

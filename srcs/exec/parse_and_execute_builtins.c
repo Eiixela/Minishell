@@ -6,22 +6,22 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 10:32:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 13:03:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_builtins(t_env *env, t_pipe *pipe)
+int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 {
 	if (!ft_strcmp(pipe->arg[0], "echo"))
 		return(ft_echo(pipe->arg), 0);
  	if (!ft_strcmp(pipe->arg[0], "cd"))
-		return(printf("cd"), 0); //ft_cd(pipe->arg, env)
+		return(ft_cd(env, line), 0); //ft_cd(pipe->arg, env)
 	if (!ft_strcmp(pipe->arg[0], "pwd"))
 		return (ft_pwd(pipe->arg), 0);
-	if (!ft_strcmp(pipe->arg[0], "export"))
-		return (printf("export\n"), 0); //ft_export()
+ 	if (!ft_strcmp(pipe->arg[0], "export"))
+		return (export(&pipe, env), 0); //ft_export()
 	if (!ft_strcmp(pipe->arg[0], "unset"))
 		return (printf("unset\n"), 0); //ft_unset()
 	if (!ft_strcmp(pipe->arg[0], "env"))
@@ -73,9 +73,9 @@ int parse_and_execute_solo_builtins(t_env *env, t_line *line)
         else if (!ft_strcmp(line->pipe->arg[0], "pwd"))
             ft_pwd(line->pipe->arg);
         else if (!ft_strcmp(line->pipe->arg[0], "export"))
-            printf("export\n");
+            export(&line->pipe, env);
         else if (!ft_strcmp(line->pipe->arg[0], "unset"))
-            printf("unset\n");
+            ft_unset(&line, env);
         else if (!ft_strcmp(line->pipe->arg[0], "env"))
             ft_env(env, line->pipe);
         else if (!ft_strcmp(line->pipe->arg[0], "exit"))
