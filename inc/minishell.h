@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:33:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 10:40:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+#include <limits.h>
 
 # define EXIT_SHELL 42
 
@@ -80,8 +81,9 @@ typedef struct s_line
 	t_argv			*argv_head;
 	t_pipe			*pipe;
 	t_pipe			*pipe_head;
-	char			**env;
+	t_env			*env;
 	int				nm_arg;
+	t_env			*env_head;
 }	t_line;
 
 
@@ -89,8 +91,8 @@ typedef struct s_line
 
 int			main(int argc, char *argv[], char *exp[]);
 bool		big_parse(t_line *line, char **input);
+char		*expand(char *input, t_line *line);
 bool		lex(char *input, t_line *line);
-bool		expand(t_line *line);
 bool		parse(t_line *line);
 
 // W_SPACE
@@ -109,10 +111,11 @@ char		*skip_quote_content(char *str, char quote);
 bool		clean_surrounding_quotes(t_line *line);
 // TOKENS_UTILS
 
-// EXPANSION
+// EXPAND_UTILS
 size_t		_strlen(char const *str);
 bool		is_valid_varname(char c);
-// EXPANSION
+char		*_strdup(const char *s);
+// EXPAND_UTILS
 
 // PARSING_UTILS
 size_t		ft_tablen(char **str);
@@ -140,16 +143,25 @@ char		redirection_offset(char redir_operator);
 //BUILTINS
 int		ft_echo(char **arg);
 void	ft_pwd(char **av);
-void	ft_cd(char **av, char **env);
+int	ft_cd(t_env *env, t_line *line);
 int		ft_env(t_env *env, t_pipe *pipe);
 int		ft_exit (t_pipe *pipe);
 int		parse_builtin(t_pipe *pipe);
 char	**arenvlst(t_env	*env);
+int	check_directory(char *var, char *path);
+int	pwds(t_env *env, char *path);
+char	*check_len(char	*path, t_env *env);
+char	*prep_path(char *var, char *path);
+char	*find_var_env(t_env *env, char *var);
+size_t	ft_arrlen(char **arr);
+char	*split_wsep(char *str, char sep);
+void	*exprt_inenv(t_env **env, char *data);
 
 //ERROR
 void	*errjoin(int error_code, char *error_message);
 void	*print_error(int error_code, char *error_message);
 int		print_error_message(char *s1, char *s2, char *s3);
+int	verror(char *s1, char *s2, char *s3);
 
 //FREE
 void	env_freelst(t_env **env);
@@ -172,7 +184,7 @@ int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
 int		pipex(t_env *env, t_line *line);
 int		execute_cmd(t_env *env, t_pipe *pipe);
 char	*get_path(t_pipe *pipe, char **env, int i);
-int		parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe);
+int		parse_and_execute_solo_builtins(t_env *env, t_line *line);
 int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd);
 void	create_env(char **envp, t_env **env);
 int		_call_childs(t_env *env, t_line *line);

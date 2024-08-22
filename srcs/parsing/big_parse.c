@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/13 15:34:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 09:05:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,12 @@ bool	big_parse(t_line *line, char **input)
 	str = *input;
 	if (!clean_input((char **)&str))
 		return (false);
+	str = expand(str, line);
+	if (!str)
+		return (false);
 	if (!lex((char *)str, line))
 		return (false);
-	if (!expand(line))
-		return (false);
+	free(str);
 	if (!parse(line))
 		return (false);
 	return (true);

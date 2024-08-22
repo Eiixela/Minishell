@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:35:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 09:39:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd)
 		}
 		if (parse_builtin(pipe))
         {
-            if (!execute_builtins(env, pipe))
+		    if (!execute_builtins(env, pipe))
                 exit(EXIT_SUCCESS);
-        }
-        else
+		}
+		else
         {
-            if (execute_cmd(env, pipe))
+		    if (execute_cmd(env, pipe))
                 exit(pipe->ret_val);
-        }
-    }
+		}
+	}
     return (pid);
 }
 
@@ -64,7 +64,7 @@ int	_call_childs(t_env *env, t_line *line)
 	(void)pid;
 	current = line->pipe;
 	input_fd = 0;
- 	if (parse_and_execute_solo_builtins(env, line->pipe) == 0)
+ 	if (parse_and_execute_solo_builtins(env, line) == 0)
 		return (1);
 	while (current != NULL)
 	{

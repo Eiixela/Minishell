@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/13 15:33:19 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/22 09:31:57 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/main/minishell.c\
 		srcs/parsing/big_parse.c\
 		srcs/parsing/lexing.c\
-		srcs/parsing/expansion.c\
+		srcs/parsing/expand.c\
 		srcs/parsing/parsing.c\
 		srcs/parsing/utils/parsing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
@@ -36,6 +36,9 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/builtins/ft_echo.c\
 		srcs/builtins/ft_pwd.c\
 		srcs/builtins/ft_cd.c\
+		srcs/builtins/ft_cd_utils.c\
+		srcs/builtins/ft_cd_canon.c\
+		srcs/builtins/builtins_utils.c\
 		srcs/builtins/ft_env.c\
 		srcs/builtins/ft_export.c\
 		srcs/builtins/ft_exit.c\

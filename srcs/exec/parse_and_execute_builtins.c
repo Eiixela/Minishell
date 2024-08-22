@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 13:53:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 10:32:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,30 +56,30 @@ int	parse_builtin (t_pipe *pipe)
 }
 
 //TODO make struct env for ome builtins
-int parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe)
+int parse_and_execute_solo_builtins(t_env *env, t_line *line)
 {
     int saved_output;
 
     saved_output = -1;
-    if (pipe->next == NULL && parse_builtin(pipe) == 1 && pipe->arg)
+    if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
     {
-        if (pipe->redir != NULL)
-            if (!redirection_in_pipe(pipe, &saved_output))
+        if (line->pipe->redir != NULL)
+            if (!redirection_in_pipe(line->pipe, &saved_output))
                 return (0);
-        if (!ft_strcmp(pipe->arg[0], "echo"))
-            ft_echo(pipe->arg);
-        else if (!ft_strcmp(pipe->arg[0], "cd"))
-            printf("cd\n");
-        else if (!ft_strcmp(pipe->arg[0], "pwd"))
-            ft_pwd(pipe->arg);
-        else if (!ft_strcmp(pipe->arg[0], "export"))
+        if (!ft_strcmp(line->pipe->arg[0], "echo"))
+            ft_echo(line->pipe->arg);
+        else if (!ft_strcmp(line->pipe->arg[0], "cd"))
+            ft_cd(env, line);
+        else if (!ft_strcmp(line->pipe->arg[0], "pwd"))
+            ft_pwd(line->pipe->arg);
+        else if (!ft_strcmp(line->pipe->arg[0], "export"))
             printf("export\n");
-        else if (!ft_strcmp(pipe->arg[0], "unset"))
+        else if (!ft_strcmp(line->pipe->arg[0], "unset"))
             printf("unset\n");
-        else if (!ft_strcmp(pipe->arg[0], "env"))
-            ft_env(env, pipe);
-        else if (!ft_strcmp(pipe->arg[0], "exit"))
-            ft_exit(pipe);
+        else if (!ft_strcmp(line->pipe->arg[0], "env"))
+            ft_env(env, line->pipe);
+        else if (!ft_strcmp(line->pipe->arg[0], "exit"))
+            ft_exit(line->pipe);
         else
             return (1);
         if (saved_output != -1)
