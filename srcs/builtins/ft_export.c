@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 13:01:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:46:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static bool	is_sorted(char **tab)
 {
 	size_t	i;
-
 	i = 0;
 	while (tab[i])
 	{
@@ -33,7 +32,7 @@ static char	**sort_tab(char **arenv, size_t len)
 	char	*tenv;
 
 	i = 0;
-	while (arenv[i])
+	while (i < 50 && arenv[i])
 	{
 		j = i + 1;
 		if (j <= len && ft_strncmp(arenv[i], arenv[j], ft_strlen(arenv[i])) > 0)
@@ -160,7 +159,6 @@ static int	exec_export(t_pipe **pipe, t_env *head, t_env *env)
 int	export(t_pipe **pipe, t_env *env)
 {
 	t_env	*head;
-
 	head = env;
 	if (env && !(*pipe)->arg[1])
 		if (sort_env(env) == 1)
