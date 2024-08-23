@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/23 09:20:38 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:20:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,34 @@ static bool	clean_input(char **str)
 	return (true);
 }
 
-bool	big_parse(t_line *line, char **input, t_env *env)
+int no_output_syntax_error(char *s, t_line *line)
+{
+	size_t	i = 0;
+	
+	if (s[i] == ':' || s[i] == '!' || s[i] == '\n' || s[i] == '#')
+	{	
+		line->pipe->ret_val = 0;
+		return (false);	
+	}
+	if (s[i] == '!')
+	{
+		line->pipe->ret_val = 1;
+		return (false);
+	}
+	return (true);
+}
+
+bool	big_parse(t_line *line, char **input, t_env *env, int *status)
 {
 	char	*str;
 
 	if (!*input || !input)
 		return (false);
+	if (!no_output_syntax_error(*input, line))
+	{
+		*status = 1;	
+		return (false);
+	}
 	skip_white_spaces((char **)input);
 	if (!**input)
 		return (false);
@@ -69,7 +91,7 @@ bool	big_parse(t_line *line, char **input, t_env *env)
 		return (false);
 	if (!lex((char *)str, line))
 		return (false);
-	free(str);
+	//free(str);
 	if (!parse(line))
 		return (false);
 	return (true);

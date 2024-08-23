@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 12:43:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:13:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,9 @@ int	_call_childs(t_env *env, t_line *line)
 	return (1);
 }
 
-int	pipex(t_env *env, t_line *line)
+int	pipex(t_env *env, t_line *line, int *status)
 {
+	line->pipe->ret_val = *status;
 	if (!_call_childs(env, line))		
 		return (0);
 	return (1);

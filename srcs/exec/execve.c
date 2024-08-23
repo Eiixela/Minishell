@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 12:43:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:18:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
-			ft_putstr_fd("minishell: ", STDOUT_FILENO);
-			ft_putstr_fd(pipe->arg[0], STDOUT_FILENO);
-			ft_putstr_fd(": command not found\n", STDOUT_FILENO);
+			print_error_message("minishell: ", pipe->arg[0], \
+		": command not found\n");
 			exit(127);
 		}
 		if (execve(path, pipe->arg, env_now) == -1)
 		{
-			perror("execve");
+			print_error_message("bash: ", pipe->arg[0], \
+		" Is a directory");
 			exit(126);
 		}
 	}

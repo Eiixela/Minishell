@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/23 09:20:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:14:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_line
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
-bool		big_parse(t_line *line, char **input, t_env *env);
+bool		big_parse(t_line *line, char **input, t_env *env, int *status);
 char		*expand(char *input, t_env *env);
 bool		lex(char *input, t_line *line);
 bool		parse(t_line *line);
@@ -142,7 +142,7 @@ char		redirection_offset(char redir_operator);
 
 //BUILTINS
 int		ft_echo(char **arg);
-void	ft_pwd(char **av);
+int		ft_pwd(char **av);
 int		ft_cd(t_env *env, t_line *line);
 int		ft_env(t_env *env, t_pipe *pipe);
 int		ft_exit (t_pipe *pipe);
@@ -157,8 +157,8 @@ char	*find_var_env(t_env *env, char *var);
 size_t	ft_arrlen(char **arr);
 char	*split_wsep(char *str, char sep);
 void	*exprt_inenv(t_env **env, char *data);
-int	export(t_pipe **pipe, t_env *env);
-int	sort_env(t_env	*env);
+int		export(t_pipe **pipe, t_env *env);
+int		sort_env(t_env	*env);
 
 //ERROR
 void	*errjoin(int error_code, char *error_message);
@@ -184,7 +184,7 @@ void	handle_exit_status_child(t_line *line, int status);
 int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
 
 //EXECUTING
-int		pipex(t_env *env, t_line *line);
+int		pipex(t_env *env, t_line *line, int *status);
 int		execute_cmd(t_env *env, t_pipe *pipe, t_line *line);
 char	*get_path(t_pipe *pipe, char **env, int i);
 int		parse_and_execute_solo_builtins(t_env *env, t_line *line);

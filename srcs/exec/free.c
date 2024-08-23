@@ -6,13 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:32:12 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:32:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:20:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_double_tab(char **s)
+void	free_double_tab(char **s)
 {
 	size_t	i;
 

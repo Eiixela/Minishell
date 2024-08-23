@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/23 09:23:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:17:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ int	main(int ac, char **av, char **envp)
 	char	*str;
 	t_line	line;
 	t_env	*env;
+	int		status;
 
 	(void)av;
 	(void)ac;
 	str = NULL;
+	status = 0;
 	if (ac != 1)
 		return(print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
@@ -44,13 +46,16 @@ int	main(int ac, char **av, char **envp)
 		if (str && *str)
 		{
 			add_history(str);
-			if (big_parse(&line, &str, env) == true)
+			if (big_parse(&line, &str, env, &status) == true)
 			{
-				if (!pipex(env, &line))
+				if (!pipex(env, &line, &status))
 					perror("execve");
+				if (g_ret == SIGINT)
+					status = 128 + g_ret;
 			}
 		}
 	}
 	clear_history();
+	exit(status);
 	return (0);
 }

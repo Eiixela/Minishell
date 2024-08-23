@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:28:09 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:01:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:20:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static char	*check_command_in_path(char *cmd)
 		return (ft_strdup(cmd));
 	return (NULL);
 }
-
-
 
 static char	*get_env(char *name, char **env)
 {
