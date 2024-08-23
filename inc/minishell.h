@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 15:10:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:20:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ typedef struct s_line
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
-bool		big_parse(t_line *line, char **input);
-char		*expand(char *input, t_line *line);
+bool		big_parse(t_line *line, char **input, t_env *env);
+char		*expand(char *input, t_env *env);
 bool		lex(char *input, t_line *line);
 bool		parse(t_line *line);
 

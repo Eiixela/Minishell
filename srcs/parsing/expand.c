@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/22 15:08:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:23:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,26 +46,26 @@ char	*actual_expand(char *s1, char *value, char *rest)
 	return (final_input);
 }
 
-char	*get_env_value(t_line *line, char *name)
+char	*get_env_value(char *name, t_env *env)
 {
-	t_env	*env;
+	t_env	*env_now;
 	char	*value;
 	int		name_len;
 
-	env = line->env;
+	env_now = env;
 	name_len = ft_strlen(name);
-	while (env)
+	while (env_now)
 	{
-		if (!ft_strncmp(name, env->env, name_len) && *(env->env + name_len) == '=')
+		if (!ft_strncmp(name, env_now->env, name_len) && *(env_now->env + name_len) == '=')
 		{
-			if (*(env->env + name_len + 1) == '\0')
+			if (*(env_now->env + name_len + 1) == '\0')
 				return (ft_calloc(1, 1));
-			value = ft_strdup(env->env + name_len + 1);
+			value = ft_strdup(env_now->env + name_len + 1);
 			if (!value)
 				return (NULL);
 			return (value);
 		}
-		env = env->next;
+		env_now = env_now->next;
 	}
 	return (ft_calloc(1, 1));
 }
@@ -82,7 +82,7 @@ void	free_s1_value_rest_name(char *s1, char *value, char *rest, char *name)
 		free(name);
 }
 
-char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
+char	*towards_expand(char *dollar_index, char *str_head, t_env *env)
 {
 	char	*final_input;
 	char	*s1;
@@ -100,7 +100,7 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	name = ft_substr(dollar_index, 1, name_len);
 	if (!name) // THERE SHOULD BE MORE TO THIS THAN JUST NULL CHECK
 		return (NULL);
-	value = get_env_value(line, name);
+	value = get_env_value(name, env);
 	if (!value)
 		return (false);
 	rest = _strdup(dollar_index + 1 + name_len);
@@ -113,7 +113,7 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	return (final_input);
 }
 
-char	*expand(char *input, t_line *line)
+char	*expand(char *input, t_env *env)
 {
 	char	*str_head;
 	short	squote_mode;
@@ -127,7 +127,7 @@ char	*expand(char *input, t_line *line)
 		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
 			&& squote_mode == -1 && input[1] != '$' && (input [1] != '\'' || input [1] != '"'))
 		{
-			input = towards_expand(input, line, str_head);
+			input = towards_expand(input, str_head, env);
 			str_head = input;
 			continue ;
 		}

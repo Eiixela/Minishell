@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/22 15:07:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:20:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static bool	clean_input(char **str)
 	return (true);
 }
 
-bool	big_parse(t_line *line, char **input)
+bool	big_parse(t_line *line, char **input, t_env *env)
 {
 	char	*str;
 
@@ -64,7 +64,7 @@ bool	big_parse(t_line *line, char **input)
 	str = *input;
 	if (!clean_input((char **)&str))
 		return (false);
-	str = expand(str, line);
+	str = expand(str, env);
 	if (!str)
 		return (false);
 	if (!lex((char *)str, line))
