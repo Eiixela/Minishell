@@ -6,7 +6,7 @@
 #    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/14 12:12:20 by saperrie         ###   ########.fr        #
+#    Updated: 2024/08/25 01:46:10 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
 
-CFLAGS = -Wall -Wextra -Werror -g3 
+CFLAGS = -Wall -Wextra -Werror -g3
 IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 DFLAGS = -MMD -MP
 LFLAGS = -L$(LIBFT_DIR) -lft -lreadline
@@ -28,6 +28,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/parsing/lexing.c\
 		srcs/parsing/expand.c\
 		srcs/parsing/parsing.c\
+		srcs/parsing/free.c\
 		srcs/parsing/utils/parsing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
 		srcs/parsing/utils/utils.c\
@@ -89,4 +90,3 @@ fclean: clean
 .PHONY: re
 re: fclean
 	@make --no-print-directory all
-

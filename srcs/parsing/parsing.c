@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/13 15:34:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:33:26 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,27 @@ static bool	tag_arg(t_line *line)
 {
 	char	**cpy;
 	size_t	tablen;
+	size_t	i;
 
-	cpy = line->pipe->arg;
-	tablen = ft_tablen(cpy);
-	line->pipe->arg = ft_calloc(tablen + 1 + 1, sizeof(char *));
-	if (!line->pipe->arg)
+	tablen = ft_tablen(line->pipe->arg);
+	cpy = ft_calloc(tablen + 2, sizeof(char *));
+	if (!cpy)
 		return (false);
-	ft_memcpy(line->pipe->arg, cpy, tablen * sizeof(char *));
-	line->pipe->arg[tablen] = line->argv->node;
+	i = -1;
+	if (line->pipe->arg)
+	{
+		while (++i < tablen)
+			cpy[i] = line->pipe->arg[i];
+		free(line->pipe->arg);
+	}
+	line->pipe->arg = cpy;
+	line->pipe->arg[tablen] = ft_strdup(line->argv->node);
+	if (!line->pipe->arg[tablen])
+	{
+		free(cpy);
+		return (false);
+	}
+	line->pipe->arg[tablen + 1] = NULL;
 	return (true);
 }
 
@@ -32,13 +45,17 @@ bool	handle_redir(t_line *line, char	*first_redirection)
 	char	operator;
 
 	operator = is_redirection_operator((line->argv->node));
-	if (operator == IN_REDIR && process_redir(line, IN_REDIR, first_redirection))
+	if (operator == IN_REDIR \
+		&& process_redir(line, IN_REDIR, first_redirection))
 		;
-	else if (operator == OUT_REDIR && process_redir(line, OUT_REDIR, first_redirection))
+	else if (operator == OUT_REDIR \
+		&& process_redir(line, OUT_REDIR, first_redirection))
 		;
-	else if (operator == APPEND && process_redir(line, APPEND, first_redirection))
+	else if (operator == APPEND \
+		&& process_redir(line, APPEND, first_redirection))
 		;
-	else if (operator == HEREDOC && process_redir(line, HEREDOC, first_redirection))
+	else if (operator == HEREDOC \
+		&& process_redir(line, HEREDOC, first_redirection))
 		;
 	else
 		return (false);
@@ -57,7 +74,7 @@ static	bool	handle_pipe(t_line *line, char *first_redirection)
 	return (true);
 }
 
-//TODO this too big, first part could be a function
+//TODO this too big, first part could be init pipe function
 static	bool	tag_tokens(t_line *line, char *first_redirection)
 {
 	line->pipe = ft_calloc(1, sizeof(t_pipe));
@@ -86,7 +103,6 @@ static	bool	tag_tokens(t_line *line, char *first_redirection)
 		line->argv = line->argv->next;
 	}
 	return (true);
-	// free_t_line_argv();
 }
 
 bool	parse(t_line *line)
@@ -102,5 +118,6 @@ bool	parse(t_line *line)
 		return (false);
 	line->pipe = line->pipe_head;
 	line->pipe->redir = line->pipe->redir_head;
+	line->argv = line->argv_head;
 	return (true);
 }

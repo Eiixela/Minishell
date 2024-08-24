@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:32:12 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:32:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:17:20 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_double_tab(char **s)
+void	free_double_tab(char **s)
 {
 	size_t	i;
 

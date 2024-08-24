@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/21 23:04:55 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:43:58 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	main(int ac, char **av, char **envp)
 					perror("execve");
 			}
 		}
+		cleanup(&line);
 	}
 	clear_history();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/21 22:51:18 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:34:31 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	turn_extra_dollar_negative(char	**s1)
 	*s1 = head;
 }
 
-// THERE'S GOTTA BE A LEAK IN THERE SOMEWHERE
 char	*actual_expand(char *s1, char *value, char *rest)
 {
 	char	*final_input;
@@ -56,7 +55,8 @@ char	*get_env_value(t_line *line, char *name)
 	name_len = ft_strlen(name);
 	while (env)
 	{
-		if (!ft_strncmp(name, env->env, name_len) && *(env->env + name_len) == '=')
+		if (!ft_strncmp(name, env->env, name_len) \
+			&& *(env->env + name_len) == '=')
 		{
 			if (*(env->env + name_len + 1) == '\0')
 				return (ft_calloc(1, 1));
@@ -98,7 +98,7 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	while (is_valid_varname(*(++name_ptr)))
 		name_len += 1;
 	name = ft_substr(dollar_index, 1, name_len);
-	if (!name) // THERE SHOULD BE MORE TO THIS THAN JUST NULL CHECK
+	if (!name)
 		return (NULL);
 	value = get_env_value(line, name);
 	if (!value)
@@ -125,7 +125,8 @@ char	*expand(char *input, t_line *line)
 		if (input[0] == '\'')
 			squote_mode *= -1;
 		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
-			&& squote_mode == -1 && input[1] != '$' && (input [1] != '\'' || input [1] != '"'))
+			&& squote_mode == -1 && input[1] != '$' \
+				&& (input [1] != '\'' || input [1] != '"'))
 		{
 			input = towards_expand(input, line, str_head);
 			str_head = input;

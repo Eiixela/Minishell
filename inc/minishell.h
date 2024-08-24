@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/20 21:12:08 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:44:09 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,34 +96,28 @@ bool		parse(t_line *line);
 // W_SPACE
 bool		is_white_space(char c);
 size_t		skip_white_spaces(char **input);
-// W_SPACE
 
 // QUOTES
 char		*find_matching_quote(char *str, char quote);
 bool		even_quotes(char *str);
-// QUOTES
 
 // TOKENS_UTILS
 bool		is_quote(char c, char quote);
 char		*skip_quote_content(char *str, char quote);
 bool		clean_surrounding_quotes(t_line *line);
-// TOKENS_UTILS
 
 // EXPAND_UTILS
 size_t		_strlen(char const *str);
 bool		is_valid_varname(char c);
 char		*_strdup(const char *s);
-// EXPAND_UTILS
 
 // PARSING_UTILS
 size_t		ft_tablen(char **str);
 // bool		extract_node(t_line *line);
-// PARSING_UTILS
 
 // STRUCT
 t_line		*make_argv_node(char *input, size_t len, t_line *line);
 size_t		count_argv_nodes(t_line *line);
-// STRUCT
 
 // REDIRECTIONS
 bool		handle_redir(t_line *line, char	*first_redirection);
@@ -132,52 +126,53 @@ bool		process_redir(t_line *line, char redir_operator, \
 char		is_redirection_operator(char *str);
 char		skip_redirection_operator(char **str);
 char		redirection_offset(char redir_operator);
-// REDIRECTIONS
 
+// CLEANUP
+void		cleanup(t_line *line);
 // =================================== PARSING ================================
 
 //======================================EXEC===================================
 
 //BUILTINS
-int		ft_echo(char **arg);
-void	ft_pwd(char **av);
-void	ft_cd(char **av, char **env);
-int		ft_env(t_env *env, t_pipe *pipe);
-int		ft_exit (t_pipe *pipe);
-int		parse_builtin(t_pipe *pipe);
-char	**arenvlst(t_env	*env);
+int			ft_echo(char **arg);
+void		ft_pwd(char **av);
+void		ft_cd(char **av, char **env);
+int			ft_env(t_env *env, t_pipe *pipe);
+int			ft_exit(t_pipe *pipe);
+int			parse_builtin(t_pipe *pipe);
+char		**arenvlst(t_env	*env);
 
 //ERROR
-void	*errjoin(int error_code, char *error_message);
-void	*print_error(int error_code, char *error_message);
-int		print_error_message(char *s1, char *s2, char *s3);
+void		*errjoin(int error_code, char *error_message);
+void		*print_error(int error_code, char *error_message);
+int			print_error_message(char *s1, char *s2, char *s3);
 
 //FREE
-void	env_freelst(t_env **env);
-void	env_addback(t_env **env, t_env *node);
-t_env	*env_newnode(char *data);
-void	free_all_tab(char **s_cmd, char **allpath);
-void	free_double_tab(char **s);
+void		env_freelst(t_env **env);
+void		env_addback(t_env **env, t_env *node);
+t_env		*env_newnode(char *data);
+void		free_all_tab(char **s_cmd, char **allpath);
+void		free_double_tab(char **s);
 
 //SIGNALS
-char	*send_eof(char *line);
-void	siglisten(void);
-void	sigend(void);
-void	sighandler(int sig);
-void	handle_exit_status_child(t_line *line, int status);
+char		*send_eof(char *line);
+void		siglisten(void);
+void		sigend(void);
+void		sighandler(int sig);
+void		handle_exit_status_child(t_line *line, int status);
 
 //REDIRECTIONS
-int		redirection_in_pipe(t_pipe *pipe, int *saved_output);
+int			redirection_in_pipe(t_pipe *pipe, int *saved_output);
 
 //EXECUTING
-int		pipex(t_env *env, t_line *line);
-int		execute_cmd(t_env *env, t_pipe *pipe);
-char	*get_path(t_pipe *pipe, char **env, int i);
-int		parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe);
-int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd);
-void	create_env(char **envp, t_env **env);
-int		_call_childs(t_env *env, t_line *line);
-int		execute_builtins(t_env *env, t_pipe *pipe);
+int			pipex(t_env *env, t_line *line);
+int			execute_cmd(t_env *env, t_pipe *pipe);
+char		*get_path(t_pipe *pipe, char **env, int i);
+int			parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe);
+int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd);
+void		create_env(char **envp, t_env **env);
+int			_call_childs(t_env *env, t_line *line);
+int			execute_builtins(t_env *env, t_pipe *pipe);
 
 // =================================== EXEC ================================
 
