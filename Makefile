@@ -6,7 +6,7 @@
 #    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/25 01:46:10 by saperrie         ###   ########.fr        #
+#    Updated: 2024/08/25 02:35:26 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 DFLAGS = -MMD -MP
 LFLAGS = -L$(LIBFT_DIR) -lft -lreadline
@@ -90,3 +90,15 @@ fclean: clean
 .PHONY: re
 re: fclean
 	@make --no-print-directory all
+
+.PHONY: debug
+debug:
+	@clear
+	@make -s re CFLAGS+="-g3 -fsanitize=address"
+	@./$(NAME)
+
+.PHONY: run
+run:
+	@clear
+	@make -sj re
+	@./$(NAME)

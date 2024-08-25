@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/25 01:43:58 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/25 02:24:22 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,21 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	str = NULL;
 	if (ac != 1)
-		return(print_error(errno, "minishell: too many arguments"), 1);
+		return (print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
 		return (1);
 	line.env = env;
-	// printf("%p ENV ADDR\n%s VALUE\n", line.env, line.env->env);
 	while (1)
 	{
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
+		if (!str)
+			return (cleanup(&line), 0);
 		if (str && *str)
 		{
 			add_history(str);
-			if (big_parse(&line, &str) == true)
-			{
-				if (!pipex(env, &line))
-					perror("execve");
-			}
+			if (big_parse(&line, &str) == true && !pipex(env, &line))
+				perror("execve");
 		}
 		cleanup(&line);
 	}
