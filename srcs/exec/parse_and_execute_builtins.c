@@ -6,90 +6,76 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 13:53:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:24:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_builtins(t_env *env, t_pipe *pipe)
+int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 {
 	if (!ft_strcmp(pipe->arg[0], "echo"))
-		return(ft_echo(pipe->arg), 0);
- 	if (!ft_strcmp(pipe->arg[0], "cd"))
-		return(printf("cd"), 0); //ft_cd(pipe->arg, env)
+		line->pipe->ret_val = ft_echo(pipe->arg);
+	if (!ft_strcmp(pipe->arg[0], "cd"))
+		line->pipe->ret_val = ft_cd(env, line);
 	if (!ft_strcmp(pipe->arg[0], "pwd"))
-		return (ft_pwd(pipe->arg), 0);
+		line->pipe->ret_val = ft_pwd(pipe->arg);
 	if (!ft_strcmp(pipe->arg[0], "export"))
-		return (printf("export\n"), 0); //ft_export()
+		line->pipe->ret_val = export(&pipe, env);
 	if (!ft_strcmp(pipe->arg[0], "unset"))
-		return (printf("unset\n"), 0); //ft_unset()
+		line->pipe->ret_val = ft_unset(&line, env);
 	if (!ft_strcmp(pipe->arg[0], "env"))
-		return (ft_env(env, pipe), 0);
+		line->pipe->ret_val = ft_env(env, pipe);
 	if (!ft_strcmp(pipe->arg[0], "exit"))
-		return (ft_exit(pipe), 0);
+		line->pipe->ret_val = ft_exit(pipe);
 	else
 		return (1);
 	return (0);
 }
 
-int	parse_builtin (t_pipe *pipe)
+int	parse_builtin(t_pipe *pipe)
 {
 	if (pipe->arg)
 	{
-	if (!ft_strcmp(pipe->arg[0], "echo"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "cd"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "pwd"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "export"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "unset"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "env"))
-		return (1);
-	else if (!ft_strcmp(pipe->arg[0], "exit"))
-		return (1);
+		if (!ft_strcmp(pipe->arg[0], "echo"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "cd"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "pwd"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "export"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "unset"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "env"))
+			return (1);
+		else if (!ft_strcmp(pipe->arg[0], "exit"))
+			return (1);
 	}
 	return (0);
 }
 
 //TODO make struct env for ome builtins
-int parse_and_execute_solo_builtins(t_env *env, t_pipe *pipe)
+int	parse_and_execute_solo_builtins(t_env *env, t_line *line)
 {
-    int saved_output;
+	int	saved_output;
 
-    saved_output = -1;
-    if (pipe->next == NULL && parse_builtin(pipe) == 1 && pipe->arg)
-    {
-        if (pipe->redir != NULL)
-            if (!redirection_in_pipe(pipe, &saved_output))
-                return (0);
-        if (!ft_strcmp(pipe->arg[0], "echo"))
-            ft_echo(pipe->arg);
-        else if (!ft_strcmp(pipe->arg[0], "cd"))
-            printf("cd\n");
-        else if (!ft_strcmp(pipe->arg[0], "pwd"))
-            ft_pwd(pipe->arg);
-        else if (!ft_strcmp(pipe->arg[0], "export"))
-            printf("export\n");
-        else if (!ft_strcmp(pipe->arg[0], "unset"))
-            printf("unset\n");
-        else if (!ft_strcmp(pipe->arg[0], "env"))
-            ft_env(env, pipe);
-        else if (!ft_strcmp(pipe->arg[0], "exit"))
-            ft_exit(pipe);
-        else
-            return (1);
-        if (saved_output != -1)
-        {
-            if (dup2(saved_output, STDOUT_FILENO) == -1)
-                perror("dup2");
-            close(saved_output);
-        }
-        return (0);
-    }
-    return (1);
+	saved_output = -1;
+	if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 \
+	&& line->pipe->arg)
+	{
+		if (line->pipe->redir != NULL)
+			if (!redirection_in_pipe(line->pipe, &saved_output))
+				return (0);
+		if (!execute_builtins(env, line->pipe, line))
+			return (1);
+		if (saved_output != -1)
+		{
+			if (dup2(saved_output, STDOUT_FILENO) == -1)
+				perror("dup2");
+			close(saved_output);
+		}
+		return (0);
+	}
+	return (1);
 }
-

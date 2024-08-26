@@ -3,121 +3,128 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:08:04 by aljulien          #+#    #+#             */
-/*   Updated: 2024/07/16 20:53:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 10:45:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
-# include <stdbool.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdlib.h>
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+size_t	ft_arrlen(char **arr)
 {
 	size_t	i;
 
 	i = 0;
-	if (n == 0)
-		return (0);
-	while ((i < n) && (s1[i] || s2[i]))
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	if (!arr || !*arr)
+		return (i);
+	while (arr[i])
 		i++;
+	return (i);
+}
+
+static char	*init_path(t_line *line, t_env *env)
+{
+	char	*path;
+	char	*temp;
+	char	*str;
+
+	path = NULL;
+	temp = NULL;
+	str = NULL;
+	str = find_var_env(env, "PWD=");
+	if (!str || !str[0])
+	{
+		str = NULL;
+		str = getcwd(str, 0);
+		if (!str)
+			return (NULL);
+		temp = ft_strjoin(str, "/");
+		free(str);
+	}
+	else
+		temp = ft_strjoin(str, "/");
+	if (!temp)
+		return (NULL);
+	path = ft_strjoin(temp, line->pipe->arg[1]);
+	free(temp);
+	return (path);
+}
+
+static char	*cd_path(t_line *line, t_env *env)
+{
+	char	*path;
+	t_env *env_now;
+
+	env_now = env;
+	if (line->pipe->arg[1][0] == '/')
+		path = ft_strdup(line->pipe->arg[1]);
+	else
+		path = init_path(line, env_now);
+	if (!path)
+		return (print_error(errno, "minishell: exec"));
+	path = prep_path(line->pipe->arg[1], path);
+	if (!path)
+		return (NULL);
+	if (check_directory(line->pipe->arg[1], path))
+		return (free(path), NULL);
+	return (path);
+}
+
+static int	special_cases(t_line *line, char **path, t_env *env)
+{
+	t_env	*env_now;
+
+	env_now = env;
+	if (!line->pipe->arg[1])
+	{
+		*path = find_var_env(env_now, "HOME=");
+		if (!*path || !*path[0])
+			return (ft_putendl_fd("minishell: cd: HOME not set", 2), -1);
+		*path = ft_strdup(*path);
+		if (!*path)
+			return (print_error(errno, "minishell: exec"), -1);
+		return (1);
+	}
+	else if (line->pipe->arg[1][0] == '-' && !line->pipe->arg[1][1])
+	{
+		*path = find_var_env(line->env, "OLDPWD=");
+		if (!*path || !*path[0])
+			return (ft_putendl_fd("minishell: cd: OLDPWD not set", 2), -1);
+		*path = ft_strdup(*path);
+		if (!*path)
+			return (print_error(errno, "minishell: exec"), -1);
+		return (1);
 	}
 	return (0);
 }
 
-static char *get_value_by_key(const char *key, char **env)
+int	ft_cd(t_env *env, t_line *line)
 {
-    int i = 0;
-    size_t key_len = ft_strlen(key);
+	char	*path;
+	char	*tmp;
+	int		rv;
 
-    while (env && env[i])
-    {
-        if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
-            return env[i] + key_len + 1;
-        i++;
-    }
-    return NULL;
-}
-
-void update_pwd(char **env)
-{
-    char *oldpwd = get_value_by_key("PWD", env);
-    char *new_pwd = getcwd(NULL, 0);
-
-    if (oldpwd)
-    {
-        // Here you would set the environment variable OLDPWD
-        setenv("OLDPWD", oldpwd, 1);
-    }
-    // Set the environment variable PWD
-    setenv("PWD", new_pwd, 1);
-    free(new_pwd);
-}
-
-static void _cd_with_arg(char **av, char **env)
-{
-    if (av && av[1])
-    {
-        if (chdir(av[1]) == -1)
-        {
-            perror("minishell: cd");
-        }
-        else
-        {
-            update_pwd(env);
-        }
-    }
-}
-
-static void _cd_without_arg(char **env)
-{
-    char *home = get_value_by_key("HOME", env);
-    if (!home)
-    {
-        ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-        return;
-    }
-    if (chdir(home) == -1)
-    {
-        perror("minishell: cd");
-    }
-    else
-    {
-        update_pwd(env);
-    }
-}
-
-
-void	ft_cd(char **av, char **env)
-{
-	char	*cwd;
-	char	*key;
-	char	*value;
-
-    (void)key;
-	(void)av;
-	value = getcwd(NULL, 0);
-	if (av && av[0] && !av[1])
-		_cd_without_arg(env);
-	else
-		_cd_with_arg(av, env);
-	cwd = getcwd(NULL, 0);
-	if (ft_strncmp(cwd, value, 100) != 0)
-		key = ft_strdup("OLDPWD");
-	else
-		fprintf(stderr, "free value in cd builtin\n");
-	key = ft_strdup("PWD");
-	value = getcwd(NULL, 0);
-	
-	
+	path = NULL;
+	if (ft_arrlen((line)->pipe->arg) > 2)
+		return (print_error(0, "minishell: cd: too many arguments"), 1);
+	rv = special_cases(line, &path, env);
+	if (rv == -1)
+		return (1);
+	if (!rv)
+	{
+		path = cd_path(line, env);
+		if (!path)
+			return (1);
+	}
+	tmp = check_len(path, line->env);
+	if (!tmp)
+		return (free(path), 1);
+	if (chdir(tmp) == -1)
+		return (free(path), print_error(errno, "minishell: exec"), 1);
+	if (pwds(env, path))
+		return (free(path), print_error(errno, "minishell: exec"), 1);
+	free(path);
+	return (0);
 }

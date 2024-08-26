@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 22:10:09 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/20 16:42:02 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:09:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ char	*skip_quote_content(char *str, char quote)
 	while (*str && (!is_quote(*str, quote) || *str == '|'))
 	{
 		if (*str == '|')
-			*str *= -1;
-		if (quote == '\'' && *str == '$')
 			*str *= -1;
 		str++;
 	}

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 14:21:45 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:25:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:42:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static size_t	env_len(t_env *env)
 	return (n_nodes);
 }
 
-char	**arenvlst(t_env	*env)
+char	**arenvlst(t_env *env)
 {
 	char	**arenv;
 	size_t	i;
