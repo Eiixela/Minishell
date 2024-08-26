@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/23 14:20:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:14:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static bool	is_sorted(char **tab)
 	j = ft_tablen(tab);
 	if (tab)
 	{
-		while (i <= j)
+		while (i <= j - 1)
 		{
 			if (ft_strncmp(tab[i], tab[i + 1], 1) > 0)
 				return (false);

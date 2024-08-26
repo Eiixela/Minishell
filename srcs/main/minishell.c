@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 14:11:56 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:09:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	g_ret = 0;
 
 static int init_env(t_env **env, char **envp)
 {
-	/* if (!isatty(0) || isatty(1))
-		return (print_error(errno, "minishell"), 0); */
+	/*if (!isatty(0) || isatty(1))
+		return (print_error(errno, "minishell"), 0);*/
 	*env = NULL;
 	create_env(envp, env);
 	siglisten();
@@ -60,8 +60,9 @@ int	main(int ac, char **av, char **envp)
 				status = line.pipe->ret_val;
 			}
 		}
+		cleanup(&line);
 	}
-	cleanup(&line);
+	free_env(env);
 	clear_history();
 	exit(status);
 	return (0);

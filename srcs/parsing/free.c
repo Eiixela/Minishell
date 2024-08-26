@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/25 02:50:12 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:06:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ void	cleanup(t_line *line)
 		line->argv = line->argv_head;
 	free_argv(line->argv);
 	free_pipe(line->pipe);
-	free_env(line->env);
 	line->argv = NULL;
 	line->pipe = NULL;
-	line->env = NULL;
 }
