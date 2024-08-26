@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 15:35:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 09:05:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static int	get_nonull(void)
 
 void	sighandler(int sig)
 {
+	
 	g_ret = sig;
 	if (g_ret == SIGINT)
 		rl_done = g_ret;

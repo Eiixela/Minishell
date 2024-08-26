@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/23 14:13:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:59:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ int	_call_childs(t_env *env, t_line *line)
 	int		status;
 	t_pipe	*current;
 	pid_t	pid;
-    
-	(void)pid;
+
 	current = line->pipe;
 	input_fd = 0;
  	if (parse_and_execute_solo_builtins(env, line) == 0)
