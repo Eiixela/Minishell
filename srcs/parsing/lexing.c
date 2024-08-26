@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:08:18 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/22 15:08:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:34:54 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static char	*tokenise(char *ptr, t_line *line)
 {
 	char	*cpy;
 
-	// skip_white_spaces(&ptr);
 	cpy = ptr;
 	if (skip_redirection_operator(&cpy))
 		skip_white_spaces(&cpy);

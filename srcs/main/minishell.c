@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 13:05:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/25 02:24:22 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,17 @@ int	main(int ac, char **av, char **envp)
 	str = NULL;
 	status = 0;
 	if (ac != 1)
-		return(print_error(errno, "minishell: too many arguments"), 1);
+		return (print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
 		return (1);
+	line.env = env;
 	while (1)
 	{
 		fprintf(stderr, "%i\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
+		if (!str)
+			return (cleanup(&line), 0);
 		if (str && *str)
 		{
 			add_history(str);
@@ -56,8 +59,8 @@ int	main(int ac, char **av, char **envp)
 					status = 128 + g_ret;
 				status = line.pipe->ret_val;
 			}
-			free(str);
 		}
+		cleanup(&line);
 	}
 	clear_history();
 	exit(status);

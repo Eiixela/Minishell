@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/23 09:23:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/25 03:25:46 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,48 @@ void	turn_extra_dollar_negative(char	**s1)
 	*s1 = head;
 }
 
-// THERE'S GOTTA BE A LEAK IN THERE SOMEWHERE
-char	*actual_expand(char *s1, char *value, char *rest)
+char	*actual_expand(char **s1, char *value, char *rest)
 {
 	char	*final_input;
 	char	*s2;
 
-	if (s1)
+	if (s1 && *s1)
 	{
-		turn_extra_dollar_negative(&s1);
+		turn_extra_dollar_negative(s1);
 		s2 = ft_strjoin(value, rest);
 		if (!s2)
 			return (NULL);
-		final_input = ft_strjoin(s1, s2);
+		final_input = ft_strjoin(*s1, s2);
 		free(s2);
+		s2 = NULL;
 		return (final_input);
 	}
 	final_input = ft_strjoin(value, rest);
 	return (final_input);
 }
 
-char	*get_env_value(char *name, t_env *env)
+
+char	*get_env_value(t_line *line, char *name)
 {
-	t_env	*env_now;
+	t_env	*env;
 	char	*value;
 	int		name_len;
 
-	env_now = env;
+	env = line->env;
 	name_len = ft_strlen(name);
-	while (env_now)
+	while (env)
 	{
-		if (!ft_strncmp(name, env_now->env, name_len) && *(env_now->env + name_len) == '=')
+		if (!ft_strncmp(name, env->env, name_len) \
+			&& *(env->env + name_len) == '=')
 		{
-			if (*(env_now->env + name_len + 1) == '\0')
+			if (*(env->env + name_len + 1) == '\0')
 				return (ft_calloc(1, 1));
-			value = ft_strdup(env_now->env + name_len + 1);
+			value = ft_strdup(env->env + name_len + 1);
 			if (!value)
 				return (NULL);
 			return (value);
 		}
-		env_now = env_now->next;
+		env = env->next;
 	}
 	return (ft_calloc(1, 1));
 }
@@ -82,7 +84,7 @@ void	free_s1_value_rest_name(char *s1, char *value, char *rest, char *name)
 		free(name);
 }
 
-char	*towards_expand(char *dollar_index, char *str_head, t_env *env)
+char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 {
 	char	*final_input;
 	char	*s1;
@@ -98,22 +100,22 @@ char	*towards_expand(char *dollar_index, char *str_head, t_env *env)
 	while (is_valid_varname(*(++name_ptr)))
 		name_len += 1;
 	name = ft_substr(dollar_index, 1, name_len);
-	if (!name) // THERE SHOULD BE MORE TO THIS THAN JUST NULL CHECK
+	if (!name)
 		return (NULL);
-	value = get_env_value(name, env);
+	value = get_env_value(line, name);
 	if (!value)
 		return (false);
 	rest = _strdup(dollar_index + 1 + name_len);
 	if (!rest)
 		return (false);
-	final_input = actual_expand(s1, value, rest);
+	final_input = actual_expand(&s1, value, rest);
 	if (!final_input)
 		return (false);
 	free_s1_value_rest_name(s1, value, rest, name);
 	return (final_input);
 }
 
-char	*expand(char *input, t_env *env)
+char	*expand(char *input, t_line *line)
 {
 	char	*str_head;
 	short	squote_mode;
@@ -125,9 +127,11 @@ char	*expand(char *input, t_env *env)
 		if (input[0] == '\'')
 			squote_mode *= -1;
 		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
-			&& squote_mode == -1 && input[1] != '$' && (input [1] != '\'' || input [1] != '"'))
+			&& squote_mode == -1 && input[1] != '$' \
+				&& (input[1] != '\'' || input[1] != '"'))
 		{
-			input = towards_expand(input, str_head, env);
+			input = towards_expand(input, line, str_head);
+			free(str_head);
 			str_head = input;
 			continue ;
 		}

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:45:06 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 10:27:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 13:17:23 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ bool	process_redir(t_line *line, char redir_operator, \
 		line->pipe->redir->fd[i++] = line->argv->node[offset++];
 	line->pipe->redir->fd[i] = '\0';
 	if (!*line->pipe->redir->fd && !line->argv->next)
-		return (printf("redir into newline\n"), false);
+		return (printf("redir into newline\n"), line->pipe->ret_val = 2, false);
+	printf("\tfd: %s\n", line->pipe->redir->fd);
 	return (true);
 }
