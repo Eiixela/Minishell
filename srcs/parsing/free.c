@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 17:39:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:18:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void	free_argv(t_argv *argv)
 
 void	cleanup(t_line *line)
 {
-	fprintf(stderr, "here!");
 	if (line->pipe)
 	{
 		while (line->pipe)

@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/26 17:07:21 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/26 18:37:52 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror 
 IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 DFLAGS = -MMD -MP
 LFLAGS = -L$(LIBFT_DIR) -lft -lreadline

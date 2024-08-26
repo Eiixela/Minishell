@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 16:58:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:23:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	parse_and_execute_solo_builtins(t_env *env, t_line *line)
 				return (0);
 		if (!execute_builtins(env, line->pipe, line))
 			return (1);
+		fprintf(stderr, "cc");
 		if (saved_output != -1)
 		{
 			if (dup2(saved_output, STDOUT_FILENO) == -1)
