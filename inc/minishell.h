@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 15:37:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:56:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int		ft_echo(char **arg);
 int		ft_pwd(char **av);
 int		ft_cd(t_env *env, t_line *line);
 int		ft_env(t_env *env, t_pipe *pipe);
-int		ft_exit (t_pipe *pipe);
+int		ft_exit (t_pipe *pipe, t_line *line);
 int		ft_unset(t_line **line, t_env *env);
 int		parse_builtin(t_pipe *pipe);
 char	**arenvlst(t_env	*env);

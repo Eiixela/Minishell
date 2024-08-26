@@ -6,13 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 16:32:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:38:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
+void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *line)
 {
 	(void)pipe;
 	clear_history();
@@ -20,6 +20,7 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message)
 		env_freelst(&(*lst)->env);
 	if (lst && (*lst))
 		input_freelst(lst); */
+	cleanup(line);
 	printf("exit\n");
 	if (error_message)
 		print_error(0, error_message);
@@ -84,7 +85,7 @@ int	print_error_message(char *s1, char *s2, char *s3)
 	return (1);
 }
 
-static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit)
+static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit, t_line *line)
 {
 	if (not_num(pipe->arg[1]) == 0 || overflow(pipe->arg[1]) == 0)
 	{
@@ -92,11 +93,11 @@ static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit)
 		print_error_message("minishell: exit: ", pipe->arg[1], \
 		": numeric argument required");
 		arg_of_exit = 2;
-		lethal_exit(pipe, arg_of_exit, NULL);
+		lethal_exit(pipe, arg_of_exit, NULL, line);
 	}
 }
 
-int ft_exit (t_pipe *pipe)
+int ft_exit (t_pipe *pipe, t_line *line)
 {
 	unsigned long long int	arg_of_exit = 0;
 
@@ -104,16 +105,16 @@ int ft_exit (t_pipe *pipe)
 	//		free(line);
 	if (pipe && pipe->arg[1])
 	{
-		is_arg_valid(pipe, 0);
+		is_arg_valid(pipe, 0, line);
 		if (ft_dstrlen(pipe->arg) > 2)
 			return(printf("exit\nbash: exit: too many arguments\n"), 1);
 		else
 		{
 			arg_of_exit = ft_atoll(pipe->arg[1]);
 			pipe->ret_val = (unsigned char)arg_of_exit;
-			return(lethal_exit(pipe, pipe->ret_val, NULL), pipe->ret_val);
+			return(lethal_exit(pipe, pipe->ret_val, NULL, line), pipe->ret_val);
 		}
 	}
 	arg_of_exit = pipe->ret_val;
-	return (lethal_exit(pipe, arg_of_exit, NULL), arg_of_exit);
+	return (lethal_exit(pipe, arg_of_exit, NULL, line), arg_of_exit);
 }

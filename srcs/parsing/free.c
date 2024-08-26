@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 15:06:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:52:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	free_argv(t_argv *argv)
 	t_argv	*next;
 
 	current = argv;
-	while (current)
+	while (current != NULL)
 	{
 		next = current->next;
 		if (current->node)

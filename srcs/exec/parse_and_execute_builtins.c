@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/23 14:24:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:58:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 {
 	if (!ft_strcmp(pipe->arg[0], "echo"))
 		line->pipe->ret_val = ft_echo(pipe->arg);
-	if (!ft_strcmp(pipe->arg[0], "cd"))
+	else if (!ft_strcmp(pipe->arg[0], "cd"))
 		line->pipe->ret_val = ft_cd(env, line);
-	if (!ft_strcmp(pipe->arg[0], "pwd"))
+	else if (!ft_strcmp(pipe->arg[0], "pwd"))
 		line->pipe->ret_val = ft_pwd(pipe->arg);
-	if (!ft_strcmp(pipe->arg[0], "export"))
+	else if (!ft_strcmp(pipe->arg[0], "export"))
 		line->pipe->ret_val = export(&pipe, env);
-	if (!ft_strcmp(pipe->arg[0], "unset"))
+	else if (!ft_strcmp(pipe->arg[0], "unset"))
 		line->pipe->ret_val = ft_unset(&line, env);
-	if (!ft_strcmp(pipe->arg[0], "env"))
+	else if (!ft_strcmp(pipe->arg[0], "env"))
 		line->pipe->ret_val = ft_env(env, pipe);
-	if (!ft_strcmp(pipe->arg[0], "exit"))
-		line->pipe->ret_val = ft_exit(pipe);
+	else if (!ft_strcmp(pipe->arg[0], "exit"))
+		line->pipe->ret_val = ft_exit(pipe, line);
 	else
 		return (1);
 	return (0);

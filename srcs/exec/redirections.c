@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:29:47 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 15:32:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:47:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ static int last_redir(t_redir *last_out_redir)
     int flags;
     int fd;
 
-    fprintf(stderr, " here!\n");
     if (last_out_redir->type == APPEND)
         flags = O_WRONLY | O_APPEND;
     else
