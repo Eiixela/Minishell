@@ -6,7 +6,7 @@
 #    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/25 02:35:26 by saperrie         ###   ########.fr        #
+#    Updated: 2024/08/26 13:23:52 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,14 +91,14 @@ fclean: clean
 re: fclean
 	@make --no-print-directory all
 
-.PHONY: debug
-debug:
-	@clear
-	@make -s re CFLAGS+="-g3 -fsanitize=address"
-	@./$(NAME)
-
-.PHONY: run
-run:
-	@clear
-	@make -sj re
-	@./$(NAME)
+# .PHONY: debug
+# debug:
+#	@clear
+#	@make -s re CFLAGS+="-g3 -fsanitize=address"
+#	@./$(NAME)
+#
+# .PHONY: run
+# run:
+#	@clear
+#	@make -sj re
+#	@./$(NAME)
