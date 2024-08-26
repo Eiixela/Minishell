@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 16:52:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:39:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ void	free_pipe(t_pipe *pipe)
 	int		i;
 
 	current = pipe;
-	i = 0;
 	while (current)
 	{
 		next = current->next;
 		if (current->arg)
 		{
+			i = 0;
 			while (current->arg[i])
 				free(current->arg[i++]);
 			free(current->arg);
@@ -83,6 +83,7 @@ void	free_argv(t_argv *argv)
 
 void	cleanup(t_line *line)
 {
+	fprintf(stderr, "here!");
 	if (line->pipe)
 	{
 		while (line->pipe)
