@@ -1,11 +1,12 @@
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 17:56:01 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 12:59:32 by aljulien         ###   ########.fr       */
+/*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
+/*   Updated: 2024/08/26 14:06:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +26,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-#include <limits.h>
+# include <limits.h>
 
 # define EXIT_SHELL 42
 
@@ -89,8 +90,8 @@ typedef struct s_line
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
-bool		big_parse(t_line *line, char **input, t_env *env, int *status);
-char		*expand(char *input, t_env *env);
+bool		big_parse(t_line *line, char **input, int *status);
+char		*expand(char *input, t_line *line);
 bool		lex(char *input, t_line *line);
 bool		parse(t_line *line);
 
@@ -159,7 +160,6 @@ void	*errjoin(int error_code, char *error_message);
 void	*print_error(int error_code, char *error_message);
 int		print_error_message(char *s1, char *s2, char *s3);
 int		verror(char *s1, char *s2, char *s3);
->>>>>>> main
 
 //FREE
 void		env_freelst(t_env **env);
@@ -187,7 +187,6 @@ int		create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_lin
 void	create_env(char **envp, t_env **env);
 int		_call_childs(t_env *env, t_line *line);
 int		execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
->>>>>>> main
 
 // =================================== EXEC ================================
 

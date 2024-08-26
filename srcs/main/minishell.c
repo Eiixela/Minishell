@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/25 02:24:22 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/26 14:11:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(int ac, char **av, char **envp)
 		if (str && *str)
 		{
 			add_history(str);
-			if (big_parse(&line, &str, env, &status) == true)
+			if (big_parse(&line, &str, &status) == true)
 			{
 				line.pipe->ret_val = status;
 				if (!pipex(env, &line, &status))
@@ -60,8 +60,8 @@ int	main(int ac, char **av, char **envp)
 				status = line.pipe->ret_val;
 			}
 		}
-		cleanup(&line);
 	}
+	cleanup(&line);
 	clear_history();
 	exit(status);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/23 14:20:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 14:05:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int no_output_syntax_error(char *s, t_line *line)
 	return (true);
 }
 
-bool	big_parse(t_line *line, char **input, t_env *env, int *status)
+bool	big_parse(t_line *line, char **input, int *status)
 {
 	char	*str;
 
