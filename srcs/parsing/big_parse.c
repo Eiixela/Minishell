@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 14:05:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:36:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,34 +52,12 @@ static bool	clean_input(char **str)
 	return (true);
 }
 
-int no_output_syntax_error(char *s, t_line *line)
-{
-	size_t	i = 0;
-	
-	if (s[i] == ':' || s[i] == '!' || s[i] == '\n' || s[i] == '#')
-	{	
-		line->pipe->ret_val = 0;
-		return (false);	
-	}
-	if (s[i] == '!')
-	{
-		line->pipe->ret_val = 1;
-		return (false);
-	}
-	return (true);
-}
-
-bool	big_parse(t_line *line, char **input, int *status)
+bool	big_parse(t_line *line, char **input)
 {
 	char	*str;
 
 	if (!*input || !input)
 		return (false);
-	if (!no_output_syntax_error(*input, line))
-	{
-		*status = 1;	
-		return (false);
-	}
 	skip_white_spaces((char **)input);
 	if (!**input)
 		return (false);

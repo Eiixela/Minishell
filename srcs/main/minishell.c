@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 15:27:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:50:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int ac, char **av, char **envp)
 	line.env = env;
 	while (1)
 	{
-		fprintf(stderr, "%i\n", status);
+		fprintf(stderr, "\n\n%i\n\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
@@ -50,7 +50,7 @@ int	main(int ac, char **av, char **envp)
 		if (str && *str)
 		{
 			add_history(str);
-			if (big_parse(&line, &str, &status) == true)
+			if (big_parse(&line, &str) == true)
 			{
 				line.pipe->ret_val = status;
 				if (!pipex(env, &line, &status))

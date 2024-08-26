@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:29:47 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 15:18:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:32:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int redir_heredoc(t_pipe *pipe)
     close(fd_file_heredoc);
     for (int i = 0; i < heredoc_count; i++)
         unlink(temp_file);
+    free(temp_file);
     return (1);
 }
 

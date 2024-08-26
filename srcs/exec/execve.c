@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 12:36:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:29:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 	env_now = arenvlst(env);
 	path = NULL;
 	if (!pipe->arg || !pipe->arg[0])
-		return (printf("minishell: %s:command not found\n", pipe->arg[0]), 0);
+		return (ft_putstr_fd("minishell: %s:command not found\n", 2), 0);
 	if (execute_builtins(env, pipe, line) == 1)
 	{
 		path = get_path(pipe, env_now, -1);
