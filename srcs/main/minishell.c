@@ -29,10 +29,12 @@ int	main(int ac, char **av, char **envp)
 	char	*str;
 	t_line	line;
 	t_env	*env;
+	int		status;
 
 	(void)av;
 	(void)ac;
 	str = NULL;
+	status = 0;
 	if (ac != 1)
 		return (print_error(errno, "minishell: too many arguments"), 1);
 	if (!init_env(&env, envp))
@@ -40,6 +42,7 @@ int	main(int ac, char **av, char **envp)
 	line.env = env;
 	while (1)
 	{
+		fprintf(stderr, "%i\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
@@ -47,11 +50,19 @@ int	main(int ac, char **av, char **envp)
 		if (str && *str)
 		{
 			add_history(str);
-			if (big_parse(&line, &str) == true && !pipex(env, &line))
-				perror("execve");
+			if (big_parse(&line, &str, env, &status) == true)
+			{
+				line.pipe->ret_val = status;
+				if (!pipex(env, &line, &status))
+					perror("execve");
+				if (g_ret == SIGINT)
+					status = 128 + g_ret;
+				status = line.pipe->ret_val;
+			}
 		}
 		cleanup(&line);
 	}
 	clear_history();
+	exit(status);
 	return (0);
 }

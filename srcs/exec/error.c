@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:31:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/13 12:33:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:19:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,27 @@ void	*print_error(int error_code, char *error_message)
 	else if (error_code && error_message)
 		errjoin(error_code, error_message);
 	return (NULL);
+}
+
+int	verror(char *s1, char *s2, char *s3)
+{
+	char	*tmp;
+	char	*error_message;
+
+	tmp = ft_strjoin(s1, s2);
+	if (!tmp)
+		return (print_error(0, "Congrat ! The error message crashed"), 1);
+	error_message = ft_strjoin(tmp, s3);
+	if (!error_message)
+		return (free(tmp), \
+		print_error(0, "Congrat ! The error message crashed"), 1);
+	free(tmp);
+	if (ft_putstr_fd("\033[1;31m", STDERR_FILENO) == -1)
+		return (-1);
+	if (ft_putstr_fd(error_message, STDERR_FILENO) == -1)
+		return (-1);
+	free(error_message);
+	if (ft_putendl_fd("\033[0m", STDERR_FILENO) == -1)
+		return (-1);
+	return (1);
 }

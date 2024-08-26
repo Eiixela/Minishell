@@ -6,7 +6,7 @@
 #    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/26 13:23:52 by saperrie         ###   ########.fr        #
+#    Updated: 2024/08/22 15:13:32 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,21 +34,24 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/parsing/utils/utils.c\
 		srcs/parsing/utils/expand_utils.c\
 		srcs/parsing/utils/redirection_utils.c\
-		srcs/builtins/ft_echo.c\
-		srcs/builtins/ft_pwd.c\
+		srcs/builtins/builtins_utils.c\
+		srcs/builtins/ft_cd_canon.c\
+		srcs/builtins/ft_cd_utils.c\
 		srcs/builtins/ft_cd.c\
+		srcs/builtins/ft_echo.c\
 		srcs/builtins/ft_env.c\
-		srcs/builtins/ft_export.c\
 		srcs/builtins/ft_exit.c\
+		srcs/builtins/ft_export.c\
+		srcs/builtins/ft_pwd.c\
 		srcs/builtins/ft_unset.c\
-		srcs/exec/pipex.c\
-		srcs/exec/get_path.c\
-		srcs/exec/execve.c\
-		srcs/exec/parse_and_execute_builtins.c\
-		srcs/exec/signal.c\
-		srcs/exec/redirections.c\
 		srcs/exec/error.c\
+		srcs/exec/execve.c\
 		srcs/exec/free.c\
+		srcs/exec/get_path.c\
+		srcs/exec/parse_and_execute_builtins.c\
+		srcs/exec/pipex.c\
+		srcs/exec/redirections.c\
+		srcs/exec/signal.c\
 							)
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))

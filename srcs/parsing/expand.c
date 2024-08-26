@@ -46,6 +46,7 @@ char	*actual_expand(char **s1, char *value, char *rest)
 	return (final_input);
 }
 
+
 char	*get_env_value(t_line *line, char *name)
 {
 	t_env	*env;

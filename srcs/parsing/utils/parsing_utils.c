@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:45:06 by saperrie          #+#    #+#             */
 /*   Updated: 2024/08/26 13:17:23 by saperrie         ###   ########.fr       */
@@ -33,7 +33,6 @@ static	bool	first_redir(t_line *line)
 	line->pipe->redir_head = line->pipe->redir;
 	line->pipe->redir->prev = NULL;
 	line->pipe->redir->next = NULL;
-	write(1, "first", 5);
 	return (true);
 }
 
