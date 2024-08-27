@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/27 13:15:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:14:54 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // if heredoc limiter contains quote : cat << "H"D
 // 										<< $USER
 // 										<< HD
-// 				don't expand, result is : $USER 
+// 				don't expand, result is : $USER
 
 static	bool	dirty_redir(char *str)
 {
@@ -71,7 +71,7 @@ bool	big_parse(t_line *line, char **input)
 		return (false);
 	str = NULL;
 	if (str)
-	  free(str);
+		free(str);
 	if (!parse(line))
 		return (false);
 	return (true);

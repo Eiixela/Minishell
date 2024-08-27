@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/27 15:47:34 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:15:13 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	free_argv(t_argv *argv)
 
 void	cleanup(t_line *line)
 {
-	if (line->pipe && line->pipe_head)
+	if (line->pipe)
 	{
 		while (line->pipe)
 		{
@@ -96,10 +96,8 @@ void	cleanup(t_line *line)
 	}
 	if (line->argv)
 		line->argv = line->argv_head;
-	if (line->argv)
-		free_argv(line->argv);
-	if (line->argv)
-		free_pipe(line->pipe);
+	free_argv(line->argv);
+	free_pipe(line->pipe);
 	line->argv = NULL;
 	line->pipe = NULL;
 }
