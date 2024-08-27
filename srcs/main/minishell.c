@@ -3,24 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 15:49:47 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:45:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_ret = 0;
-
-static void	init_line(t_line *line)
-{
-	line->argv = NULL;
-	line->argv_head = NULL;
-	line->pipe = NULL;
-	line->pipe_head = NULL;
-}
 
 static int init_env(t_env **env, char **envp)
 {
@@ -47,7 +39,6 @@ int	main(int ac, char **av, char **envp)
 	if (!init_env(&env, envp))
 		return (1);
 	line.env = env;
-	init_line(&line);
 	while (1)
 	{
 		fprintf(stderr, "%i\n", status);
@@ -69,9 +60,7 @@ int	main(int ac, char **av, char **envp)
 			status = 128 + g_ret;
 		else
 			status = line.pipe->ret_val;
-		if (str)
-			free(str);
-		cleanup(&line);
+		//cleanup(&line);
 	}
 	free_env(env);
 	clear_history();

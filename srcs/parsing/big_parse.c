@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/27 16:14:54 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:45:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ bool	big_parse(t_line *line, char **input)
 	if (!*input || !input)
 		return (false);
 	skip_white_spaces((char **)input);
+	fprintf(stderr, "here!");
 	if (!**input)
 		return (false);
 	str = *input;

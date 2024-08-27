@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 14:22:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:40:31 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_env
 {
 	char			*env;
 	struct s_env	*prev;
+	bool 			is_exported;
 	struct s_env	*next;
 }	t_env;
 
