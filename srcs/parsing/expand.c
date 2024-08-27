@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/27 20:17:44 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:41:46 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,10 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head, char* val
 			return (false);
 	}
 	else
+	{
 		name = NULL;
+		name_len = 1;
+	}
 	rest = _strdup(dollar_index + 1 + name_len);
 	if (!rest)
 		return (false);
