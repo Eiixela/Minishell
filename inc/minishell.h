@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 15:56:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 14:22:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ char		*send_eof(char *line);
 void		siglisten(void);
 void		sigend(void);
 void		sighandler(int sig);
-void		handle_exit_status_child(t_line *line, int status);
+void handle_exit_status_child(t_line *line, int status, int *quit_message_printed);
 
 //REDIRECTIONS
 int			redirection_in_pipe(t_pipe *pipe, int *saved_output);

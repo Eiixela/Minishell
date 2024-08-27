@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 18:35:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 14:45:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	main(int ac, char **av, char **envp)
 	int		status;
 
 	(void)av;
-	(void)ac;
 	str = NULL;
 	status = 0;
 	if (ac != 1)
@@ -45,9 +44,10 @@ int	main(int ac, char **av, char **envp)
 		fprintf(stderr, "%i\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
+		fprintf(stderr, "cc");
 		if (!str)
 			return (cleanup(&line), free_env(env), 0);
-		if (str && *str)
+		if (str && *str && g_ret != SIGINT)
 		{
 			add_history(str);
 			if (big_parse(&line, &str) == true)
@@ -55,12 +55,13 @@ int	main(int ac, char **av, char **envp)
 				line.pipe->ret_val = status;
 				if (!pipex(env, &line, &status))
 					perror("execve");
-				if (g_ret == SIGINT)
-					status = 128 + g_ret;
-				status = line.pipe->ret_val;
 			}
 		}
-		cleanup(&line);
+		if (g_ret == SIGINT)
+			status = 128 + g_ret;
+		else
+			status = line.pipe->ret_val;
+		//cleanup(&line);
 	}
 	free_env(env);
 	clear_history();

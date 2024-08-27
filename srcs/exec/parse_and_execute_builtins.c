@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 10:41:10 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 18:23:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 09:14:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,31 @@ int	parse_builtin(t_pipe *pipe)
 }
 
 //TODO make struct env for ome builtins
-int	parse_and_execute_solo_builtins(t_env *env, t_line *line)
+int parse_and_execute_solo_builtins(t_env *env, t_line *line)
 {
-	int	saved_output;
-
-	saved_output = -1;
-	if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 \
-	&& line->pipe->arg)
-	{
-		if (line->pipe->redir != NULL)
-			if (!redirection_in_pipe(line->pipe, &saved_output))
-				return (0);
-		if (!execute_builtins(env, line->pipe, line))
-			return (1);
-		fprintf(stderr, "cc");
-		if (saved_output != -1)
-		{
-			if (dup2(saved_output, STDOUT_FILENO) == -1)
-				perror("dup2");
-			close(saved_output);
-		}
-		return (0);
-	}
-	return (1);
+    int saved_output = -1;
+    if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
+    {
+        if (line->pipe->redir != NULL)
+            if (!redirection_in_pipe(line->pipe, &saved_output))
+                return (0);
+        if (!execute_builtins(env, line->pipe, line))
+        {
+            if (saved_output != -1)
+            {
+                if (dup2(saved_output, STDOUT_FILENO) == -1)
+                    perror("dup2");
+                close(saved_output);
+            }
+            return (2);  // Builtin was executed
+        }
+        if (saved_output != -1)
+        {
+            if (dup2(saved_output, STDOUT_FILENO) == -1)
+                perror("dup2");
+            close(saved_output);
+        }
+        return (0);
+    }
+    return (1);
 }

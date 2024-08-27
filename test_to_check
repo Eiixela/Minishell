@@ -1,0 +1,3 @@
+test 109 ---> seg fault
+test 113 ---> seg fault
+problems with exit status of the echo command
