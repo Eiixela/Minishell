@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/27 13:33:54 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/27 18:40:48 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = cc
+CC = gcc
 
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/

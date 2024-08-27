@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 15:49:47 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:05:16 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,19 @@ int	main(int ac, char **av, char **envp)
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
 			return (cleanup(&line), free_env(env), 0);
+		line.exit_status = status;
 		if (str && *str && g_ret != SIGINT)
 		{
 			add_history(str);
-			if (big_parse(&line, &str) == true)
+			str = big_parse(&line, &str, status);
+			if (str)
 			{
 				line.pipe->ret_val = status;
 				if (!pipex(env, &line, &status))
 					perror("execve");
 			}
+			else
+				printf("PB DE STR EN SORTIE DE EXPAND?\n");
 		}
 		if (g_ret == SIGINT)
 			status = 128 + g_ret;

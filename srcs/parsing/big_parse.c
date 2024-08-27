@@ -6,11 +6,10 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/27 16:14:54 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:24:15 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 // if heredoc limiter contains quote : cat << "H"D
@@ -52,27 +51,24 @@ static bool	clean_input(char **str)
 	return (true);
 }
 
-bool	big_parse(t_line *line, char **input)
+char	*big_parse(t_line *line, char **input, int status)
 {
 	char	*str;
 
 	if (!*input || !input)
-		return (false);
+		return (NULL);
 	skip_white_spaces((char **)input);
 	if (!**input)
-		return (false);
+		return (NULL);
 	str = *input;
 	if (!clean_input((char **)&str))
-		return (false);
+		return (NULL);
 	str = expand(str, line);
 	if (!str)
-		return (false);
+		return (NULL);
 	if (!lex((char *)str, line))
-		return (false);
-	str = NULL;
-	if (str)
-		free(str);
-	if (!parse(line))
-		return (false);
-	return (true);
+		return (NULL);
+	if (!parse(line, status))
+		return (NULL);
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:12:31 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/25 03:25:46 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:17:44 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,11 @@ void	free_s1_value_rest_name(char *s1, char *value, char *rest, char *name)
 		free(name);
 }
 
-char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
+char	*towards_expand(char *dollar_index, t_line *line, char *str_head, char* value)
 {
 	char	*final_input;
 	char	*s1;
 	char	*name;
-	char	*value;
 	char	*rest;
 	char	*name_ptr;
 	int		name_len;
@@ -97,14 +96,20 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head)
 	name_len = 0;
 	s1 = ft_substr(str_head, 0, dollar_index - str_head);
 	name_ptr = dollar_index;
-	while (is_valid_varname(*(++name_ptr)))
-		name_len += 1;
-	name = ft_substr(dollar_index, 1, name_len);
-	if (!name)
-		return (NULL);
-	value = get_env_value(line, name);
+	// init_value();
 	if (!value)
-		return (false);
+	{
+		while (is_valid_varname(*(++name_ptr)))
+			name_len += 1;
+		name = ft_substr(dollar_index, 1, name_len);
+		if (!name)
+			return (NULL);
+		value = get_env_value(line, name);
+		if (!value)
+			return (false);
+	}
+	else
+		name = NULL;
 	rest = _strdup(dollar_index + 1 + name_len);
 	if (!rest)
 		return (false);
@@ -119,18 +124,31 @@ char	*expand(char *input, t_line *line)
 {
 	char	*str_head;
 	short	squote_mode;
+	char	*value;
 
 	str_head = input;
 	squote_mode = -1;
 	while (*input)
 	{
+		value = NULL;
 		if (input[0] == '\'')
 			squote_mode *= -1;
 		if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
 			&& squote_mode == -1 && input[1] != '$' \
 				&& (input[1] != '\'' || input[1] != '"'))
 		{
-			input = towards_expand(input, line, str_head);
+			input = towards_expand(input, line, str_head, value);
+			free(str_head);
+			str_head = input;
+			continue ;
+		}
+		else if (input[0] == '$' && input[1] == '?' && \
+			(!is_valid_varname(input[2]) || !input[2]) && squote_mode == -1)
+		{
+			value = ft_itoa(line->exit_status);
+			if (!value)
+				return (NULL);
+			input = towards_expand(input, line, str_head, value);
 			free(str_head);
 			str_head = input;
 			continue ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 16:07:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:00:10 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int _call_childs(t_env *env, t_line *line)
 
     current = line->pipe;
     input_fd = 0;
-    
     int builtin_result = parse_and_execute_solo_builtins(env, line);
     if (builtin_result == 2)  // Builtin was executed
         return (1);
@@ -99,13 +98,14 @@ int _call_childs(t_env *env, t_line *line)
             quit_message_printed = 0;
         handle_exit_status_child(line, status, &quit_message_printed);
     }
+    (void)pid;
     return (1);
 }
 
 int	pipex(t_env *env, t_line *line, int *status)
 {
 	line->pipe->ret_val = *status;
-	if (!_call_childs(env, line))		
+	if (!_call_childs(env, line))
 		return (0);
 	return (1);
 }
