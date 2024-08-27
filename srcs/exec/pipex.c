@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 14:23:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:07:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
         return (perror("fork"), 0);
     if (pid == 0)
     {
-        // Reset SIGQUIT handler to default for child processes
         signal(SIGQUIT, SIG_DFL);
-
         if (input_fd != STDIN_FILENO)
         {
             if (dup2(input_fd, STDIN_FILENO) == -1)
