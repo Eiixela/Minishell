@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 18:18:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/27 15:47:34 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	free_argv(t_argv *argv)
 
 void	cleanup(t_line *line)
 {
-	if (line->pipe)
+	if (line->pipe && line->pipe_head)
 	{
 		while (line->pipe)
 		{
@@ -91,12 +91,15 @@ void	cleanup(t_line *line)
 				line->pipe->redir = line->pipe->redir_head;
 			line->pipe = line->pipe->next;
 		}
-		line->pipe = line->pipe_head;
+		if (line->pipe_head)
+			line->pipe = line->pipe_head;
 	}
 	if (line->argv)
 		line->argv = line->argv_head;
-	free_argv(line->argv);
-	free_pipe(line->pipe);
+	if (line->argv)
+		free_argv(line->argv);
+	if (line->argv)
+		free_pipe(line->pipe);
 	line->argv = NULL;
 	line->pipe = NULL;
 }
