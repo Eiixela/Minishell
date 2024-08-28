@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:20:29 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 15:23:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:22:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ void handle_exit_status_child(t_line *line, int status, int *quit_message_printe
     }
     else if (WIFSIGNALED(status))
     {
+        line->pipe->ret_val = 128 + WTERMSIG(status);
         if (WTERMSIG(status) == SIGQUIT && !(*quit_message_printed))
         {
             printf("Quit (core dumped)\n");
             *quit_message_printed = 1;
         }
-        line->pipe->ret_val = 128 + WTERMSIG(status);
     }
 }
+
 
 /* void	handle_exit_status_in_pipe(t_line *line)
 {

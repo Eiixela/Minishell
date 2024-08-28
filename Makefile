@@ -6,11 +6,11 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/27 13:33:54 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/28 10:06:59 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = cc
+CC = gcc
 
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/

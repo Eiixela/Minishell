@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 16:11:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/28 09:00:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 			exit(126);
 		}
 	}
-	fprintf(stderr, "cc");
 	free_double_tab(env_now);
 	return (0);
 }

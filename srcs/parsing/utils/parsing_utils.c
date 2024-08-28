@@ -6,12 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:45:06 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 16:44:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/28 09:02:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdbool.h>
 
 size_t	ft_tablen(char **str)
 {
@@ -33,6 +32,8 @@ static	bool	first_redir(t_line *line)
 	line->pipe->redir_head = line->pipe->redir;
 	line->pipe->redir->prev = NULL;
 	line->pipe->redir->next = NULL;
+	// line->pipe->redir->type = 0;
+	line->pipe->redir->fd = NULL;
 	return (true);
 }
 
@@ -47,6 +48,8 @@ static bool	any_redir(t_line *line)
 	line->pipe->redir->next->prev = line->pipe->redir;
 	line->pipe->redir = line->pipe->redir->next;
 	line->pipe->redir->next = NULL;
+	// line->pipe->redir->type = 0;
+	line->pipe->redir->fd = NULL;
 	return (true);
 }
 

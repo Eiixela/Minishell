@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 16:07:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:22:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
         }
         if (parse_builtin(pipe))
         {
-            if (!execute_builtins(env, pipe, line))
-                exit(pipe->ret_val);  // Exit with the return value of the builtin
+            int builtin_result = execute_builtins(env, pipe, line);
+            exit(builtin_result);  // Exit with the return value of the builtin
         }
         else
         {
@@ -60,15 +60,17 @@ int _call_childs(t_env *env, t_line *line)
     int     input_fd;
     t_pipe  *current;
     pid_t   pid;
-    int     quit_message_printed = 0;  // Flag to track if we've printed the quit message
+    pid_t   last_pid = 0;  // To keep track of the last process in the pipeline
+    int     quit_message_printed = 0;
+    int builtin_result;
+    int status;
 
     current = line->pipe;
     input_fd = 0;
-    
-    int builtin_result = parse_and_execute_solo_builtins(env, line);
-    if (builtin_result == 2)  // Builtin was executed
+    builtin_result = parse_and_execute_solo_builtins(env, line);
+    if (builtin_result == 2)
         return (1);
-    if (builtin_result == 0)  // Error occurred
+    if (builtin_result == 0)
         return (0);
     while (current != NULL)
     {
@@ -88,24 +90,26 @@ int _call_childs(t_env *env, t_line *line)
             if (input_fd != 0)
                 close(input_fd);
         }
+        if (current->next == NULL)
+            last_pid = pid;
         current = current->next;
     }
-    sigend();
     pid_t wpid;
-    int status;
-    while ((wpid = waitpid(-1, &status, 0)) > 0)
+    sigend();
+    while ((wpid = wait(&status)) > 0) 
     {
-        if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT && !quit_message_printed)
-            quit_message_printed = 0;
-        handle_exit_status_child(line, status, &quit_message_printed);
+        if (wpid == last_pid) {
+            handle_exit_status_child(line, status, &quit_message_printed);
+        }
     }
     return (1);
 }
 
+
 int	pipex(t_env *env, t_line *line, int *status)
 {
 	line->pipe->ret_val = *status;
-	if (!_call_childs(env, line))		
+	if (!_call_childs(env, line))
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/27 16:40:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/28 08:59:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_line
 	t_pipe			*pipe_head;
 	t_env			*env;
 	int				nm_arg;
+	int				exit_status;
 	t_env			*env_head;
 }	t_line;
 
@@ -91,10 +92,10 @@ typedef struct s_line
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
-bool		big_parse(t_line *line, char **input);
+char		*big_parse(t_line *line, char **input, int status);
 char		*expand(char *input, t_line *line);
 bool		lex(char *input, t_line *line);
-bool		parse(t_line *line);
+bool		parse(t_line *line, int status);
 
 // W_SPACE
 bool		is_white_space(char c);
