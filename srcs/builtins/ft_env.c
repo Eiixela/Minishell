@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 14:21:45 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 14:42:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:30:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**arenvlst(t_env *env)
 	arenv[env_len(env)] = 0;
 	while (tmp)
 	{
-		arenv[i] = ft_strdup(tmp->env);
+		arenv[i] = _strdup(tmp->env);
 		if (!arenv[i])
 		{
 			free_dtab(arenv);

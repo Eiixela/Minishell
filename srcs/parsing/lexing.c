@@ -3,59 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:08:18 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/25 01:34:54 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:50:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO turn this function into two
-t_line	*make_argv_node(char *input, size_t len, t_line *line)
-{
-	t_argv	*next_node;
-
-	if (!line->argc++)
-	{
-		line->argv = malloc(sizeof(t_argv));
-		if (!line->argv)
-			return (NULL);
-		line->argv_head = line->argv;
-		line->argv->prev = NULL;
-		line->argv->next = NULL;
-		line->argv->node_index = line->argc;
-		line->argv->node = ft_substr(input, 0, len);
-		if (!line->argv->node)
-			return (NULL);
-	}
-	else
-	{
-		next_node = malloc(sizeof(t_argv));
-		if (!next_node)
-			return (NULL);
-		next_node->prev = line->argv;
-		line->argv->next = next_node;
-		line->argv = next_node;
-		line->argv->next = NULL;
-		line->argv->node_index = line->argc;
-		line->argv->node = ft_substr(input, 0, len);
-		if (!line->argv->node)
-			return (NULL);
-	}
-	return (line);
-}
-
-static char	*fill_argv(char *input, t_line *line, size_t token_len)
-{
-	line = make_argv_node(input, token_len, line);
-	if (!line || !line->argv)
-		return (NULL);
-	return (input);
-}
-
-static char	*tokenise(char *ptr, t_line *line)
+char	*tokenise(char *ptr, t_line *line)
 {
 	char	*cpy;
 
@@ -63,7 +20,8 @@ static char	*tokenise(char *ptr, t_line *line)
 	if (skip_redirection_operator(&cpy))
 		skip_white_spaces(&cpy);
 	if (is_redirection_operator(cpy))
-		return (NULL);
+		return (ft_putstr_fd("bash: syntax error near unexpected token `>>'\n",
+				2), line->exit_status = 2, NULL);
 	while (*cpy && !is_white_space(*cpy) && !is_redirection_operator(cpy) \
 		&& *cpy != '|')
 	{
@@ -80,7 +38,7 @@ static char	*tokenise(char *ptr, t_line *line)
 	return (cpy);
 }
 
-static	char	*which_token(char *input, t_line *line)
+char	*which_token(char *input, t_line *line)
 {
 	char	*ptr;
 
@@ -97,10 +55,9 @@ static	char	*which_token(char *input, t_line *line)
 	return (ptr);
 }
 
-static bool	make_tokens(char *input, t_line *line)
+bool	make_tokens(char *input, t_line *line)
 {
 	line->argc = 0;
-	while (*input)
 	{
 		skip_white_spaces(&input);
 		if (!*input)

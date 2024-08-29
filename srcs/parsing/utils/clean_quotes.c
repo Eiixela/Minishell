@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   clean_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 00:07:21 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/20 16:44:13 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:00:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	memcpy_skips_quotes(char *str, int *dst, int *src)
+void	memcpy_skips_quotes(char *str, int *dst, int *src)
 {
 	char	quote;
 
 	quote = str[(*src)++];
 	while (str[*src] != quote && str[*src])
 	{
-	// printf("(%i) <- (%i) [%x]`%c'\n", *dst, *src, str[*src], str[*src]);
 		str[*dst] = str[*src];
 		*dst += 1;
 		*src += 1;
@@ -48,7 +47,6 @@ bool	clean_surrounding_quotes(t_line *line)
 			else
 				line->argv->node[dst++] = line->argv->node[src++];
 		}
-		// printf("\tclean%i: %s\n", line->argv->node_index, line->argv->node);
 		line->argv = line->argv->next;
 	}
 	return (true);

@@ -3,31 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/26 14:05:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:43:49 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
-// if heredoc limiter contains quote : cat << "H"D
-// 										<< $USER
-// 										<< HD
-// 				don't expand, result is : $USER 
-
-static	bool	dirty_redir(char *str)
+bool	dirty_pipe(char *str, t_line *line)
 {
 	while (*str)
 	{
-		if (skip_redirection_operator(&str))
+		if (*str == '|')
 		{
 			skip_white_spaces(&str);
 			if (*str == '|')
-				return (ft_putstr_fd \
-			("syntax error near unexpected token `newline'\n", 2), false);
+			{
+				ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
+				line->exit_status = 2;
+				return (false);
+			}
 		}
 		else
 			str += 1;
@@ -35,66 +32,80 @@ static	bool	dirty_redir(char *str)
 	return (true);
 }
 
-static bool	clean_input(char **str)
+bool	dirty_redir(char *str, t_line *line)
+{
+	while (*str)
+	{
+		if (skip_redirection_operator(&str))
+		{
+			skip_white_spaces(&str);
+			if (*str == '|')
+			{
+				ft_putstr_fd("bash: syntax error near unexpected token `|'\n", \
+					2);
+				line->exit_status = 2;
+				return (false);
+			}
+			if (is_redirection_operator(str))
+			{
+				ft_putstr_fd("bash: syntax error near unexpected token `<<'\n", \
+					2);
+				line->exit_status = 2;
+				return (false);
+			}
+		}
+		else
+			str += 1;
+	}
+	return (true);
+}
+
+bool	clean_input(char **str, t_line *line)
 {
 	skip_white_spaces((char **)str);
 	if (!*str)
 		return (false);
 	if (**str == '|')
-		return (ft_putstr_fd \
-	("minishell: syntax error near unexpected token `|'\n", 2), \
-			false);
+	{
+		ft_putstr_fd("bash: syntax error near unexpected token `|'\n", 2);
+		line->exit_status = 2;
+		return (false);
+	}
 	if (!even_quotes(*str))
-		return (ft_putstr_fd("minishell: parsing error: missing quote\n", 2) \
-	, false);
-	if (!dirty_redir(*str))
-		return (false);
-	return (true);
-}
-
-int no_output_syntax_error(char *s, t_line *line)
-{
-	size_t	i = 0;
-	
-	if (s[i] == ':' || s[i] == '!' || s[i] == '\n' || s[i] == '#')
-	{	
-		line->pipe->ret_val = 0;
-		return (false);	
-	}
-	if (s[i] == '!')
 	{
-		line->pipe->ret_val = 1;
+		ft_putstr_fd("bash: syntax error: missing quote\n", 2);
+		line->exit_status = 2;
 		return (false);
 	}
+	if (!dirty_redir(*str, line))
+		return (false);
+	if (!dirty_pipe(*str, line))
+		return (false);
 	return (true);
 }
 
-bool	big_parse(t_line *line, char **input, int *status)
+char	*big_parse(t_line *line, char **input, int status)
 {
-	char	*str;
+	char		*str;
+	short		squote_mode;
+	static char	*value;
 
+	value = NULL;
+	squote_mode = -1;
 	if (!*input || !input)
-		return (false);
-	if (!no_output_syntax_error(*input, line))
-	{
-		*status = 1;	
-		return (false);
-	}
+		return (NULL);
 	skip_white_spaces((char **)input);
 	if (!**input)
-		return (false);
+		return (NULL);
 	str = *input;
-	if (!clean_input((char **)&str))
-		return (false);
-	str = expand(str, line);
+	if (!clean_input((char **)&str, line))
+		return (NULL);
+	str = expand(str, line, value, squote_mode);
 	if (!str)
-		return (false);
+		return (NULL);
 	if (!lex((char *)str, line))
-		return (false);
-  str = NULL;
-  if (str)
-	  free(str);
-	if (!parse(line))
-		return (false);
-	return (true);
+		return (NULL);
+	if (!parse(line, status))
+		return (NULL);
+	return (str);
 }
