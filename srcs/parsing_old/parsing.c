@@ -6,13 +6,13 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 19:05:38 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:32:06 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	tag_arg(t_line *line)
+static bool	tag_arg(t_line *line)
 {
 	char	**cpy;
 	size_t	tablen;
@@ -62,7 +62,7 @@ bool	handle_redir(t_line *line, char	*first_redirection)
 	return (true);
 }
 
-bool	handle_pipe(t_line *line, char *first_redirection)
+static	bool	handle_pipe(t_line *line, char *first_redirection)
 {
 	line->pipe->next = ft_calloc(1, sizeof(t_pipe));
 	if (!line->pipe->next)
@@ -74,9 +74,17 @@ bool	handle_pipe(t_line *line, char *first_redirection)
 	return (true);
 }
 
-bool	tag_tokens(t_line *line, char *first_redirection, int status)
+//TODO this too big, first part could be init pipe function
+static	bool	tag_tokens(t_line *line, char *first_redirection, int status)
 {
-	line = init_line_pipe(line, status);
+	line->pipe = ft_calloc(1, sizeof(t_pipe));
+	if (!line->pipe)
+		return (false);
+	line->pipe_head = line->pipe;
+	line->pipe->prev = NULL;
+	line->pipe->next = NULL;
+	line->pipe->ret_val = status;
+	line->nm_arg = 1;
 	while (line->argv)
 	{
 		if (*line->argv->node == '|')

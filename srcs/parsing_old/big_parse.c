@@ -3,36 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 01:43:49 by marvin           ###   ########.fr       */
+/*   Updated: 2024/08/28 08:59:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	dirty_pipe(char *str, t_line *line)
-{
-	while (*str)
-	{
-		if (*str == '|')
-		{
-			skip_white_spaces(&str);
-			if (*str == '|')
-			{
-				ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
-				line->exit_status = 2;
-				return (false);
-			}
-		}
-		else
-			str += 1;
-	}
-	return (true);
-}
+// if heredoc limiter contains quote : cat << "H"D
+// 										<< $USER
+// 										<< HD
+// 				don't expand, result is : $USER
 
-bool	dirty_redir(char *str, t_line *line)
+static	bool	dirty_redir(char *str)
 {
 	while (*str)
 	{
@@ -40,19 +25,8 @@ bool	dirty_redir(char *str, t_line *line)
 		{
 			skip_white_spaces(&str);
 			if (*str == '|')
-			{
-				ft_putstr_fd("bash: syntax error near unexpected token `|'\n", \
-					2);
-				line->exit_status = 2;
-				return (false);
-			}
-			if (is_redirection_operator(str))
-			{
-				ft_putstr_fd("bash: syntax error near unexpected token `<<'\n", \
-					2);
-				line->exit_status = 2;
-				return (false);
-			}
+				return (ft_putstr_fd \
+			("syntax error near unexpected token `newline'\n", 2), false);
 		}
 		else
 			str += 1;
@@ -60,47 +34,36 @@ bool	dirty_redir(char *str, t_line *line)
 	return (true);
 }
 
-bool	clean_input(char **str, t_line *line)
+static bool	clean_input(char **str)
 {
 	skip_white_spaces((char **)str);
 	if (!*str)
 		return (false);
 	if (**str == '|')
-	{
-		ft_putstr_fd("bash: syntax error near unexpected token `|'\n", 2);
-		line->exit_status = 2;
-		return (false);
-	}
+		return (ft_putstr_fd \
+	("minishell: syntax error near unexpected token `|'\n", 2), \
+			false);
 	if (!even_quotes(*str))
-	{
-		ft_putstr_fd("bash: syntax error: missing quote\n", 2);
-		line->exit_status = 2;
-		return (false);
-	}
-	if (!dirty_redir(*str, line))
-		return (false);
-	if (!dirty_pipe(*str, line))
+		return (ft_putstr_fd("minishell: parsing error: missing quote\n", 2) \
+	, false);
+	if (!dirty_redir(*str))
 		return (false);
 	return (true);
 }
 
 char	*big_parse(t_line *line, char **input, int status)
 {
-	char		*str;
-	short		squote_mode;
-	static char	*value;
+	char	*str;
 
-	value = NULL;
-	squote_mode = -1;
 	if (!*input || !input)
 		return (NULL);
 	skip_white_spaces((char **)input);
 	if (!**input)
 		return (NULL);
 	str = *input;
-	if (!clean_input((char **)&str, line))
+	if (!clean_input((char **)&str))
 		return (NULL);
-	str = expand(str, line, value, squote_mode);
+	str = expand(str, line);
 	if (!str)
 		return (NULL);
 	if (!lex((char *)str, line))

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/29 13:58:47 by aljulien         ###   ########.fr        #
+#    Updated: 2024/08/29 19:08:57 by saperrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,11 +28,14 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/parsing/lexing.c\
 		srcs/parsing/expand.c\
 		srcs/parsing/parsing.c\
-		srcs/parsing/free.c\
+		srcs/parsing/utils/free.c\
 		srcs/parsing/utils/parsing_utils.c \
+		srcs/parsing/utils/lexing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
 		srcs/parsing/utils/utils.c\
 		srcs/parsing/utils/expand_utils.c\
+		srcs/parsing/utils/expand_utils1.c\
+		srcs/parsing/utils/expand_utils2.c\
 		srcs/parsing/utils/redirection_utils.c\
 		srcs/builtins/builtins_utils.c\
 		srcs/builtins/ft_cd_canon.c\

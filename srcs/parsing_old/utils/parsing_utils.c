@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:45:06 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 19:05:34 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:43:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_line	*init_line_pipe(t_line *line, int status)
-{
-	line->pipe = ft_calloc(1, sizeof(t_pipe));
-	if (!line->pipe)
-		return (false);
-	line->pipe_head = line->pipe;
-	line->pipe->prev = NULL;
-	line->pipe->next = NULL;
-	line->pipe->ret_val = status;
-	line->nm_arg = 1;
-	return (line);
-}
 
 size_t	ft_tablen(char **str)
 {
@@ -37,7 +24,7 @@ size_t	ft_tablen(char **str)
 	return (i);
 }
 
-bool	first_redir(t_line *line)
+static	bool	first_redir(t_line *line)
 {
 	line->pipe->redir = malloc(sizeof(t_redir));
 	if (!line->pipe->redir)
@@ -45,12 +32,12 @@ bool	first_redir(t_line *line)
 	line->pipe->redir_head = line->pipe->redir;
 	line->pipe->redir->prev = NULL;
 	line->pipe->redir->next = NULL;
-	line->pipe->redir->type = 0;
+	// line->pipe->redir->type = 0;
 	line->pipe->redir->fd = NULL;
 	return (true);
 }
 
-bool	any_redir(t_line *line)
+static bool	any_redir(t_line *line)
 {
 	t_redir	*next;
 
@@ -61,7 +48,7 @@ bool	any_redir(t_line *line)
 	line->pipe->redir->next->prev = line->pipe->redir;
 	line->pipe->redir = line->pipe->redir->next;
 	line->pipe->redir->next = NULL;
-	line->pipe->redir->type = 0;
+	// line->pipe->redir->type = 0;
 	line->pipe->redir->fd = NULL;
 	return (true);
 }
@@ -90,6 +77,6 @@ bool	process_redir(t_line *line, char redir_operator, \
 	line->pipe->redir->fd[i] = '\0';
 	if (!*line->pipe->redir->fd && !line->argv->next)
 		return (printf("redir into newline\n"), line->pipe->ret_val = 2, false);
-	printf("\tfd: %s\n", line->pipe->redir->fd);
+	//printf("\tfd: %s\n", line->pipe->redir->fd);
 	return (true);
 }
