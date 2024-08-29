@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   big_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 01:43:49 by marvin           ###   ########.fr       */
+/*   Updated: 2024/08/29 22:10:55 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ bool	clean_input(char **str, t_line *line)
 	}
 	if (!dirty_redir(*str, line))
 		return (false);
-	if (!dirty_pipe(*str, line))
-		return (false);
+	// if (!dirty_pipe(*str, line))
+	// 	return (false);
 	return (true);
 }
 
