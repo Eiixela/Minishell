@@ -6,224 +6,107 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 13:30:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:17:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_sorted(char **tab)
+void	*exprt_inenv_export(t_env **env, char *data, bool has_equals)
 {
-	size_t	i;
-	size_t	j;
-	
-	i = 0;
-	j = ft_tablen(tab);
-	if (tab)
+	t_env	*new;
+
+	new = env_newnode(data);
+	if (!new)
+		return (NULL);
+	new->is_exported = !has_equals;
+	if (!has_equals)
 	{
-		while (i <= j - 1)
+		free(new->env);
+		new->env = ft_strdup(data);
+		if (!new->env)
 		{
-			if (ft_strncmp(tab[i], tab[i + 1], 1) > 0)
-				return (false);
-			i++;
+			free(new);
+			return (NULL);
 		}
 	}
-	return (true);
+	env_addback(env, new);
+	return (new);
 }
 
-static char	**sort_tab(char **arenv, size_t len)
+static int	find_var_export(t_pipe **pipe, t_env *current, int rv,
+		int arg_index)
 {
-	size_t	i;
-	size_t	j;
-	char	*tenv;
+	char	*s;
+	char	*temp;
 
-	i = 0;
-	while (i < 100 && arenv[i])
+	while (current)
 	{
-		j = i + 1;
-		if (j <= len && ft_strncmp(arenv[i], arenv[j], ft_strlen(arenv[i])) > 0)
+		s = cut_string(current->env, '=');
+		temp = cut_string((*pipe)->arg[arg_index], '=');
+		if (!s || !temp)
+			return (free_for_export(1, &s, &temp), -1);
+		if (ft_strcmp(temp, s) == 0)
 		{
-			tenv = arenv[i];
-			arenv[i] = arenv[j];
-			arenv[j] = tenv;
+			free(current->env);
+			current->env = ft_strdup((*pipe)->arg[arg_index]);
+			if (!current->env)
+				return (free_for_export(2, &s, &temp), -1);
+			current->is_exported = (rv != 1);
+			return (free_for_export(2, &s, &temp), 1);
 		}
-		i++;
+		free_for_export(0, &s, &temp);
+		current = current->next;
 	}
-	return (arenv);
-}
-
-static ssize_t print_senv(char **arr)
-{
-    size_t i;
-
-    i = 0;
-    while (arr[i])
-    {
-        if (printf("declare -x %s\n", arr[i]) == -1)
-            return (-1);
-        i++;
-    }
-    return (1);
-}
-
-int	sort_env(t_env	*env)
-{
-	char	**arenv;
-	size_t	len;
-	ssize_t	rv;
-
-	arenv = arenvlst(env);
-	if (!arenv)
-		return (verror("minishell: ", "export: ", strerror(errno)));
-	len = ft_arrlen(arenv);
-	while (!is_sorted(arenv))
-		arenv = sort_tab(arenv, len);
-	rv = print_senv(arenv);
-	free_dtab(arenv);
-	if (rv == -1)
-		return (1);
 	return (0);
 }
 
-static int check_arg(char *var)
+static int	handles_find_in_export(int rv, t_pipe **pipe, t_env *env, int i)
 {
-    size_t i;
+	t_env	*new_node;
 
-    i = 0;
-    if (var[0] != '_' && !ft_isalpha(var[0]))
-    {
-        verror("minishell: export: '", var, "': not a valid identifier");
-        return (-1);
-    }
-    while (var[i] && var[i] != '=')
-    {
-        if (var[i] != '_' && !ft_isalnum(var[i]))
-        {
-            verror("minishell: export: '", var, "': not a valid identifier");
-            return (-1);
-        }
-        i++;
-    }
-    return (var[i] == '=' ? 1 : 0);
+	new_node = exprt_inenv_export(&env, (*pipe)->arg[i], rv == 1);
+	if (!new_node)
+		return (1);
+	new_node->is_exported = (rv == 0);
+	return (0);
 }
 
-void *exprt_inenv_export(t_env **env, char *data, bool has_equals)
+static int	exec_export(t_pipe **pipe, t_env *head, t_env *env, int status)
 {
-    t_env *new;
+	int		rv;
+	int		find_result;
+	int		i;
 
-    new = env_newnode(data);
-    if (!new)
-        return (NULL);
-    new->is_exported = !has_equals;  // Set to true if no '=', false if there's '='
-    if (!has_equals)
-    {
-        // Handle case where there's no '=' sign
-        free(new->env);
-        new->env = ft_strdup(data);
-        if (!new->env)
-        {
-            free(new);
-            return (NULL);
-        }
-    }
-    env_addback(env, new);
-    return (new);
-}
-
-char* cut_string(const char* input_string, char cut_char) {
-    char* result;
-    const char* cut_position = strchr(input_string, cut_char);
-    
-    if (cut_position != NULL) {
-        size_t length = cut_position - input_string;
-        result = (char*)malloc(length + 1);
-        if (result == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return NULL;
-        }
-        strncpy(result, input_string, length);
-        result[length] = '\0';
-    } else {
-        result = strdup(input_string);
-        if (result == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return NULL;
-        }
+	i = 0;
+	while ((*pipe)->arg[++i])
+	{
+		rv = check_arg((*pipe)->arg[i]);
+		if (rv >= 0)
+		{
+			find_result = find_var_export(pipe, head, rv, i);
+			if (find_result == -1)
+				return (1);
+			if (find_result == 0)
+				handles_find_in_export(rv, pipe, env, i);
+			if (!head)
+				head = env;
+		}
+		else
+			status = 1;
 	}
-    return result;
-}
-
-static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
-{
-    size_t i;
-    int rv;
-    int status;
-	char *s;
-    t_env *current = head;
-
-    status = 0;
-    i = 0;
-    while ((*pipe)->arg[++i])
-    {
-        rv = check_arg((*pipe)->arg[i]);
-        if (rv >= 0)
-        {
-            char *var_name = (rv == 1) ? split_wsep((*pipe)->arg[i], '=') : ft_strdup((*pipe)->arg[i]);
-            bool found = false;
-            while (current)
-            {
-				s = cut_string(current->env, '=');
-				var_name = cut_string(var_name, '=');
-                if (ft_strcmp(var_name, s) == 0)
-                {
-                    if (rv == 1) // Variable with '='
-                    {
-						fprintf(stderr, "HEEEERE!\n");
-                        free(current->env);
-                        current->env = ft_strdup((*pipe)->arg[i]);
-                        if (!current->env)
-                            return (1);
-                        current->is_exported = false;
-                    }
-                    else
-                    {	
-						fprintf(stderr, "THEEEEERE!\n");
-						free(current->env);
-                        current->env = ft_strdup((*pipe)->arg[i]);
-                        if (!current->env)
-                            return (1);
-                        current->is_exported = true;
-                    }
-					found = true;
-                    break;
-                }
-				free(s);
-                current = current->next;
-            }
-			fprintf(stderr, "found = %i\n", found);
-            if (!found)
-            {
-                t_env *new_node = exprt_inenv_export(&env, (*pipe)->arg[i], rv == 1);
-                if (!new_node)
-                    return (1);
-                new_node->is_exported = (rv == 0);
-            }
-            free(var_name);
-            if (!head)
-                head = env;
-        }
-        else
-            status = 1;
-    }
-    return (status);
+	return (status);
 }
 
 int	export(t_pipe **pipe, t_env *env)
 {
 	t_env	*head;
+	int		status;
+
+	status = 0;
 	head = env;
 	if (env && !(*pipe)->arg[1])
 		if (sort_env(env) == 1)
 			return (1);
-	return (exec_export(pipe, head, env));
+	return (exec_export(pipe, head, env, status));
 }

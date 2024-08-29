@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 10:24:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:18:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,10 +154,14 @@ char	*prep_path(char *var, char *path);
 char	*find_var_env(t_env *env, char *var);
 size_t	ft_arrlen(char **arr);
 char	*split_wsep(char *str, char sep);
-void *exprt_inenv(t_env **env, char *data);
+void	*exprt_inenv(t_env **env, char *data);
 int		export(t_pipe **pipe, t_env *env);
 int		sort_env(t_env	*env);
-void *exprt_inenv_export(t_env **env, char *data, bool has_equals);
+void	*exprt_inenv_export(t_env **env, char *data, bool has_equals);
+char	*cut_string(const char* input_string, char cut_char);
+ssize_t	print_senv(char **arr);
+void	free_for_export(int index, char **s, char **temp);
+int		check_arg(char *var);
 
 //ERROR
 void	*errjoin(int error_code, char *error_message);
