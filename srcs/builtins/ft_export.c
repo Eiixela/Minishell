@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 10:37:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:56:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,18 @@ static char	**sort_tab(char **arenv, size_t len)
 	return (arenv);
 }
 
-static ssize_t	print_senv(char **arr)
+static ssize_t print_senv(char **arr)
 {
-	size_t	i;
+    size_t i;
 
-	i = 0;
-	while (arr[i])
-	{
-		if (printf("declare -x %s\n", arr[i]) == -1)
-			return (1);
-		i++;
-	}
-	return (1);
+    i = 0;
+    while (arr[i])
+    {
+        if (printf("declare -x %s\n", arr[i]) == -1)
+            return (-1);
+        i++;
+    }
+    return (1);
 }
 
 int	sort_env(t_env	*env)
@@ -107,31 +107,6 @@ static int check_arg(char *var)
     return (var[i] == '=' ? 1 : 0);
 }
 
-
-/* static int	change_var(t_env *env, char *var)
-{
-	char	*key;
-
-	key = split_wsep(var, '=');
-	if (!key)
-		return (-1);
-	while (env)
-	{
-		if (ft_strncmp(key, env->env, ft_strlen(key)) == 0)
-		{
-			free(env->env);
-			free(key);
-			env->env = ft_strdup(var);
-			if (!env->env)
-				return (-1);
-			return (1);
-		}
-		env = env->next;
-	}
-	free(key);
-	return (0);
-} */
-
 void *exprt_inenv_export(t_env **env, char *data, bool has_equals)
 {
     t_env *new;
@@ -173,7 +148,7 @@ static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
             bool found = false;
             while (current)
             {
-                if (ft_strncmp(var_name, current->env, ft_strlen(var_name)) == 0)
+                if (ft_strcmp(var_name, current->env) == 0)
                 {
                     if (rv == 1) // Variable with '='
                     {
@@ -187,13 +162,14 @@ static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
                     {
                         current->is_exported = true;  // Set to 1 for variables without '='
                     }
-                    found = true;
                     break;
+					found = true;
                 }
                 current = current->next;
             }
             if (!found) // If variable doesn't exist, create it
             {
+						fprintf(stderr, "found\n");
                 t_env *new_node = exprt_inenv_export(&env, (*pipe)->arg[i], rv == 1);
                 if (!new_node)
                     return (1);
@@ -208,10 +184,6 @@ static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
     }
     return (status);
 }
-
-
-
-
 
 int	export(t_pipe **pipe, t_env *env)
 {
