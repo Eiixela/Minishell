@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 11:56:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 13:30:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,36 @@ void *exprt_inenv_export(t_env **env, char *data, bool has_equals)
     return (new);
 }
 
+char* cut_string(const char* input_string, char cut_char) {
+    char* result;
+    const char* cut_position = strchr(input_string, cut_char);
+    
+    if (cut_position != NULL) {
+        size_t length = cut_position - input_string;
+        result = (char*)malloc(length + 1);
+        if (result == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return NULL;
+        }
+        strncpy(result, input_string, length);
+        result[length] = '\0';
+    } else {
+        result = strdup(input_string);
+        if (result == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return NULL;
+        }
+	}
+    return result;
+}
+
 static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
 {
     size_t i;
     int rv;
     int status;
+	char *s;
+    t_env *current = head;
 
     status = 0;
     i = 0;
@@ -143,37 +168,45 @@ static int exec_export(t_pipe **pipe, t_env *head, t_env *env)
         rv = check_arg((*pipe)->arg[i]);
         if (rv >= 0)
         {
-            t_env *current = head;
             char *var_name = (rv == 1) ? split_wsep((*pipe)->arg[i], '=') : ft_strdup((*pipe)->arg[i]);
             bool found = false;
             while (current)
             {
-                if (ft_strcmp(var_name, current->env) == 0)
+				s = cut_string(current->env, '=');
+				var_name = cut_string(var_name, '=');
+                if (ft_strcmp(var_name, s) == 0)
                 {
                     if (rv == 1) // Variable with '='
                     {
+						fprintf(stderr, "HEEEERE!\n");
                         free(current->env);
                         current->env = ft_strdup((*pipe)->arg[i]);
                         if (!current->env)
                             return (1);
-                        current->is_exported = false;  // Set to 0 for variables with '='
+                        current->is_exported = false;
                     }
-                    else // Variable without '='
-                    {
-                        current->is_exported = true;  // Set to 1 for variables without '='
+                    else
+                    {	
+						fprintf(stderr, "THEEEEERE!\n");
+						free(current->env);
+                        current->env = ft_strdup((*pipe)->arg[i]);
+                        if (!current->env)
+                            return (1);
+                        current->is_exported = true;
                     }
-                    break;
 					found = true;
+                    break;
                 }
+				free(s);
                 current = current->next;
             }
-            if (!found) // If variable doesn't exist, create it
+			fprintf(stderr, "found = %i\n", found);
+            if (!found)
             {
-						fprintf(stderr, "found\n");
                 t_env *new_node = exprt_inenv_export(&env, (*pipe)->arg[i], rv == 1);
                 if (!new_node)
                     return (1);
-                new_node->is_exported = (rv == 0);  // Set to 1 if no '=', 0 if there's '='
+                new_node->is_exported = (rv == 0);
             }
             free(var_name);
             if (!head)
