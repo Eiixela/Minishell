@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 17:45:51 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 10:25:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:31:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static int init_env(t_env **env, char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*str;
-	t_line	line;
-	t_env	*env;
-	int		status;
+	char			*str;
+	static t_line	line;
+	t_env			*env;
+	int				status;
 
 	(void)av;
 	str = NULL;
@@ -41,7 +41,7 @@ int	main(int ac, char **av, char **envp)
 	line.env = env;
 	while (1)
 	{
-		fprintf(stderr, "status = %i\n", status);
+		//fprintf(stderr, "status = %i\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
@@ -56,15 +56,18 @@ int	main(int ac, char **av, char **envp)
 				line.pipe->ret_val = status;
 				if (!pipex(env, &line, &status))
 					perror("execve");
+				line.exit_status = line.pipe->ret_val;
+				cleanup(&line);
 			}
 			else
-				printf("PB DE STR EN SORTIE DE EXPAND?\n");
+				printf("BAD_PARSING\n");
 		}
 		if (g_ret == SIGINT)
 			status = 128 + g_ret;
 		else
-			status = line.pipe->ret_val;
-		//cleanup(&line);
+			status = line.exit_status;
+		if (str)
+			free(str);
 	}
 	free_env(env);
 	clear_history();

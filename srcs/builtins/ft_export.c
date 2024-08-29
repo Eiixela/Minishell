@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:08:05 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 15:17:56 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:28:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,10 @@ static int	exec_export(t_pipe **pipe, t_env *head, t_env *env, int status)
 			if (!head)
 				head = env;
 		}
-		else
+		else if (rv == -1)
 			status = 1;
+		else if (rv == -2)
+			status = 2;
 	}
 	return (status);
 }

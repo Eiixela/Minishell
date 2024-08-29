@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 09:31:24 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 15:07:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:29:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,26 +70,32 @@ void free_for_export(int index, char **s, char **temp)
     }
 }
 
-int	check_arg(char *var)
+int check_arg(char *var)
 {
-	size_t	i;
+    size_t i;
 
-	i = 0;
-	if (var[0] != '_' && !ft_isalpha(var[0]))
-	{
-		verror("minishell: export: '", var, "': not a valid identifier");
-		return (-1);
-	}
-	while (var[i] && var[i] != '=')
-	{
-		if (var[i] != '_' && !ft_isalnum(var[i]))
-		{
-			verror("minishell: export: '", var, "': not a valid identifier");
-			return (-1);
-		}
-		i++;
-	}
-	if (var[i] == '=')
-		return (1);
-	return (0);
+    i = 0;
+    if (var[0] == '-')
+    {
+		verror("minishell: export: '", var, "': invalid option");
+        return (-2);
+    }
+    if (var[0] != '_' && !ft_isalpha(var[0]))
+    {
+        verror("minishell: export: '", var, "': not a valid identifier");
+        return (-1);
+    }
+    while (var[i] && var[i] != '=')
+    {
+        if (var[i] != '_' && !ft_isalnum(var[i]))
+        {
+            verror("minishell: export: '", var, "': not a valid identifier");
+            return (-1);
+        }
+        i++;
+    }
+    if (var[i] == '=')
+        return (1);
+    return (0);
 }
+
