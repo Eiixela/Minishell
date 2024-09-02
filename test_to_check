@@ -17,14 +17,17 @@ Check cas limite sur exit, ou mettre un message d'erreur (tests 369,371)
 Check message errur et exit status sur cd file_not_existing (test 417)
 Check input : > name_of_file ---> makes the program runs in a loop
 Leaks sur cat Makefile | wc -l
+Leaks sur "$HOMEnimportequoi" (test 140), puis more leaks si on enchaine avec $HOMEnimportequoi
+Fix	exit status for << $hola, parsed as faulty input (status==2) when it's valid (status==0) (test 542)
+Fix > ok which is fucked lol
 
 
 140
 176
 
 
-Hi ! i'm currently working on a  project trying to recreate some of bash features (the 42 school's minishell project to be specific). As part of the project, there's some commands i need to recode like the cd command for example, but right now in having a problems with my builtins command (aka the ones i need to recode). I'm currently working on the cd builtin. My issue is the following. When i give the input : 
+Hi ! i'm currently working on a  project trying to recreate some of bash features (the 42 school's minishell project to be specific). As part of the project, there's some commands i need to recode like the cd command for example, but right now in having a problems with my builtins command (aka the ones i need to recode). I'm currently working on the cd builtin. My issue is the following. When i give the input :
 
 cd ~
 
-I need my cd builtin to work just like in bash, meaning to take me back to the 
+I need my cd builtin to work just like in bash, meaning to take me back to the
