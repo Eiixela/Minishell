@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:14:35 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/28 09:00:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 11:48:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		if (execve(path, pipe->arg, env_now) == -1)
 		{
 			print_error_message("bash: ", pipe->arg[0], \
-		" Is a directory");
+		" Is a directory\n");
 			free_double_tab(env_now);
 			cleanup(line);
 			free_env(env);

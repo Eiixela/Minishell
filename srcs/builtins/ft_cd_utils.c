@@ -6,11 +6,26 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 09:26:23 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/22 10:41:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:40:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char *expand_tilde(const char *arg, t_env *env)
+{
+    if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
+    {
+        char *home = find_var_env(env, "HOME=");
+        if (!home || !*home)
+            return ft_strdup(arg);  // If HOME is not set, return the original argument
+        if (arg[1] == '\0')
+            return ft_strdup(home);
+        return ft_strjoin(home, arg + 1);
+    }
+    return ft_strdup(arg);
+}
+
 
 int	check_directory(char *var, char *path)
 {
@@ -21,11 +36,11 @@ int	check_directory(char *var, char *path)
 		if (errno == ENOENT)
 		{
 			verror("minishell: cd: ", var, \
-			": No such file or directory");
+			": No such file or directory1");
 			return (1);
 		}
 		if (errno == 13)
-			verror("minishell: cd: ", var, ": Not a directory");
+			verror("minishell: cd: ", var, ": Not a directory2");
 		if (errno == ENAMETOOLONG)
 			return (0);
 		return (1);
@@ -34,7 +49,7 @@ int	check_directory(char *var, char *path)
 		return (0);
 	else
 	{
-		verror("minishell: cd: ", var, ": Not a directory");
+		verror("minishell: cd: ", var, ": Not a directory3");
 		return (1);
 	}
 	return (0);

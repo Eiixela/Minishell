@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 19:05:38 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/02 10:25:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ bool	handle_pipe(t_line *line, char *first_redirection)
 		return (false);
 	line->pipe->next->prev = line->pipe;
 	line->pipe = line->pipe->next;
-	line->pipe->ret_val = 1;
+	line->exit_status = 1;
 	*first_redirection = 0;
 	return (true);
 }

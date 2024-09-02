@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:45:06 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 19:05:34 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/02 12:51:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ bool	process_redir(t_line *line, char redir_operator, \
 		line->pipe->redir->fd[i++] = line->argv->node[offset++];
 	line->pipe->redir->fd[i] = '\0';
 	if (!*line->pipe->redir->fd && !line->argv->next)
-		return (printf("redir into newline\n"), line->pipe->ret_val = 2, false);
-	printf("\tfd: %s\n", line->pipe->redir->fd);
+		return (printf("minishell: syntax error near unexpected token `newline'\n"), line->exit_status = 2, false);
+	//printf("\tfd: %s\n", line->pipe->redir->fd);
 	return (true);
 }

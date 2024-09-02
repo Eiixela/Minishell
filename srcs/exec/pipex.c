@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/28 10:22:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 11:15:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
 {
     pid_t pid;
     int saved_output;
+    int builtin_result;
+    int redir_result;
 
     pid = fork();
     if (pid == -1)
@@ -37,14 +39,18 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
         }
         if (pipe->redir != NULL)
         {
-            if (!redirection_in_pipe(pipe, &saved_output))
+            redir_result = redirection_in_pipe(pipe, &saved_output, env);
+            if (redir_result == 0)
                 return (exit(EXIT_FAILURE), pid);
+            else if (redir_result == 2)
+                exit (pipe->ret_val);
         }
         if (parse_builtin(pipe))
         {
-            int builtin_result = execute_builtins(env, pipe, line);
+            builtin_result = execute_builtins(env, pipe, line);
             exit(builtin_result);  // Exit with the return value of the builtin
         }
+        
         else
         {
             if (execute_cmd(env, pipe, line))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 19:07:45 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/02 13:54:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ char		*cut_string(const char *input_string, char cut_char);
 ssize_t		print_senv(char **arr);
 void		free_for_export(int index, char **s, char **temp);
 int			check_arg(char *var);
+char *expand_tilde(const char *arg, t_env *env);
 
 //ERROR
 void		*errjoin(int error_code, char *error_message);
@@ -201,7 +202,7 @@ void		sighandler(int sig);
 void 		handle_exit_status_child(t_line *line, int status, int *quit_message_printed);
 
 //REDIRECTIONS
-int			redirection_in_pipe(t_pipe *pipe, int *saved_output);
+int			redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env);
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status);

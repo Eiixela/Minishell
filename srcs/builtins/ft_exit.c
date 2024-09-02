@@ -6,13 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 15:12:06 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/26 17:48:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 13:17:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *line)
+void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *line, int indice)
 {
 	(void)pipe;
 	clear_history();
@@ -22,9 +22,10 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *lin
 		input_freelst(lst); */
 	cleanup(line);
 	free_env(line->env);
-	printf("exit\n");
 	if (error_message)
 		print_error(0, error_message);
+	if (indice == 0)
+		printf("exit\n");
 	if (arg_of_exit > 0)
 		exit(arg_of_exit);
 	else
@@ -92,9 +93,9 @@ static void	is_arg_valid(t_pipe *pipe, unsigned long long int arg_of_exit, t_lin
 	{
 		printf("exit\n");
 		print_error_message("minishell: exit: ", pipe->arg[1], \
-		": numeric argument required");
+		": numeric argument required\n");
 		arg_of_exit = 2;
-		lethal_exit(pipe, arg_of_exit, NULL, line);
+		lethal_exit(pipe, arg_of_exit, NULL, line, 1);
 	}
 }
 
@@ -113,9 +114,9 @@ int ft_exit (t_pipe *pipe, t_line *line)
 		{
 			arg_of_exit = ft_atoll(pipe->arg[1]);
 			pipe->ret_val = (unsigned char)arg_of_exit;
-			return(lethal_exit(pipe, pipe->ret_val, NULL, line), pipe->ret_val);
+			return(lethal_exit(pipe, pipe->ret_val, NULL, line, 0), pipe->ret_val);
 		}
 	}
 	arg_of_exit = pipe->ret_val;
-	return (lethal_exit(pipe, arg_of_exit, NULL, line), arg_of_exit);
+	return (lethal_exit(pipe, arg_of_exit, NULL, line, 0), arg_of_exit);
 }
