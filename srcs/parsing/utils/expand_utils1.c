@@ -23,7 +23,7 @@ bool	is_env_var_format(char *input, short squote_mode)
 
 bool	is_exit_status_format(char *input, short squote_mode)
 {
-	// if (input[0] == '$' && input[1] == '?' && \
+	// if (input[0] == '$' && input[1] == '?' &&
 	// 	(!is_valid_varname(input[2]) || !input[2]) && squote_mode == -1)
 	if (input[0] == '$' && input[1] == '?' && squote_mode == -1)
 		return (true);
