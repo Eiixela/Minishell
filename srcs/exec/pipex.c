@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 16:54:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:15:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line)
 {
     pid_t pid;
-    int saved_output;
-    int builtin_result;
-    int redir_result;
 
     pid = fork();
     if (pid == -1)
@@ -39,52 +36,41 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
         }
         if (pipe->redir != NULL)
         {
-            redir_result = redirection_in_pipe(pipe, &saved_output, env);
+            int saved_output;
+            int redir_result = redirection_in_pipe(pipe, &saved_output, env);
             if (redir_result == 0)
-                return (exit(EXIT_FAILURE), pid);
+                exit(EXIT_FAILURE);
             else if (redir_result == 2)
-                exit (pipe->ret_val);
-        }
-        if (parse_builtin(pipe))
-        {
-            builtin_result = execute_builtins(env, pipe, line);
-            exit(builtin_result);  // Exit with the return value of the builtin
-        }
-        
-        else
-        {
-            if (execute_cmd(env, pipe, line))
                 exit(pipe->ret_val);
         }
+        if (strcmp(pipe->arg[0], "cat") == 0 && pipe->arg[1] == NULL && isatty(STDIN_FILENO))
+        {
+            char buf[1024];
+            ssize_t n = read(STDIN_FILENO, buf, sizeof(buf));
+            if (n > 0)
+                write(STDOUT_FILENO, buf, n);
+            exit(0);
+        }
+        execute_cmd(env, pipe, line);
+        exit(pipe->ret_val);
     }
     return (pid);
 }
 
 int _call_childs(t_env *env, t_line *line)
 {
-    int     pipe_fd[2];
-    int     input_fd;
-    t_pipe  *current;
-    pid_t   pid;
-    pid_t   last_pid = 0;  // To keep track of the last process in the pipeline
-    int     quit_message_printed = 0;
-    int builtin_result;
-    int status;
+    int pipe_fd[2], input_fd = 0, status;
+    t_pipe *current = line->pipe;
+    pid_t pid, last_pid = 0;
 
-    current = line->pipe;
-    input_fd = 0;
-    builtin_result = parse_and_execute_solo_builtins(env, line);
-    if (builtin_result == 2)
-        return (1);
-    if (builtin_result == 0)
-        return (0);
+	(void)last_pid;
     while (current != NULL)
     {
         if (current->next != NULL)
         {
-            fprintf(stderr, "arg1= %s\n", line->pipe->arg[0]);
             if (pipe(pipe_fd) == -1)
                 return (perror("pipe"), 0);
+
             pid = create_process(env, current, input_fd, pipe_fd[1], line);
             close(pipe_fd[1]);
             if (input_fd != 0)
@@ -93,23 +79,15 @@ int _call_childs(t_env *env, t_line *line)
         }
         else
         {
-            fprintf(stderr, "arg2= %s\n", line->pipe->arg[0]);
             pid = create_process(env, current, input_fd, 1, line);
             if (input_fd != 0)
                 close(input_fd);
         }
-        if (current->next == NULL)
-            last_pid = pid;
+        last_pid = pid;
         current = current->next;
     }
-    pid_t wpid;
-    sigend();
-    while ((wpid = wait(&status)) > 0) 
-    {
-        if (wpid == last_pid) {
-            handle_exit_status_child(line, status, &quit_message_printed);
-        }
-    }
+
+    while (wait(&status) > 0);
     return (1);
 }
 
@@ -194,7 +172,6 @@ int _call_childs(t_env *env, t_line *line)
     }
     return (1);
 }*/
-
 
 int	pipex(t_env *env, t_line *line, int *status)
 {
