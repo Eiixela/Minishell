@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 21:05:51 by saperrie          #+#    #+#             */
-/*   Updated: 2024/09/02 11:47:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:51:16 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	cleanup(t_line *line)
 	}
 	if (line->argv)
 		line->argv = line->argv_head;
-	//free_argv(line->argv);
+	free_argv(line->argv);
 	free_pipe(line->pipe);
 	line->argv = NULL;
 	line->pipe = NULL;
