@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:55:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/09/02 10:25:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 22:56:30 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,9 @@ bool	parse(t_line *line, int status)
 
 	first_redirection = 0;
 	line->argv = line->argv_head;
-	if (!clean_surrounding_quotes(line))
-		return (false);
+	if (line->argv->node)
+		if (!clean_surrounding_quotes(line))
+			return (false);
 	line->argv = line->argv_head;
 	if (!tag_tokens(line, &first_redirection, status))
 		return (false);

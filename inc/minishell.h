@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 13:54:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 20:40:22 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,8 @@ bool		process_redir(t_line *line, char redir_operator, \
 char		is_redirection_operator(char *str);
 char		skip_redirection_operator(char **str);
 char		redirection_offset(char redir_operator);
+void		clean_redir(char *str);
+void		dirtier_redir(char *str);
 
 // CLEANUP
 void		cleanup(t_line *line);

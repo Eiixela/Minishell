@@ -1,20 +1,20 @@
-==77751== Memcheck, a memory error detector
-==77751== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==77751== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==77751== Command: cat
-==77751== Parent PID: 77749
-==77751== 
-==77751== 
-==77751== FILE DESCRIPTORS: 1 open (0 std) at exit.
-==77751== Open file descriptor 3: /home/saperrie/cmor/42/minishell/tester-minishell/test
-==77751==    <inherited from parent>
-==77751== 
-==77751== 
-==77751== HEAP SUMMARY:
-==77751==     in use at exit: 0 bytes in 0 blocks
-==77751==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
-==77751== 
-==77751== All heap blocks were freed -- no leaks are possible
-==77751== 
-==77751== For lists of detected and suppressed errors, rerun with: -s
-==77751== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==188740== Memcheck, a memory error detector
+==188740== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==188740== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==188740== Command: cat
+==188740== Parent PID: 188738
+==188740== 
+==188740== 
+==188740== FILE DESCRIPTORS: 1 open (0 std) at exit.
+==188740== Open file descriptor 3: /home/saperrie/cmor/42/minishell/tester-minishell/test
+==188740==    <inherited from parent>
+==188740== 
+==188740== 
+==188740== HEAP SUMMARY:
+==188740==     in use at exit: 0 bytes in 0 blocks
+==188740==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==188740== 
+==188740== All heap blocks were freed -- no leaks are possible
+==188740== 
+==188740== For lists of detected and suppressed errors, rerun with: -s
+==188740== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
