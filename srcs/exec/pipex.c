@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 16:54:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:56:08 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
             builtin_result = execute_builtins(env, pipe, line);
             exit(builtin_result);  // Exit with the return value of the builtin
         }
-        
+
         else
         {
             if (execute_cmd(env, pipe, line))
@@ -82,7 +82,6 @@ int _call_childs(t_env *env, t_line *line)
     {
         if (current->next != NULL)
         {
-            fprintf(stderr, "arg1= %s\n", line->pipe->arg[0]);
             if (pipe(pipe_fd) == -1)
                 return (perror("pipe"), 0);
             pid = create_process(env, current, input_fd, pipe_fd[1], line);
@@ -93,7 +92,6 @@ int _call_childs(t_env *env, t_line *line)
         }
         else
         {
-            fprintf(stderr, "arg2= %s\n", line->pipe->arg[0]);
             pid = create_process(env, current, input_fd, 1, line);
             if (input_fd != 0)
                 close(input_fd);
@@ -104,7 +102,7 @@ int _call_childs(t_env *env, t_line *line)
     }
     pid_t wpid;
     sigend();
-    while ((wpid = wait(&status)) > 0) 
+    while ((wpid = wait(&status)) > 0)
     {
         if (wpid == last_pid) {
             handle_exit_status_child(line, status, &quit_message_printed);
@@ -187,7 +185,7 @@ int _call_childs(t_env *env, t_line *line)
     }
     pid_t wpid;
     sigend();
-    while ((wpid = wait(&status)) > 0) 
+    while ((wpid = wait(&status)) > 0)
     {
         if (wpid == last_pid)
             handle_exit_status_child(line, status, &quit_message_printed);

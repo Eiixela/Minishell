@@ -1,3 +1,0 @@
-aljulien@z3r8p5:~/goinfre/minishell$ echo hola > bonjour
-aljulien@z3r8p5:~/goinfre/minishell$ <bonjour cat | wc > bonjour
-aljulien@z3r8p5:~/goinfre/minishell$ 
