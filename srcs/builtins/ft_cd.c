@@ -77,8 +77,10 @@ static int special_cases(t_line *line, char **path, t_env *env)
 	if (!line->pipe->arg[1] || (line->pipe->arg[1][0] == '~' && line->pipe->arg[1][1] == '\0'))
 	{
 		*path = find_var_env(env, "HOME=");
-		if (!*path || !*path[0])
+		if (!*path)
 			return (ft_putendl_fd("minishell: cd: HOME not set", 2), -1);
+		if (!*path[0])
+			return (2);
 		*path = ft_strdup(*path);
 		if (!*path)
 			return (print_error(errno, "minishell: exec"), -1);
@@ -107,6 +109,8 @@ int ft_cd(t_env *env, t_line *line)
 	if (ft_arrlen((line)->pipe->arg) > 2)
 		return (print_error(0, "minishell: cd: too many arguments"), 1);
 	rv = special_cases(line, &path, env);
+	if (rv == 2)
+		return (0);
 	if (rv == -1)
 		return (1);
 	if (!rv)

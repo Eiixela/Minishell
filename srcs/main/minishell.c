@@ -45,7 +45,7 @@ int	main(int ac, char **av, char **envp)
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
-			return (cleanup(&line), free_env(env), 0);
+			return (printf("exit\n"), cleanup(&line), free_env(env), 0);
 		line.exit_status = status;
 		if (str && *str && g_ret != SIGINT)
 		{

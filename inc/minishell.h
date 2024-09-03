@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/03 11:25:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:25:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ void		free_env(t_env *env);
 
 //BUILTINS
 int			ft_echo(char **arg);
-int			ft_pwd(char **av);
+int			ft_pwd(t_env *env);
 int			ft_cd(t_env *env, t_line *line);
 int			ft_env(t_env *env, t_pipe *pipe);
 int			ft_exit (t_pipe *pipe, t_line *line);

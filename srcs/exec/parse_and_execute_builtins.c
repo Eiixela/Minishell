@@ -19,7 +19,7 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 	else if (!ft_strcmp(pipe->arg[0], "cd"))
 		line->pipe->ret_val = ft_cd(env, line);
 	else if (!ft_strcmp(pipe->arg[0], "pwd"))
-		line->pipe->ret_val = ft_pwd(pipe->arg);
+		line->pipe->ret_val = ft_pwd(env);
 	else if (!ft_strcmp(pipe->arg[0], "export"))
 		line->pipe->ret_val = export(&pipe, env);
 	else if (!ft_strcmp(pipe->arg[0], "unset"))

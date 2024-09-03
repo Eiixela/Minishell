@@ -10,28 +10,26 @@
 /**/
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
-int	ft_pwd(char **av)
+int	ft_pwd(t_env *env)
 {
-	char	*pwd;
+	char	*str;
 
-	if (av && av[0] && av[1] && (ft_strlen(av[1]) >= 2) && (ft_strncmp(av[1], "-", 1) == 0))
+	str = NULL;
+	str = find_var_env(env, "PWD=");
+	if (!str || !str[0])
 	{
-		av[1][2] = '\0';
-		ft_putstr_fd("minishell: pwd: ", 2);
-		ft_putstr_fd(av[1], 2);
-		ft_putstr_fd(": invalid option\n", 2);
-		return (1);
+		str = NULL;
+		str = getcwd(str, 0);
+		if (!str)
+			return (print_error(errno, "minishell: exec"), 1);
+		if (g_ret == SIGPIPE || ft_putendl_fd(str, STDOUT_FILENO) == -1)
+			return (free(str), 1);
+		free(str);
 	}
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
-		perror("minishell: pwd");
-	else
-	{
-		ft_putstr_fd(pwd, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		free(pwd);
-	}
+	else if (g_ret == SIGPIPE || ft_putendl_fd(str, STDOUT_FILENO) == -1)
+		return (free(str), 1);
 	return (0);
 }
+	

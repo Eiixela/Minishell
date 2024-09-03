@@ -14,18 +14,17 @@
 
 char *expand_tilde(const char *arg, t_env *env)
 {
-if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
-{
-char *home = find_var_env(env, "HOME=");
-if (!home || !*home)
-return ft_strdup(arg);  // If HOME is not set, return the original argument
-if (arg[1] == '\0')
-return ft_strdup(home);
-return ft_strjoin(home, arg + 1);
+	if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
+	{
+		char *home = find_var_env(env, "HOME=");
+		if (!home || !*home)
+			return ft_strdup(arg);
+		if (arg[1] == '\0')
+			return ft_strdup(home);
+		return ft_strjoin(home, arg + 1);
+	}
+	return ft_strdup(arg);
 }
-return ft_strdup(arg);
-}
-
 
 int	check_directory(char *var, char *path)
 {
