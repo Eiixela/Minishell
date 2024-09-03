@@ -51,7 +51,7 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 			execute_builtins(env, pipe, line);
 			exit(pipe->ret_val);
 		}
-		if (pipe->arg[0])
+		if (pipe->arg && pipe->arg[0])
 			execute_cmd(env, pipe, line);
 		exit(pipe->ret_val);
 	}
@@ -90,11 +90,10 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	{
 		while (current && strcmp(current->arg[0], "cat") == 0
 			&& current->arg[1] == NULL && !current->redir)
-		{
-			 
 			current = current->next;
-		}
 	}
+	else
+		return (1);
 	current = line->pipe;
 	while (current != NULL)
 	{

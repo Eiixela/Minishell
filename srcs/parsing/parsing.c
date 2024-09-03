@@ -104,7 +104,7 @@ bool	parse(t_line *line, int status)
 
 	first_redirection = 0;
 	line->argv = line->argv_head;
-	if (line->argv->node)
+	if (line->argv && line->argv->node)
 		if (!clean_surrounding_quotes(line))
 			return (false);
 	line->argv = line->argv_head;
