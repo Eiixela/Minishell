@@ -74,58 +74,58 @@ static char	*cd_path(t_line *line, t_env *env)
 
 static int special_cases(t_line *line, char **path, t_env *env)
 {
-if (!line->pipe->arg[1] || (line->pipe->arg[1][0] == '~' && line->pipe->arg[1][1] == '\0'))
-{
-*path = find_var_env(env, "HOME=");
-if (!*path || !*path[0])
-return (ft_putendl_fd("minishell: cd: HOME not set", 2), -1);
-*path = ft_strdup(*path);
-if (!*path)
-return (print_error(errno, "minishell: exec"), -1);
-return (1);
-}
-else if (line->pipe->arg[1][0] == '-' && !line->pipe->arg[1][1])
-{
-*path = find_var_env(env, "OLDPWD=");
-if (!*path || !*path[0])
-return (ft_putendl_fd("minishell: cd: OLDPWD not set", 2), -1);
-*path = ft_strdup(*path);
-if (!*path)
-return (print_error(errno, "minishell: exec"), -1);
-return (1);
-}
-return (0);
+	if (!line->pipe->arg[1] || (line->pipe->arg[1][0] == '~' && line->pipe->arg[1][1] == '\0'))
+	{
+		*path = find_var_env(env, "HOME=");
+		if (!*path || !*path[0])
+			return (ft_putendl_fd("minishell: cd: HOME not set", 2), -1);
+		*path = ft_strdup(*path);
+		if (!*path)
+			return (print_error(errno, "minishell: exec"), -1);
+		return (1);
+	}
+	else if (line->pipe->arg[1][0] == '-' && !line->pipe->arg[1][1])
+	{
+		*path = find_var_env(env, "OLDPWD=");
+		if (!*path || !*path[0])
+			return (ft_putendl_fd("minishell: cd: OLDPWD not set", 2), -1);
+		*path = ft_strdup(*path);
+		if (!*path)
+			return (print_error(errno, "minishell: exec"), -1);
+		return (1);
+	}
+	return (0);
 }
 
 int ft_cd(t_env *env, t_line *line)
 {
-char *path;
-char *tmp;
-int rv;
+	char *path;
+	char *tmp;
+	int rv;
 
-path = NULL;
-if (ft_arrlen((line)->pipe->arg) > 2)
-return (print_error(0, "minishell: cd: too many arguments"), 1);
-rv = special_cases(line, &path, env);
-if (rv == -1)
-return (1);
-if (!rv)
-{
-char *expanded_arg = expand_tilde(line->pipe->arg[1], env);
-free(line->pipe->arg[1]);
-line->pipe->arg[1] = expanded_arg;
-path = cd_path(line, env);
-if (!path)
-return (1);
-}
-tmp = check_len(path, line->env);
-if (!tmp)
-return (free(path), 1);
-if (chdir(tmp) == -1)
-return (free(path), print_error(errno, "minishell: exec"), 1);
-if (pwds(env, path))
-return (free(path), print_error(errno, "minishell: exec"), 1);
-free(path);
-return (0);
+	path = NULL;
+	if (ft_arrlen((line)->pipe->arg) > 2)
+		return (print_error(0, "minishell: cd: too many arguments"), 1);
+	rv = special_cases(line, &path, env);
+	if (rv == -1)
+		return (1);
+	if (!rv)
+	{
+		char *expanded_arg = expand_tilde(line->pipe->arg[1], env);
+		free(line->pipe->arg[1]);
+		line->pipe->arg[1] = expanded_arg;
+		path = cd_path(line, env);
+		if (!path)
+			return (1);
+	}
+	tmp = check_len(path, line->env);
+	if (!tmp)
+		return (free(path), 1);
+	if (chdir(tmp) == -1)
+		return (free(path), print_error(errno, "minishell: exec"), 1);
+	if (pwds(env, path))
+		return (free(path), print_error(errno, "minishell: exec"), 1);
+	free(path);
+	return (0);
 }
 

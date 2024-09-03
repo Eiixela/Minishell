@@ -111,6 +111,18 @@ static int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *
 	return (1);
 }
 
+char *ensure_positive_chars(char* str)
+{
+    size_t i = 0;
+    while (str[i] != '\0') 
+	{
+        if (str[i] < 0)
+            str[i] = (unsigned char)str[i];
+        i++;
+    }
+    return (str);
+}
+
 // Modified function to handle multiple heredocs
 int redir_heredoc(t_pipe *pipe, t_env *env)
 {
@@ -122,6 +134,9 @@ int redir_heredoc(t_pipe *pipe, t_env *env)
 	while (current_redir && current_redir->type == HEREDOC)
 	{
 		temp_file = gen_filename(heredoc_count);
+		fprintf(stderr, "before function = %s\n", current_redir->fd);
+		current_redir->fd = ensure_positive_chars(current_redir->fd);
+		fprintf(stderr, "after function = %s\n", current_redir->fd);
 		if (!handle_single_heredoc(current_redir->fd, temp_file, env))
 			return (0);
 		current_redir = current_redir->next;

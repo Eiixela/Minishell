@@ -1,3 +1,0 @@
-aljulien@z3r8p5:~/goinfre/minishell$ export HOLA=bonjour
-aljulien@z3r8p5:~/goinfre/minishell$ export HOLA=' hola et $HOLA'
-aljulien@z3r8p5:~/goinfre/minishell$ echo $HOLA

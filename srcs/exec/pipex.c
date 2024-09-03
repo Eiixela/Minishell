@@ -43,13 +43,16 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 		if (setup_io(input_fd, output_fd) == 0)
 			exit(EXIT_FAILURE);
 		if (pipe->redir != NULL && handle_redirection(pipe, env) != 1)
+		{
 			exit(pipe->ret_val);
+		}
 		if (parse_builtin(pipe))
 		{
 			execute_builtins(env, pipe, line);
 			exit(pipe->ret_val);
 		}
-		execute_cmd(env, pipe, line);
+		if (pipe->arg[0])
+			execute_cmd(env, pipe, line);
 		exit(pipe->ret_val);
 	}
 	return (pid);
@@ -83,11 +86,14 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	pid_t	pid;
 
 	current = line->pipe;
-	while (current && strcmp(current->arg[0], "cat") == 0
-		&& current->arg[1] == NULL && !current->redir)
+	if (current->arg)
 	{
-		(cat_count)++;
-		current = current->next;
+		while (current && strcmp(current->arg[0], "cat") == 0
+			&& current->arg[1] == NULL && !current->redir)
+		{
+			(cat_count)++;
+			current = current->next;
+		}
 	}
 	current = line->pipe;
 	while (current != NULL)

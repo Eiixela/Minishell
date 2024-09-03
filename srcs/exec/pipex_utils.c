@@ -65,13 +65,13 @@ current = current->next;
 
 int handle_redirection(t_pipe *pipe, t_env *env)
 {
-int saved_output;
-int redir_result;
+	int saved_output;
+	int redir_result;
 
-redir_result = redirection_in_pipe(pipe, &saved_output, env);
-if (redir_result == 0)
-return (0);
-if (redir_result == 2)
-return (2);
-return (1);
+	redir_result = redirection_in_pipe(pipe, &saved_output, env);
+	if (redir_result == 0)
+		return (0);
+	if (redir_result == 2)
+		return (2);
+	return (1);
 }

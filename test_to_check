@@ -5,15 +5,10 @@ problems with exit status of the echo command
 
 
 Faire un cas special lors de process_redir si EOF est un expand (needs to go into exec)
-Faire le nettoyage des variables exit status
 Faire un cas dans le heredoc pour que l'expand ne se passe pas quand EOF entre quotes
 Faire un cas dans le heredoc pour aue l'EOF ne soit pas expand
 Free invalid pointer in expand_utils l.33 but leaks without it so need to check this out
-Export variable should be working with $? (ex : export HO$?LA=bonjour should be exporting)
 Leaks sur "$HOMEnimportequoi" (test 140), puis more leaks si on enchaine avec $HOMEnimportequoi
-Check les exit_status de unset (tests 247, 248)
-Check les exit_status de cd (test 308, 312, 313, 314)
-Need to fix issue with trying to execute file that doesn't exist (test 322)
 Parse exit so that if it contains more that 1 arg it returns "too many arguments" (test 334, 334, 337, 338)
 Check cas limite sur exit, ou mettre un message d'erreur (tests 369,371)
 Check message errur et exit status sur cd file_not_existing (test 417)
@@ -22,17 +17,40 @@ Leaks sur cat Makefile | wc -l
 Fix > ok and >> ok which give out an error and don't give prompt back (test 491, 492, 493, 494, 499, 500, 501, 502, 503, 504)
 Free invalid pointer (test 520)
 Fix	exit status for << $hola, parsed as faulty input (status==2) when it's valid (status==0) (test 542)
-Expand dans expand fait tourner le programme en boucle (test 212)
 
 
-CHILD LEAK APPAREMMENT echo " $ " | cat -e 	:'(
+Expand dans expand fait tourner le programme en boucle (test 212) PARSING
+Seg fault si on essaye d'expand une variable qui n'est pas expandable ou si expandable mais des trucs en plus derriere (tests 141, 139, 218) PARSING
+Mauvais code erreur quand on expand une variable sans commande avant (test 140) EXEC
+Check les exit_status de unset (test 247) EXEC
+Check erreur message quand HOME= et cd apres (test 308, 313, 314) EXEC
+Need to fix issue with trying to execute file that doesn't exist, pas le bon exit status (test 322) EXEC
+Need to fix error message en limit numeric argument in exit (test 369, 371) EXEC
+Need to fix parsing for 3 pipe in a row in a command like so '|||' (test 412) + leaks in exec PARSING+EXEC
+Need to figure out output et exit status of test 417 EXEC
+Seg fault sur test 442, 466, 467, 478, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505  EXEC
+Need to fix loop (test 450, 451, 532, 533, 536) EXEC
+Fix expand in EOF du heredoc (test 534) EXEC
+Need to fix exit status test 468, 469, 470, 475, 476 EXEC
+
+
+CHILD LEAK APPAREMMENT echo " $ " | cat -e 	:'( FIXED ??
+
+
+
+TESTS OK =
+334
+335
+337
+338
+351 (leaks sur 'echo $?' apres le test ?)
+537
+535
+540
+541
+485
+486
+538
 
 140
-176
-
-
-Hi ! i'm currently working on a  project trying to recreate some of bash features (the 42 school's minishell project to be specific). As part of the project, there's some commands i need to recode like the cd command for example, but right now in having a problems with my builtins command (aka the ones i need to recode). I'm currently working on the cd builtin. My issue is the following. When i give the input :
-
-cd ~
-
-I need my cd builtin to work just like in bash, meaning to take me back to the
+176 

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 char	*find_var_env(t_env *env, char *var)
 {
 	while (env)
