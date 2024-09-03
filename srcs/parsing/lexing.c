@@ -72,7 +72,7 @@ bool	make_tokens(char *input, t_line *line)
 
 bool	lex(char *input, t_line *line)
 {
-	if (!make_tokens(input, line))
+	if (!make_tokens(input, line) || !line->argv || !line->argv->node)
 		return (false);
 	return (true);
 }
