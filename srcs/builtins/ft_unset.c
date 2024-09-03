@@ -70,57 +70,58 @@ static t_env	*env_rmone(t_env **sup, t_env **head)
 	return (*sup);
 }
 
-int is_valid_identifier(const char *str)
-{
-    if (!str || !*str) 
-        return (0);
-    if (!isalpha(*str) && *str != '_')
-        return (0);
-    str++;
-    while (*str)
-    {
-        if (!isalnum(*str) && *str != '_') 
-            return (0);
-        str++;
-    }
-    return (1);
+int is_valid_identifier(const char *str) {
+if (!str || !*str) return 0;
+
+if (!isalpha(*str) && *str != '_') return 0;
+
+for (str++; *str; str++) {
+if (!isalnum(*str) && *str != '_') return 0;
 }
 
+return 1;
+}
 
 int ft_unset(t_line **line, t_env *env)
 {
-	t_env *head;
-	size_t i;
-	int status = 0;
+t_env *head;
+size_t i;
+int status = 0;
 
-	if (!line || !(*line) || !env || ((*line)->pipe->arg && !(*line)->pipe->arg[1]))
-		return (1);
-	head = env;
-	i = 1;
-	while ((*line)->pipe->arg[i++])
-	{
-		if ((*line)->pipe->arg[i][0] == '-')
-			return (printf("bash: unset: --: invalid option\n"), 2);
-		if (!is_valid_identifier((*line)->pipe->arg[i]))
-		{
-			fprintf(stderr, "bash: unset: `%s': not a valid identifier\n", (*line)->pipe->arg[i]);
-			status = 1;
-		}
-		else
-		{
-			env = head;
-			while (env)
-			{
-				if (comp_keys(env->env, (*line)->pipe->arg[i]))
-				{
-					head = env_rmone(&env, &head);
-					break;
-				}
-				env = env->next;
-			}
-		}
-	}
-	env = head;
-	return (status);
+if (!line || !(*line) || !env || ((*line)->pipe->arg && !(*line)->pipe->arg[1]))
+return 1;
+
+head = env;
+i = 1;
+while ((*line)->pipe->arg[i])
+{
+if ((*line)->pipe->arg[i][0] == '-')
+{
+fprintf(stderr, "bash: unset: --: invalid option\n");
+return 2;
+}
+
+if (!is_valid_identifier((*line)->pipe->arg[i]))
+{
+fprintf(stderr, "bash: unset: `%s': not a valid identifier\n", (*line)->pipe->arg[i]);
+status = 1;
+}
+else
+{
+env = head;
+while (env)
+{
+if (comp_keys(env->env, (*line)->pipe->arg[i]))
+{
+head = env_rmone(&env, &head);
+break;
+}
+env = env->next;
+}
+}
+i++;
+}
+env = head;
+return status;
 }
 

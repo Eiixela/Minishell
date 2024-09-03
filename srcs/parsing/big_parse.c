@@ -18,6 +18,7 @@ bool	dirty_pipe(char *str, t_line *line)
 	{
 		if (*str == '|')
 		{
+			str += 1;
 			skip_white_spaces(&str);
 			if (*str == '|')
 			{
