@@ -77,9 +77,9 @@ bool	clean_input(char **str, t_line *line)
 		line->exit_status = 2;
 		return (false);
 	}
-	if (!dirty_redir(*str, line))
+	if (!dirty_redir(*str, line) || !dirty_pipe(*str, line))
 		return (false);
-	// dirtier_redir(*str);
+	dirtier_redir(*str);
 	return (true);
 }
 
@@ -102,7 +102,7 @@ char	*big_parse(t_line *line, char **input, int status)
 	str = expand(str, line, value, squote_mode);
 	if (!str)
 		return (NULL);
-	// clean_redir(str);
+	clean_redir(str);
 	if (!lex((char *)str, line))
 		return (NULL);
 	if (!parse(line, status))
