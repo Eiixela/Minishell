@@ -1,13 +1,13 @@
 # **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/06/03 01:12:35 by saperrie          #+#    #+#              #
-#    Updated: 2024/08/29 19:08:57 by saperrie         ###   ########.fr        #
-#                                                                              #
+#  #
+# :::  ::::::::#
+#Makefile   :+:  :+::+:#
+# +:+ +:+ +:+  #
+#By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+ #
+# +#+#+#+#+#+   +#+#
+#Created: 2024/06/03 01:12:35 by saperrie  #+##+#  #
+#Updated: 2024/09/03 11:17:11 by aljulien ###   ########.fr#
+#  #
 # **************************************************************************** #
 
 CC = gcc
@@ -56,6 +56,8 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/exec/redirections.c\
 		srcs/exec/signal.c\
 		srcs/builtins/ft_export_utils.c\
+		srcs/exec/heredoc.c\
+		srcs/exec/pipex_utils.c\
 							)
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))

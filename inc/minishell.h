@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 20:40:22 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:25:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,10 +201,11 @@ char		*send_eof(char *line);
 void		siglisten(void);
 void		sigend(void);
 void		sighandler(int sig);
-void 		handle_exit_status_child(t_line *line, int status, int *quit_message_printed);
+void 		handle_exit_status_child(t_line *line, int status, int quit_message_printed, int *cat_count);
 
 //REDIRECTIONS
 int			redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env);
+int			redir_heredoc(t_pipe *pipe, t_env *env);
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status);
@@ -213,8 +214,12 @@ char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line);
 int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line);
 void		create_env(char **envp, t_env **env);
-int			_call_childs(t_env *env, t_line *line);
+int			call_childs(t_env *env, t_line *line);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
+int			handle_cat_process(int pipe_fd[2]);
+int			handle_remaining_processes(int cat_count);
+int			cat_count(t_pipe *current, t_line *line);
+int			handle_redirection(t_pipe *pipe, t_env *env);
 
 // =================================== EXEC ================================
 

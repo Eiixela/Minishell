@@ -1,29 +1,29 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_cd_utils.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/22 09:26:23 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 14:40:38 by aljulien         ###   ########.fr       */
-/*                                                                            */
+/**/
+/*:::  ::::::::   */
+/*   ft_cd_utils.c  :+:  :+::+:   */
+/*+:+ +:+ +:+ */
+/*   By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+*/
+/*+#+#+#+#+#+   +#+   */
+/*   Created: 2024/08/22 09:26:23 by aljulien  #+##+# */
+/*   Updated: 2024/09/02 14:40:38 by aljulien ###   ########.fr   */
+/**/
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 char *expand_tilde(const char *arg, t_env *env)
 {
-    if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
-    {
-        char *home = find_var_env(env, "HOME=");
-        if (!home || !*home)
-            return ft_strdup(arg);  // If HOME is not set, return the original argument
-        if (arg[1] == '\0')
-            return ft_strdup(home);
-        return ft_strjoin(home, arg + 1);
-    }
-    return ft_strdup(arg);
+if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
+{
+char *home = find_var_env(env, "HOME=");
+if (!home || !*home)
+return ft_strdup(arg);  // If HOME is not set, return the original argument
+if (arg[1] == '\0')
+return ft_strdup(home);
+return ft_strjoin(home, arg + 1);
+}
+return ft_strdup(arg);
 }
 
 

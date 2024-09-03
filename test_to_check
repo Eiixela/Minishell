@@ -22,6 +22,7 @@ Leaks sur cat Makefile | wc -l
 Fix > ok and >> ok which give out an error and don't give prompt back (test 491, 492, 493, 494, 499, 500, 501, 502, 503, 504)
 Free invalid pointer (test 520)
 Fix	exit status for << $hola, parsed as faulty input (status==2) when it's valid (status==0) (test 542)
+Expand dans expand fait tourner le programme en boucle (test 212)
 
 
 CHILD LEAK APPAREMMENT echo " $ " | cat -e 	:'(

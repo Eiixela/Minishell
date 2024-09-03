@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 14:21:45 by aljulien          #+#    #+#             */
-/*   Updated: 2024/08/29 11:16:59 by aljulien         ###   ########.fr       */
-/*                                                                            */
+/**/
+/*:::  ::::::::   */
+/*   ft_env.c   :+:  :+::+:   */
+/*+:+ +:+ +:+ */
+/*   By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+*/
+/*+#+#+#+#+#+   +#+   */
+/*   Created: 2024/06/11 14:21:45 by aljulien  #+##+# */
+/*   Updated: 2024/08/29 11:16:59 by aljulien ###   ########.fr   */
+/**/
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -139,19 +139,19 @@ void	create_env(char **envp, t_env **env)
 
 int ft_env(t_env *env, t_pipe *pipe)
 {
-    t_env *env_now;
+t_env *env_now;
 
-    env_now = env;
-    if (pipe->arg[1])
-        return (print_error_message("minishell: ", "env: ", strerror(E2BIG)));
-    while (env_now)
-    {
-        if (!env_now->is_exported)
-        {
-            if (g_ret == SIGPIPE || ft_putendl_fd(env_now->env, STDOUT_FILENO) == -1)
-                return (print_error_message("minishell: ", "env: ", strerror(errno)));
-        }
-        env_now = env_now->next;
-    }
-    return (0);
+env_now = env;
+if (pipe->arg[1])
+return (print_error_message("minishell: ", "env: ", strerror(E2BIG)));
+while (env_now)
+{
+if (!env_now->is_exported)
+{
+if (g_ret == SIGPIPE || ft_putendl_fd(env_now->env, STDOUT_FILENO) == -1)
+return (print_error_message("minishell: ", "env: ", strerror(errno)));
+}
+env_now = env_now->next;
+}
+return (0);
 }
