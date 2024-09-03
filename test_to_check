@@ -10,21 +10,28 @@ Faire un cas dans le heredoc pour que l'expand ne se passe pas quand EOF entre q
 Faire un cas dans le heredoc pour aue l'EOF ne soit pas expand
 Free invalid pointer in expand_utils l.33 but leaks without it so need to check this out
 Export variable should be working with $? (ex : export HO$?LA=bonjour should be exporting)
+Leaks sur "$HOMEnimportequoi" (test 140), puis more leaks si on enchaine avec $HOMEnimportequoi
 Check les exit_status de unset (tests 247, 248)
 Check les exit_status de cd (test 308, 312, 313, 314)
 Need to fix issue with trying to execute file that doesn't exist (test 322)
+Parse exit so that if it contains more that 1 arg it returns "too many arguments" (test 334, 334, 337, 338)
 Check cas limite sur exit, ou mettre un message d'erreur (tests 369,371)
 Check message errur et exit status sur cd file_not_existing (test 417)
 Check input : > name_of_file ---> makes the program runs in a loop
 Leaks sur cat Makefile | wc -l
+Fix > ok and >> ok which give out an error and don't give prompt back (test 491, 492, 493, 494, 499, 500, 501, 502, 503, 504)
+Free invalid pointer (test 520)
+Fix	exit status for << $hola, parsed as faulty input (status==2) when it's valid (status==0) (test 542)
 
+
+CHILD LEAK APPAREMMENT echo " $ " | cat -e 	:'(
 
 140
 176
 
 
-Hi ! i'm currently working on a  project trying to recreate some of bash features (the 42 school's minishell project to be specific). As part of the project, there's some commands i need to recode like the cd command for example, but right now in having a problems with my builtins command (aka the ones i need to recode). I'm currently working on the cd builtin. My issue is the following. When i give the input : 
+Hi ! i'm currently working on a  project trying to recreate some of bash features (the 42 school's minishell project to be specific). As part of the project, there's some commands i need to recode like the cd command for example, but right now in having a problems with my builtins command (aka the ones i need to recode). I'm currently working on the cd builtin. My issue is the following. When i give the input :
 
 cd ~
 
-I need my cd builtin to work just like in bash, meaning to take me back to the 
+I need my cd builtin to work just like in bash, meaning to take me back to the

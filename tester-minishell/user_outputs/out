@@ -1,5 +1,3 @@
-aljulien@z3r8p5:~/goinfre/minishell$ <
-minishell: syntax error near unexpected token `newline'
-aljulien@z3r8p5:~/goinfre/minishell$ exit
-exit
+aljulien@z3r8p5:~/goinfre/minishell$ echo hola > bonjour
+aljulien@z3r8p5:~/goinfre/minishell$ <bonjour cat | wc > bonjour
 aljulien@z3r8p5:~/goinfre/minishell$ 

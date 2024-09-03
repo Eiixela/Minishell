@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:48:55 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/02 17:15:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/03 09:05:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,15 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line
         }
         if (strcmp(pipe->arg[0], "cat") == 0 && pipe->arg[1] == NULL && isatty(STDIN_FILENO))
         {
-            char buf[1024];
-            ssize_t n = read(STDIN_FILENO, buf, sizeof(buf));
-            if (n > 0)
-                write(STDOUT_FILENO, buf, n);
-            exit(0);
+            builtin_result = execute_builtins(env, pipe, line);
+            exit(builtin_result);  // Exit with the return value of the builtin
         }
-        execute_cmd(env, pipe, line);
-        exit(pipe->ret_val);
+
+        else
+        {
+            if (execute_cmd(env, pipe, line))
+                exit(pipe->ret_val);
+        }
     }
     return (pid);
 }
@@ -86,8 +87,14 @@ int _call_childs(t_env *env, t_line *line)
         last_pid = pid;
         current = current->next;
     }
-
-    while (wait(&status) > 0);
+    pid_t wpid;
+    sigend();
+    while ((wpid = wait(&status)) > 0)
+    {
+        if (wpid == last_pid) {
+            handle_exit_status_child(line, status, &quit_message_printed);
+        }
+    }
     return (1);
 }
 
@@ -165,7 +172,7 @@ int _call_childs(t_env *env, t_line *line)
     }
     pid_t wpid;
     sigend();
-    while ((wpid = wait(&status)) > 0) 
+    while ((wpid = wait(&status)) > 0)
     {
         if (wpid == last_pid)
             handle_exit_status_child(line, status, &quit_message_printed);

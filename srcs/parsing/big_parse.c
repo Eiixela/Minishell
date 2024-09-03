@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 19:22:22 by saperrie          #+#    #+#             */
-/*   Updated: 2024/08/29 22:10:55 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/02 23:26:45 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ bool	clean_input(char **str, t_line *line)
 	}
 	if (!dirty_redir(*str, line))
 		return (false);
-	// if (!dirty_pipe(*str, line))
-	// 	return (false);
+	// dirtier_redir(*str);
 	return (true);
 }
 
@@ -103,6 +102,7 @@ char	*big_parse(t_line *line, char **input, int status)
 	str = expand(str, line, value, squote_mode);
 	if (!str)
 		return (NULL);
+	// clean_redir(str);
 	if (!lex((char *)str, line))
 		return (NULL);
 	if (!parse(line, status))

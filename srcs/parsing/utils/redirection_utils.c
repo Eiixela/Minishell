@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 23:21:34 by saperrie          #+#    #+#             */
-/*   Updated: 2024/06/09 21:45:41 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/02 23:25:29 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,29 @@ char	is_redirection_operator(char *str)
 	else if (*str == '<')
 		return (IN_REDIR);
 	return (0);
+}
+
+void	clean_redir(char *str)
+{
+	while (*str)
+	{
+		if (*str == '$' * -1)
+			*str = '$';
+		str += 1;
+	}
+}
+
+void	dirtier_redir(char *str)
+{
+	while (*str)
+	{
+		if (str[0] == '<' && str[1] == '<')
+		{
+			str += 2;
+			skip_white_spaces(&str);
+			if (str[0] == '$')
+				str[0] *= -1;
+		}
+		str += 1;
+	}
 }
