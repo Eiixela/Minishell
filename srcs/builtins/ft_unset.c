@@ -30,19 +30,6 @@ static char	*comp_keys(char *to_find, char *key)
 	return (to_find);
 }
 
-static	size_t	env_len(t_env *env)
-{
-	size_t	i;
-
-	i = 0;
-	while (env)
-	{
-		env = env->next;
-		i++;
-	}
-	return (i);
-}
-
 static t_env	*env_rmone(t_env **sup, t_env **head)
 {
 	t_env	*tmp;
@@ -53,7 +40,7 @@ static t_env	*env_rmone(t_env **sup, t_env **head)
 	if (!tmp->prev)
 	{
 		(*sup) = (*sup)->next;
-		if (env_len(tmp) > 1)
+		if (env_len_unset(tmp) > 1)
 			(*sup)->prev = NULL;
 		head = sup;
 	}
@@ -70,58 +57,42 @@ static t_env	*env_rmone(t_env **sup, t_env **head)
 	return (*sup);
 }
 
-int is_valid_identifier(const char *str) {
-if (!str || !*str) return 0;
-
-if (!isalpha(*str) && *str != '_') return 0;
-
-for (str++; *str; str++) {
-if (!isalnum(*str) && *str != '_') return 0;
-}
-
-return 1;
-}
-
-int ft_unset(t_line **line, t_env *env)
+void	ft_remove_env_var(t_env **head, char *arg)
 {
-t_env *head;
-size_t i;
-int status = 0;
+	t_env	*env;
 
-if (!line || !(*line) || !env || ((*line)->pipe->arg && !(*line)->pipe->arg[1]))
-return 1;
-
-head = env;
-i = 1;
-while ((*line)->pipe->arg[i])
-{
-if ((*line)->pipe->arg[i][0] == '-')
-{
-fprintf(stderr, "bash: unset: --: invalid option\n");
-return 2;
+	env = *head;
+	while (env)
+	{
+		if (comp_keys(env->env, arg))
+		{
+			*head = env_rmone(&env, head);
+			break ;
+		}
+		env = env->next;
+	}
 }
 
-if (!is_valid_identifier((*line)->pipe->arg[i]))
+int	ft_unset(t_line **line, t_env *env)
 {
-fprintf(stderr, "bash: unset: `%s': not a valid identifier\n", (*line)->pipe->arg[i]);
-status = 1;
-}
-else
-{
-env = head;
-while (env)
-{
-if (comp_keys(env->env, (*line)->pipe->arg[i]))
-{
-head = env_rmone(&env, &head);
-break;
-}
-env = env->next;
-}
-}
-i++;
-}
-env = head;
-return status;
-}
+	t_env	*head;
+	size_t	i;
 
+	if (!line || !(*line) || !env)
+		return (0);
+	if ((*line)->pipe->arg && !(*line)->pipe->arg[1])
+		return (0);
+	head = env;
+	i = 1;
+	while ((*line)->pipe->arg[i])
+	{
+		if ((*line)->pipe->arg[i][0] == '-')
+			return (ft_putstr_fd("bash: unset: --: invalid option\n", 2), 2);
+		if (!is_valid_identifier((*line)->pipe->arg[i]))
+			return (print_error_message("bash: unset: `",
+					(*line)->pipe->arg[i], "': not a valid identifier\n"), 1);
+		ft_remove_env_var(&head, (*line)->pipe->arg[i]);
+		i++;
+	}
+	return (0);
+}

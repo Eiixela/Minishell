@@ -1,20 +1,35 @@
-==369935== Memcheck, a memory error detector
-==369935== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==369935== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==369935== Command: cat
-==369935== Parent PID: 369933
-==369935== 
-==369935== 
-==369935== FILE DESCRIPTORS: 1 open (0 std) at exit.
-==369935== Open file descriptor 3: /home/saperrie/cmor/42/minishell/tester-minishell/test
-==369935==    <inherited from parent>
-==369935== 
-==369935== 
-==369935== HEAP SUMMARY:
-==369935==     in use at exit: 0 bytes in 0 blocks
-==369935==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
-==369935== 
-==369935== All heap blocks were freed -- no leaks are possible
-==369935== 
-==369935== For lists of detected and suppressed errors, rerun with: -s
-==369935== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==359034== Memcheck, a memory error detector
+==359034== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==359034== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==359034== Command: cat
+==359034== Parent PID: 359032
+==359034== 
+==359034== 
+==359034== FILE DESCRIPTORS: 6 open (0 std) at exit.
+==359034== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==359034==    <inherited from parent>
+==359034== 
+==359034== Open AF_UNIX socket 42: <unknown>
+==359034==    <inherited from parent>
+==359034== 
+==359034== Open file descriptor 40: /dev/ptmx
+==359034==    <inherited from parent>
+==359034== 
+==359034== Open file descriptor 39: /home/aljulien/.config/Code/logs/20240904T084947/ptyhost.log
+==359034==    <inherited from parent>
+==359034== 
+==359034== Open file descriptor 38: /usr/share/code/resources/app/node_modules.asar
+==359034==    <inherited from parent>
+==359034== 
+==359034== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/test
+==359034==    <inherited from parent>
+==359034== 
+==359034== 
+==359034== HEAP SUMMARY:
+==359034==     in use at exit: 0 bytes in 0 blocks
+==359034==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==359034== 
+==359034== All heap blocks were freed -- no leaks are possible
+==359034== 
+==359034== For lists of detected and suppressed errors, rerun with: -s
+==359034== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -37,7 +37,7 @@ char	*_strdup(const char *s)
 	size_t	i;
 
 	i = 0;
-	p = (char *)malloc(sizeof(*s) * _strlen(s) + 1);
+	p = (char *)malloc(sizeof(*s) * ft_strlen(s) + 1);
 	if (p == NULL)
 		return (NULL);
 	while (s[i])

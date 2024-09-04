@@ -49,6 +49,8 @@ char	*get_path(t_pipe *pipe, char **env, int i)
 	char	*path_part;
 	char	**allpath;
 
+	if (pipe->arg[0][0] == '\0')
+		return (NULL);
 	if (ft_strchr(pipe->arg[0], '/'))
 		return (check_command_in_path(pipe->arg[0]));
 	allpath = ft_split(get_env("PATH", env), ':');

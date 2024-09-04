@@ -44,5 +44,5 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		}
 	}
 	free_double_tab(env_now);
-	return (0);
+	return (1);
 }

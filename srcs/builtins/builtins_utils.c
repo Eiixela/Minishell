@@ -52,51 +52,50 @@ void	*exprt_inenv(t_env **env, char *data)
 	return (new);
 }
 
-void free_for_export(int index, char **s, char **temp)
+void	free_for_export(int index, char **s, char **temp)
 {
-if (*s)
-{
-free(*s);
-*s = NULL;
-}
-if (index == 0 && *temp)
-{
-free(*temp);
-*temp = NULL;
-}
-if (index == 2 && *temp)
-{
-free(*temp);
-*temp = NULL;
-}
+	if (*s)
+	{
+		free(*s);
+		*s = NULL;
+	}
+	if (index == 0 && *temp)
+	{
+		free(*temp);
+		*temp = NULL;
+	}
+	if (index == 2 && *temp)
+	{
+		free(*temp);
+		*temp = NULL;
+	}
 }
 
-int check_arg(char *var)
+int	check_arg(char *var)
 {
-size_t i;
+	size_t	i;
 
-i = 0;
-if (var[0] == '-')
-{
+	i = 0;
+	if (var[0] == '-')
+	{
 		verror("minishell: export: '", var, "': invalid option");
-return (-2);
+		return (-2);
+	}
+	if (var[0] != '_' && !ft_isalpha(var[0]))
+	{
+		verror("minishell: export: '", var, "': not a valid identifier");
+		return (-1);
+	}
+	while (var[i] && var[i] != '=')
+	{
+		if (var[i] != '_' && !ft_isalnum(var[i]))
+		{
+			verror("minishell: export: '", var, "': not a valid identifier");
+			return (-1);
+		}
+		i++;
+	}
+	if (var[i] == '=')
+		return (1);
+	return (0);
 }
-if (var[0] != '_' && !ft_isalpha(var[0]))
-{
-verror("minishell: export: '", var, "': not a valid identifier");
-return (-1);
-}
-while (var[i] && var[i] != '=')
-{
-if (var[i] != '_' && !ft_isalnum(var[i]))
-{
-verror("minishell: export: '", var, "': not a valid identifier");
-return (-1);
-}
-i++;
-}
-if (var[i] == '=')
-return (1);
-return (0);
-}
-

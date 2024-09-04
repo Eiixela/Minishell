@@ -31,22 +31,30 @@ static t_redir	*redirection_append_and_out(t_redir *current_redir)
 	return (current_redir);
 }
 
-static int	redirection_in(t_redir *current_redir)
+static int redirection_in(t_redir *current_redir)
 {
-	int	fd;
+    int fd;
 
-	fd = open(current_redir->fd, O_RDONLY);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", STDOUT_FILENO);
-		ft_putstr_fd(current_redir->fd, STDOUT_FILENO);
-		return (perror(" "), 0);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-		return (perror("dup2 input"), 0);
-	close(fd);
-	return (1);
+    if (access(current_redir->fd, F_OK) == -1) {
+        ft_putstr_fd("minishell: ", STDERR_FILENO);
+        ft_putstr_fd(current_redir->fd, STDERR_FILENO);
+        ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+        return 0;
+    }
+    fd = open(current_redir->fd, O_RDONLY);
+    if (fd == -1)
+    {
+        ft_putstr_fd("minishell: ", STDERR_FILENO);
+        ft_putstr_fd(current_redir->fd, STDERR_FILENO);
+        perror(" ");
+        return 0;
+    }
+    if (dup2(fd, STDIN_FILENO) == -1)
+        return (perror("dup2 input"), 0);
+    close(fd);
+    return 1;
 }
+
 
 static int	last_redir(t_redir *last_out_redir)
 {

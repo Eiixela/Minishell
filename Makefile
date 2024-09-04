@@ -10,7 +10,7 @@
 #  #
 # **************************************************************************** #
 
-CC = gcc
+CC = cc
 
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
@@ -58,6 +58,8 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/builtins/ft_export_utils.c\
 		srcs/exec/heredoc.c\
 		srcs/exec/pipex_utils.c\
+		srcs/builtins/unset_utils.c\
+		srcs/builtins/builtins_libft.c\
 							)
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))

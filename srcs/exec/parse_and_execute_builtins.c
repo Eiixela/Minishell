@@ -17,17 +17,17 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 	if (!ft_strcmp(pipe->arg[0], "echo"))
 		line->pipe->ret_val = ft_echo(pipe->arg);
 	else if (!ft_strcmp(pipe->arg[0], "cd"))
-		line->pipe->ret_val = ft_cd(env, line);
+		pipe->ret_val = ft_cd(env, line);
 	else if (!ft_strcmp(pipe->arg[0], "pwd"))
-		line->pipe->ret_val = ft_pwd(env);
+		pipe->ret_val = ft_pwd(env);
 	else if (!ft_strcmp(pipe->arg[0], "export"))
-		line->pipe->ret_val = export(&pipe, env);
+		pipe->ret_val = export(&pipe, env);
 	else if (!ft_strcmp(pipe->arg[0], "unset"))
-		line->pipe->ret_val = ft_unset(&line, env);
+		pipe->ret_val = ft_unset(&line, env);
 	else if (!ft_strcmp(pipe->arg[0], "env"))
-		line->pipe->ret_val = ft_env(env, pipe);
+		pipe->ret_val = ft_env(env, pipe);
 	else if (!ft_strcmp(pipe->arg[0], "exit"))
-		line->pipe->ret_val = ft_exit(pipe, line);
+		pipe->ret_val = ft_exit(pipe, line);
 	else
 		return (1);
 	return (0);

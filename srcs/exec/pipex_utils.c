@@ -24,7 +24,7 @@ close(pipe_fd[0]);
 dup2(pipe_fd[1], STDOUT_FILENO);
 close(pipe_fd[1]);
 if (read(STDIN_FILENO, buf, sizeof(buf)) > 0)
-write(STDOUT_FILENO, buf, strlen(buf));
+write(STDOUT_FILENO, buf, ft_strlen(buf));
 exit(0);
 }
 return (pid);
@@ -53,7 +53,7 @@ int cat_count(t_pipe *current, t_line *line)
 	int cat_count;
 
 	cat_count = 0;
-	while (current && strcmp(current->arg[0], "cat") == 0
+	while (current && ft_strcmp(current->arg[0], "cat") == 0
 && current->arg[1] == NULL && !current->redir)
 {
 cat_count++;

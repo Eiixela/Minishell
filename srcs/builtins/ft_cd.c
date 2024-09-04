@@ -12,18 +12,6 @@
 
 #include "minishell.h"
 
-size_t	ft_arrlen(char **arr)
-{
-	size_t	i;
-
-	i = 0;
-	if (!arr || !*arr)
-		return (i);
-	while (arr[i])
-		i++;
-	return (i);
-}
-
 static char	*init_path(t_line *line, t_env *env)
 {
 	char	*path;
@@ -55,7 +43,7 @@ static char	*init_path(t_line *line, t_env *env)
 static char	*cd_path(t_line *line, t_env *env)
 {
 	char	*path;
-	t_env *env_now;
+	t_env	*env_now;
 
 	env_now = env;
 	if (line->pipe->arg[1][0] == '/')
@@ -72,9 +60,10 @@ static char	*cd_path(t_line *line, t_env *env)
 	return (path);
 }
 
-static int special_cases(t_line *line, char **path, t_env *env)
+static int	special_cases(t_line *line, char **path, t_env *env)
 {
-	if (!line->pipe->arg[1] || (line->pipe->arg[1][0] == '~' && line->pipe->arg[1][1] == '\0'))
+	if (!line->pipe->arg[1] || (line->pipe->arg[1][0] == '~'
+		&& line->pipe->arg[1][1] == '\0'))
 	{
 		*path = find_var_env(env, "HOME=");
 		if (!*path)
@@ -99,23 +88,14 @@ static int special_cases(t_line *line, char **path, t_env *env)
 	return (0);
 }
 
-int ft_cd(t_env *env, t_line *line)
+static int	ft_cd_helper(t_line *line, t_env *env, char *path, int rv)
 {
-	char *path;
-	char *tmp;
-	int rv;
+	char	*expanded_arg;
+	char	*tmp;
 
-	path = NULL;
-	if (ft_arrlen((line)->pipe->arg) > 2)
-		return (print_error(0, "minishell: cd: too many arguments"), 1);
-	rv = special_cases(line, &path, env);
-	if (rv == 2)
-		return (0);
-	if (rv == -1)
-		return (1);
 	if (!rv)
 	{
-		char *expanded_arg = expand_tilde(line->pipe->arg[1], env);
+		expanded_arg = expand_tilde(line->pipe->arg[1], env);
 		free(line->pipe->arg[1]);
 		line->pipe->arg[1] = expanded_arg;
 		path = cd_path(line, env);
@@ -133,3 +113,18 @@ int ft_cd(t_env *env, t_line *line)
 	return (0);
 }
 
+int	ft_cd(t_env *env, t_line *line)
+{
+	char	*path;
+	int		rv;
+
+	path = NULL;
+	if (ft_arrlen((line)->pipe->arg) > 2)
+		return (print_error(0, "minishell: cd: too many arguments"), 1);
+	rv = special_cases(line, &path, env);
+	if (rv == 2)
+		return (0);
+	if (rv == -1)
+		return (1);
+	return (ft_cd_helper(line, env, path, rv));
+}

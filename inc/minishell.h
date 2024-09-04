@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/03 17:25:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:32:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,10 @@ char		*cut_string(const char *input_string, char cut_char);
 ssize_t		print_senv(char **arr);
 void		free_for_export(int index, char **s, char **temp);
 int			check_arg(char *var);
-char *expand_tilde(const char *arg, t_env *env);
+char		*expand_tilde(const char *arg, t_env *env);
+int			is_valid_identifier(const char *str);
+size_t		env_len_unset(t_env *env);
+size_t		ft_arrlen(char **arr);
 
 //ERROR
 void		*errjoin(int error_code, char *error_message);

@@ -41,7 +41,6 @@ int	main(int ac, char **av, char **envp)
 	line.env = env;
 	while (1)
 	{
-		//fprintf(stderr, "status = %i\n", status);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)

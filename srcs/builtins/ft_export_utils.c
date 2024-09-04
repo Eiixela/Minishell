@@ -12,18 +12,21 @@
 
 #include "minishell.h"
 
-ssize_t	print_senv(char **arr)
+ssize_t print_senv(char **arr)
 {
-	size_t	i;
+    size_t i;
 
-	i = 0;
-	while (arr[i])
-	{
-		if (printf("declare -x %s\n", arr[i]) == -1)
-			return (-1);
-		i++;
-	}
-	return (1);
+    i = 0;
+    while (arr[i])
+    {
+        if (arr[i][0] != '\0')
+        {
+            if (printf("declare -x %s\n", arr[i]) < 0)
+                return (-1);
+        }
+        i++;
+    }
+    return (1);
 }
 
 char	*cut_string(const char *input_string, char cut_char)
@@ -32,21 +35,21 @@ char	*cut_string(const char *input_string, char cut_char)
 	char	*cut_position;
 	size_t	length;
 
-	cut_position = strchr(input_string, cut_char);
+	cut_position = ft_strchr(input_string, cut_char);
 	if (cut_position != NULL)
 	{
 		length = cut_position - input_string;
 		result = (char *)malloc(length + 1);
 		if (result == NULL)
-			return (fprintf(stderr, "Memory allocation failed\n"), NULL);
-		strncpy(result, input_string, length);
+			return (ft_putstr_fd("Memory allocation failed\n", 2), NULL);
+		ft_strncpy(result, input_string, length);
 		result[length] = '\0';
 	}
 	else
 	{
-		result = strdup(input_string);
+		result = ft_strdup(input_string);
 		if (result == NULL)
-			return (fprintf(stderr, "Memory allocation failed\n"), NULL);
+			return (ft_putstr_fd("Memory allocation failed\n", 2), NULL);
 	}
 	return (result);
 }

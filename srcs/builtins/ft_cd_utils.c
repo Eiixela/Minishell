@@ -12,18 +12,20 @@
 
 #include "minishell.h"
 
-char *expand_tilde(const char *arg, t_env *env)
+char	*expand_tilde(const char *arg, t_env *env)
 {
+	char	*home;
+
 	if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
 	{
-		char *home = find_var_env(env, "HOME=");
+		home = find_var_env(env, "HOME=");
 		if (!home || !*home)
-			return ft_strdup(arg);
+			return (ft_strdup(arg));
 		if (arg[1] == '\0')
-			return ft_strdup(home);
+			return (ft_strdup(home));
 		return ft_strjoin(home, arg + 1);
 	}
-	return ft_strdup(arg);
+	return (ft_strdup(arg));
 }
 
 int	check_directory(char *var, char *path)
@@ -35,20 +37,19 @@ int	check_directory(char *var, char *path)
 		if (errno == ENOENT)
 		{
 			verror("minishell: cd: ", var, \
-			": No such file or directory1");
+			": No such file or directory");
 			return (1);
 		}
 		if (errno == 13)
-			verror("minishell: cd: ", var, ": Not a directory2");
+			verror("minishell: cd: ", var, ": Not a directory");
 		if (errno == ENAMETOOLONG)
 			return (0);
-		return (1);
 	}
 	if (S_ISDIR(buf.st_mode))
 		return (0);
 	else
 	{
-		verror("minishell: cd: ", var, ": Not a directory3");
+		verror("minishell: cd: ", var, ": No such file or directory");
 		return (1);
 	}
 	return (0);
