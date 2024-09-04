@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/04 13:32:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:56:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int			call_childs(t_env *env, t_line *line);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 int			handle_cat_process(int pipe_fd[2]);
 int			handle_remaining_processes(int cat_count);
-int			cat_count(t_pipe *current, t_line *line);
+int			_cat_count(t_pipe *current, t_line *line);
 int			handle_redirection(t_pipe *pipe, t_env *env);
 
 // =================================== EXEC ================================

@@ -54,3 +54,5 @@ TESTS OK =
 
 140
 176 
+
+add free(path) in execute command

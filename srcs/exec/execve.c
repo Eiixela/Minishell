@@ -23,6 +23,16 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		return (ft_putstr_fd("minishell: %s:command not found\n", 2), 0);
 	if (execute_builtins(env, pipe, line) == 1)
 	{
+		if (!access(pipe->arg[0], F_OK))
+		{
+
+			if (access(pipe->arg[0], F_OK | X_OK))
+			{
+				print_error_message("minishell: ", pipe->arg[0], \
+		" Permission denied\n");
+				exit(126);
+			}
+		}
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
@@ -30,6 +40,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		": command not found\n");
 			free_double_tab(env_now);
 			cleanup(line);
+			free(path);
 			free_env(env);
 			exit(127);
 		}
@@ -39,6 +50,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		" Is a directory\n");
 			free_double_tab(env_now);
 			cleanup(line);
+			free(path);
 			free_env(env);
 			exit(126);
 		}
