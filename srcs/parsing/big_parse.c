@@ -40,6 +40,10 @@ bool	dirty_redir(char *str, t_line *line)
 		if (skip_redirection_operator(&str))
 		{
 			skip_white_spaces(&str);
+			if (!*str)
+				return (ft_putstr_fd
+					("bash: syntax error near unexpected token `newline'\n", 2),
+					line->exit_status = 2, false);
 			if (*str == '|')
 			{
 				ft_putstr_fd("bash: syntax error near unexpected token `|'\n", \
