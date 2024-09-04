@@ -28,9 +28,9 @@ char	*get_value(char *dollar_index, t_line *line, char	*name, \
 	if (!value)
 		return (false);
 	free(name);
+	turn_extra_dollar_negative(&value);
 	return (value);
 }
-
 
 char	*get_env_value(t_line *line, char *name)
 {
