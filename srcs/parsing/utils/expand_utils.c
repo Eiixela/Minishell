@@ -12,39 +12,49 @@
 
 #include "minishell.h"
 
-size_t	_strlen(char const *str)
+char	*get_value(char *dollar_index, t_line *line, char	*name, \
+	int *name_len)
 {
-	size_t	len;
+	char	*value;
+	char	*name_ptr;
 
-	len = 0;
-	if (!str)
-		return (0);
-	while (str[len])
-		len++;
-	return (len);
-}
-
-bool	is_valid_varname(char c)
-{
-	if (ft_isalnum(c) || c == '_')
-		return (true);
-	return (false);
-}
-
-char	*_strdup(const char *s)
-{
-	char	*p;
-	size_t	i;
-
-	i = 0;
-	p = (char *)malloc(sizeof(*s) * ft_strlen(s) + 1);
-	if (p == NULL)
+	name_ptr = dollar_index;
+	if (!is_valid_varname(*(name_ptr + 1)))
+		return (printf("SAARASS\n"), ft_calloc(1, 1));
+	while (is_valid_varname(*(++name_ptr)))
+		*name_len += 1;
+	name = ft_substr(dollar_index, 1, *name_len);
+	if (!name)
 		return (NULL);
-	while (s[i])
+	value = get_env_value(line, name);
+	if (!value)
+		return (false);
+	free(name);
+	return (value);
+}
+
+
+char	*get_env_value(t_line *line, char *name)
+{
+	t_env	*env;
+	char	*value;
+	int		name_len;
+
+	env = line->env;
+	name_len = ft_strlen(name);
+	while (env)
 	{
-		p[i] = s[i];
-		i++;
+		if (!ft_strncmp(name, env->env, name_len) \
+			&& *(env->env + name_len) == '=')
+		{
+			if (*(env->env + name_len + 1) == '\0')
+				return (ft_calloc(1, 1));
+			value = ft_strdup(env->env + name_len + 1);
+			if (!value)
+				return (NULL);
+			return (value);
+		}
+		env = env->next;
 	}
-	p[i] = '\0';
-	return (p);
+	return (ft_calloc(1, 1));
 }

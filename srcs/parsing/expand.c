@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+char	*handle_exit_status(char *input, t_line *line, char **str_head)
+{
+	char	*value;
+
+	value = ft_itoa(line->exit_status);
+	if (!value)
+		return (NULL);
+	input = towards_expand(input, line, *str_head, value);
+	// free(*str_head);
+	*str_head = input;
+	return (input);
+}
+
 char	*actual_expand(char **s1, char *value, char *rest)
 {
 	char	*final_input;
@@ -74,6 +87,7 @@ char	*expand(char *input, t_line *line, char *value, short squote_mode)
 			squote_mode *= -1;
 		if (is_env_var_format(input, squote_mode))
 		{
+			printf("EXP\n");
 			input = towards_expand(input, line, str_head, value);
 			free(str_head);
 			str_head = input;

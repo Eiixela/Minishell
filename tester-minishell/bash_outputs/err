@@ -1,4 +1,0 @@
-bash: line 5: warning: here-document at line 4 delimited by end-of-file (wanted `lol')
-bash: line 5: warning: here-document at line 5 delimited by end-of-file (wanted `cat')
-bash: line 5: warning: here-document at line 5 delimited by end-of-file (wanted `koala')
-bash: line 4: prout: command not found

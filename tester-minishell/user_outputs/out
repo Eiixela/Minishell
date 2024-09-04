@@ -1,6 +1,0 @@
-aljulien@z3r8p5:~/goinfre/minishell$ echo Amour Tu es Horrible > a
-aljulien@z3r8p5:~/goinfre/minishell$ echo 0123456789 > b
-aljulien@z3r8p5:~/goinfre/minishell$ echo Prout > c
-aljulien@z3r8p5:~/goinfre/minishell$ prout << lol << cat << koala
-> exit
-> 
