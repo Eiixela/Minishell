@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 void	turn_extra_dollar_negative(char	**s1)
 {
 	char	*head;

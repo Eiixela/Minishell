@@ -87,7 +87,6 @@ char	*expand(char *input, t_line *line, char *value, short squote_mode)
 			squote_mode *= -1;
 		if (is_env_var_format(input, squote_mode))
 		{
-			printf("EXP\n");
 			input = towards_expand(input, line, str_head, value);
 			free(str_head);
 			str_head = input;

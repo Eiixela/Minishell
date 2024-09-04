@@ -19,8 +19,6 @@ char	*get_value(char *dollar_index, t_line *line, char	*name, \
 	char	*name_ptr;
 
 	name_ptr = dollar_index;
-	if (!is_valid_varname(*(name_ptr + 1)))
-		return (printf("SAARASS\n"), ft_calloc(1, 1));
 	while (is_valid_varname(*(++name_ptr)))
 		*name_len += 1;
 	name = ft_substr(dollar_index, 1, *name_len);

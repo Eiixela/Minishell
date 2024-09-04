@@ -12,19 +12,11 @@
 
 #include "minishell.h"
 
-// bool	is_env_var_format(char *input, short squote_mode)
-// {
-// 	if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
-// 		&& squote_mode == -1 && input[1] != '$')
-// 		return (true);
-// 	return (false);
-// }
-
 bool	is_env_var_format(char *input, short squote_mode)
 {
-	if (input[0] == '$' && (ft_isalpha(input[1]) || input[1] == '_') \
-		&& squote_mode == -1 && input[1] != '$' \
-			&& (input[1] == '\'' || input[1] == '"'))
+	if (input[0] == '$' && ((ft_isalpha(input[1]) || input[1] == '_') \
+		|| (input[1] == '\'' || input[1] == '"')) \
+		&& squote_mode == -1 && input[1] != '$')
 		return (true);
 	return (false);
 }
