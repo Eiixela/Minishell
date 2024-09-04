@@ -43,14 +43,18 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 		if (setup_io(input_fd, output_fd) == 0)
 			exit(EXIT_FAILURE);
 		if (pipe->redir != NULL && handle_redirection(pipe, env) != 1)
-			exit(pipe->ret_val);
+		{
+			cleanup_exec(line);
+		}
 		if (parse_builtin(pipe))
 		{
 			execute_builtins(env, pipe, line);
+			cleanup(line);
 			exit(pipe->ret_val);
 		}
 		if (pipe->arg && pipe->arg[0])
 			execute_cmd(env, pipe, line);
+		cleanup(line);
 		exit(pipe->ret_val);
 	}
 	return (pid);

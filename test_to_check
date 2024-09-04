@@ -56,3 +56,6 @@ TESTS OK =
 176 
 
 add free(path) in execute command
+
+
+valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.%p.txt --suppressions=supp.supp ./minishell

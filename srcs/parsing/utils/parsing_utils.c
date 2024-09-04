@@ -90,6 +90,5 @@ bool	process_redir(t_line *line, char redir_operator, \
 	line->pipe->redir->fd[i] = '\0';
 	if (!*line->pipe->redir->fd && !line->argv->next)
 		return (ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2), line->exit_status = 2, false);
-	//printf("\tfd: %s\n", line->pipe->redir->fd);
 	return (true);
 }

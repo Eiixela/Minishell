@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/04 14:56:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:48:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ void		env_addback(t_env **env, t_env *node);
 t_env		*env_newnode(char *data);
 void		free_all_tab(char **s_cmd, char **allpath);
 void		free_double_tab(char **s);
+void	cleanup_exec(t_line *line);
 
 //SIGNALS
 char		*send_eof(char *line);
