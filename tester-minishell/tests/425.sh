@@ -1,1 +1,1 @@
-exit | sleep 3
+exit | sleep 1

@@ -84,8 +84,8 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	pid_t	pid;
 
 	current = line->pipe;
-	while (current && strcmp(current->arg[0], "cat") == 0
-		&& current->arg[1] == NULL && !current->redir)
+	while (current && current->arg && ft_strcmp(current->arg[0], "cat") == 0
+           && current->arg[1] == NULL && !current->redir)
 	{
 		(cat_count)++;
 		current = current->next;
