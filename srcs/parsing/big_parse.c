@@ -45,19 +45,13 @@ bool	dirty_redir(char *str, t_line *line)
 					("bash: syntax error near unexpected token `newline'\n", 2),
 					line->exit_status = 2, false);
 			if (*str == '|')
-			{
-				ft_putstr_fd("bash: syntax error near unexpected token `|'\n", \
-					2);
-				line->exit_status = 2;
-				return (false);
-			}
+				return (ft_putstr_fd
+					("bash: syntax error near unexpected token `|'\n", 2),
+					line->exit_status = 2, false);
 			if (is_redirection_operator(str))
-			{
-				ft_putstr_fd("bash: syntax error near unexpected token `<<'\n", \
-					2);
-				line->exit_status = 2;
-				return (false);
-			}
+				return (ft_putstr_fd
+					("bash: syntax error near unexpected token `<<'\n", 2),
+					line->exit_status = 2, false);
 		}
 		else
 			str += 1;
