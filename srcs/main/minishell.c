@@ -27,11 +27,13 @@ static int init_env(t_env **env, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	char			*str;
+	char			*cpy;
 	static t_line	line;
 	t_env			*env;
 	int				status;
 
 	(void)av;
+	line.skipped_char = 0;
 	str = NULL;
 	status = 0;
 	if (ac != 1)
@@ -48,6 +50,7 @@ int	main(int ac, char **av, char **envp)
 		line.exit_status = status;
 		if (str && *str && g_ret != SIGINT)
 		{
+			cpy = str;
 			add_history(str);
 			str = big_parse(&line, &str, status);
 			if (str)
@@ -56,6 +59,8 @@ int	main(int ac, char **av, char **envp)
 				if (!pipex(env, &line, &status, str))
 					perror("execve");
 				line.exit_status = line.pipe->ret_val;
+				if (str && str != cpy)
+					free(str - line.skipped_char);
 				cleanup(&line);
 			}
 			else
@@ -65,8 +70,6 @@ int	main(int ac, char **av, char **envp)
 			status = 128 + g_ret;
 		else
 			status = line.exit_status;
-		if (str)
-			free(str);
 	}
 	free_env(env);
 	clear_history();
