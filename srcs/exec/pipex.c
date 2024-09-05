@@ -55,6 +55,11 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 		{
 			execute_builtins(env, pipe, line);
 			free_env(env);
+			if (str)
+			{
+				free(str);
+				str = NULL;
+			}
 			cleanup_exec(line);
 		}
 		if (pipe->arg && pipe->arg[0])

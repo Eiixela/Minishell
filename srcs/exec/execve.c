@@ -12,6 +12,36 @@
 
 #include "minishell.h"
 
+static void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
+{
+	if (i == 0)
+	{
+		print_error_message("minishell: ", line->pipe->arg[0], \
+			" Permission denied\n");;
+		free_env(env);
+		cleanup(line);
+		exit(126);
+	}
+	if (i == 1)
+	{
+		print_error_message("minishell: ", line->pipe->arg[0], \
+			": command not found\n");
+		free(path);
+		free_env(env);
+		cleanup(line);
+		exit(127);
+	}
+	if (i == 2)
+	{
+		print_error_message("bash: ", line->pipe->arg[0], \
+			" Is a directory\n");
+		cleanup(line);
+		free(path);
+		free_env(env);
+		exit(126);
+	}
+}
+
 int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 {
 	char	*path;
@@ -25,39 +55,27 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 	{
 		if (!access(pipe->arg[0], F_OK))
 		{
-
 			if (access(pipe->arg[0], F_OK | X_OK))
 			{
-				print_error_message("minishell: ", pipe->arg[0], \
-		" Permission denied\n");
-				free(path);
-				free_env(env);
-				cleanup(line);
-				exit(126);
+				free_double_tab(env_now);
+				error_and_free_for_exec(env, line, path, 0);
 			}
 		}
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
-			print_error_message("minishell: ", pipe->arg[0], \
-		": command not found\n");
-			if (str == NULL)
+			if (str)
+			{
 				free(str);
+				str = NULL;
+			}
 			free_double_tab(env_now);
-			free(path);
-			free_env(env);
-			cleanup(line);
-			exit(127);
+			error_and_free_for_exec(env, line, path, 1);
 		}
 		if (execve(path, pipe->arg, env_now) == -1)
 		{
-			print_error_message("bash: ", pipe->arg[0], \
-		" Is a directory\n");
 			free_double_tab(env_now);
-			cleanup(line);
-			free(path);
-			free_env(env);
-			exit(126);
+			error_and_free_for_exec(env, line, path, 2);
 		}
 	}
 	free_double_tab(env_now);
