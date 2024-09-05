@@ -20,7 +20,8 @@ char	*handle_exit_status(char *input, t_line *line, char **str_head)
 	if (!value)
 		return (NULL);
 	input = towards_expand(input, line, *str_head, value);
-	free(*str_head);
+	free(*str_head - line->skipped_char);
+	line->skipped_char = 0;
 	*str_head = input;
 	return (input);
 }
@@ -80,16 +81,16 @@ char	*expand(char *input, t_line *line, char *value, short squote_mode)
 	char		*str_head;
 
 	str_head = input;
-	while (*input)
+	while (input && *input)
 	{
 		value = NULL;
 		if (input[0] == '\'')
 			squote_mode *= -1;
 		if (is_env_var_format(input, squote_mode))
 		{
-
 			input = towards_expand(input, line, str_head, value);
-			free(str_head);
+			free(str_head - line->skipped_char);
+			line->skipped_char = 0;
 			str_head = input;
 			continue ;
 		}

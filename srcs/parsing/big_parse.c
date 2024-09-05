@@ -90,7 +90,7 @@ char	*big_parse(t_line *line, char **input, int status)
 
 	value = NULL;
 	squote_mode = -1;
-	if (!*input || !input)
+	if (!input || !*input)
 		return (NULL);
 	line->skipped_char = skip_white_spaces((char **)input);
 	if (!**input)
