@@ -89,7 +89,6 @@ static int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *
 	fd_file_heredoc = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_file_heredoc == -1)
 		return (ft_putstr_fd("error: cannot open file\n", 2), 0);
-		
 	while (1)
 	{
 		line_heredoc = readline("> ");
@@ -125,31 +124,54 @@ char *ensure_positive_chars(char* str)
     return (str);
 }
 
-// Modified function to handle multiple heredocs
 int redir_heredoc(t_pipe *pipe, t_env *env)
 {
-	char *temp_file;
-	int heredoc_count = 0;
-	int fd_file_heredoc;
-	t_redir *current_redir = pipe->redir;
+    char *temp_file;
+    int heredoc_count = 0;
+    int fd_file_heredoc;
+    t_redir *current_redir = pipe->redir;
 
-	while (current_redir && current_redir->type == HEREDOC)
-	{
-		temp_file = gen_filename(heredoc_count);
-		current_redir->fd = ensure_positive_chars(current_redir->fd);
-		if (!handle_single_heredoc(current_redir->fd, temp_file, env))
-			return (0);
-		current_redir = current_redir->next;
-		heredoc_count++;
-	}
-	fd_file_heredoc = open(temp_file, O_RDONLY);
-	if (fd_file_heredoc == -1)
-		return (perror("error on open for reading"), 0);
-	if (dup2(fd_file_heredoc, STDIN_FILENO) == -1)
-		return (perror("dup2 heredoc"), 0);
-	close(fd_file_heredoc);
-	for (int i = 0; i < heredoc_count; i++)
-		unlink(temp_file);
-	free(temp_file);
-	return (1);
+    while (current_redir && current_redir->type == HEREDOC)
+    {
+        temp_file = gen_filename(heredoc_count);
+        if (!temp_file)
+            return (0);
+        current_redir->fd = ensure_positive_chars(current_redir->fd);
+        if (!handle_single_heredoc(current_redir->fd, temp_file, env))
+        {
+            free(temp_file);  // Free temp_file if handle_single_heredoc fails
+            return (0);
+        }
+        free(temp_file);  // Free temp_file after each iteration
+        current_redir = current_redir->next;
+        heredoc_count++;
+    }
+    temp_file = gen_filename(heredoc_count - 1);  // Generate filename for the last heredoc
+    if (!temp_file)
+        return (0);
+    fd_file_heredoc = open(temp_file, O_RDONLY);
+    if (fd_file_heredoc == -1)
+    {
+        free(temp_file);
+        return (perror("error on open for reading"), 0);
+    }
+    if (dup2(fd_file_heredoc, STDIN_FILENO) == -1)
+    {
+        close(fd_file_heredoc);
+        free(temp_file);
+        return (perror("dup2 heredoc"), 0);
+    }
+    close(fd_file_heredoc);
+    for (int i = 0; i < heredoc_count; i++)
+    {
+        char *file_to_unlink = gen_filename(i);
+        if (file_to_unlink)
+        {
+            unlink(file_to_unlink);
+            free(file_to_unlink);
+        }
+    }
+    free(temp_file);
+    return (1);
 }
+

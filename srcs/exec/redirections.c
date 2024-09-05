@@ -96,7 +96,7 @@ int	redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env)
 				return (ft_putstr_fd("here heredoc\n", 2), 0);
 			else if (heredoc_result == 1 && pipe->redir->next == NULL
 				&& pipe->arg == NULL)
-				return (2);
+					return (2);
 			heredoc_processed = 1;
 		}
 		else if (current_redir->type == OUT_REDIR
@@ -112,6 +112,6 @@ int	redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env)
 	}
 	if (last_out_redir)
 		if (!last_redir(last_out_redir))
-			return (0);
+			return (0);	
 	return (1);
 }

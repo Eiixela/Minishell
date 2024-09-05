@@ -143,3 +143,60 @@
 ==465176== 
 ==465176== For lists of detected and suppressed errors, rerun with: -s
 ==465176== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==465139== 
+==465139== Process terminating with default action of signal 15 (SIGTERM)
+==465139==    at 0x490A75B: kill (syscall-template.S:120)
+==465139==    by 0x48A7F39: _rl_signal_handler (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==465139==    by 0x48A83A6: rl_read_key (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==465139==    by 0x488CC86: readline_internal_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==465139==    by 0x4895D14: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==465139==    by 0x401386: main (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139== 
+==465139== FILE DESCRIPTORS: 9 open (3 std) at exit.
+==465139== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==465139==    <inherited from parent>
+==465139== 
+==465139== Open AF_UNIX socket 42: <unknown>
+==465139==    <inherited from parent>
+==465139== 
+==465139== Open file descriptor 40: /dev/ptmx
+==465139==    <inherited from parent>
+==465139== 
+==465139== Open file descriptor 39: /home/aljulien/.config/Code/logs/20240904T084947/ptyhost.log
+==465139==    <inherited from parent>
+==465139== 
+==465139== Open file descriptor 38: /usr/share/code/resources/app/node_modules.asar
+==465139==    <inherited from parent>
+==465139== 
+==465139== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/user_outputs/valgrind.log
+==465139==    <inherited from parent>
+==465139== 
+==465139== 
+==465139== HEAP SUMMARY:
+==465139==     in use at exit: 224,434 bytes in 407 blocks
+==465139==   total heap usage: 616 allocs, 209 frees, 239,406 bytes allocated
+==465139== 
+==465139== 2,464 bytes in 77 blocks are still reachable in loss record 54 of 82
+==465139==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==465139==    by 0x405935: env_newnode (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x405A71: create_env (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x401527: init_env (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x401351: main (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139== 
+==465139== 4,347 bytes in 77 blocks are still reachable in loss record 68 of 82
+==465139==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==465139==    by 0x409A3C: ft_strdup (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x40595A: env_newnode (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x405A71: create_env (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x401527: init_env (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139==    by 0x401351: main (in /home/aljulien/Documents/C/C3/Minishell/minishell)
+==465139== 
+==465139== LEAK SUMMARY:
+==465139==    definitely lost: 0 bytes in 0 blocks
+==465139==    indirectly lost: 0 bytes in 0 blocks
+==465139==      possibly lost: 0 bytes in 0 blocks
+==465139==    still reachable: 6,811 bytes in 154 blocks
+==465139==         suppressed: 217,623 bytes in 253 blocks
+==465139== 
+==465139== For lists of detected and suppressed errors, rerun with: -s
+==465139== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

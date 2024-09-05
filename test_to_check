@@ -57,5 +57,13 @@ TESTS OK =
 
 add free(path) in execute command
 
-
 valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.%p.txt --suppressions=supp.supp ./minishell
+
+tests to re_check :
+545
+
+
+ACTUALLY WORKING ON 442
+> bonjour | echo hola
+cat bonjour ----> leaking
+

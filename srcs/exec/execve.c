@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
+int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 {
 	char	*path;
 	char	**env_now;
@@ -30,6 +30,9 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 			{
 				print_error_message("minishell: ", pipe->arg[0], \
 		" Permission denied\n");
+				free(path);
+				free_env(env);
+				cleanup(line);
 				exit(126);
 			}
 		}
@@ -38,10 +41,12 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line)
 		{
 			print_error_message("minishell: ", pipe->arg[0], \
 		": command not found\n");
+			if (str == NULL)
+				free(str);
 			free_double_tab(env_now);
-			cleanup(line);
 			free(path);
 			free_env(env);
+			cleanup(line);
 			exit(127);
 		}
 		if (execve(path, pipe->arg, env_now) == -1)

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/04 17:48:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/05 10:02:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,15 +212,15 @@ int			redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env);
 int			redir_heredoc(t_pipe *pipe, t_env *env);
 
 //EXECUTING
-int			pipex(t_env *env, t_line *line, int *status);
-int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line);
+int			pipex(t_env *env, t_line *line, int *status, char *str);
+int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line);
-int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line);
+int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line, char *str);
 void		create_env(char **envp, t_env **env);
-int			call_childs(t_env *env, t_line *line);
+int			call_childs(t_env *env, t_line *line, char *str);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
-int			handle_cat_process(int pipe_fd[2]);
+int			handle_cat_process(int pipe_fd[2], t_line *line);
 int			handle_remaining_processes(int cat_count);
 int			_cat_count(t_pipe *current, t_line *line);
 int			handle_redirection(t_pipe *pipe, t_env *env);

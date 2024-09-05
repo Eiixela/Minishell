@@ -17,17 +17,17 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 	if (!ft_strcmp(pipe->arg[0], "echo"))
 		line->pipe->ret_val = ft_echo(pipe->arg);
 	else if (!ft_strcmp(pipe->arg[0], "cd"))
-		pipe->ret_val = ft_cd(env, line);
+		line->pipe->ret_val = ft_cd(env, line);
 	else if (!ft_strcmp(pipe->arg[0], "pwd"))
-		pipe->ret_val = ft_pwd(env);
+		line->pipe->ret_val = ft_pwd(env);
 	else if (!ft_strcmp(pipe->arg[0], "export"))
-		pipe->ret_val = export(&pipe, env);
+		line->pipe->ret_val = export(&pipe, env);
 	else if (!ft_strcmp(pipe->arg[0], "unset"))
-		pipe->ret_val = ft_unset(&line, env);
+		line->pipe->ret_val = ft_unset(&line, env);
 	else if (!ft_strcmp(pipe->arg[0], "env"))
-		pipe->ret_val = ft_env(env, pipe);
+		line->pipe->ret_val = ft_env(env, pipe);
 	else if (!ft_strcmp(pipe->arg[0], "exit"))
-		pipe->ret_val = ft_exit(pipe, line);
+		line->pipe->ret_val = ft_exit(pipe, line);
 	else
 		return (1);
 	return (0);
@@ -58,29 +58,29 @@ int	parse_builtin(t_pipe *pipe)
 //TODO make struct env for ome builtins
 int parse_and_execute_solo_builtins(t_env *env, t_line *line)
 {
-int saved_output = -1;
-if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
-{
-if (line->pipe->redir != NULL)
-if (!redirection_in_pipe(line->pipe, &saved_output, env))
-return (0);
-if (!execute_builtins(env, line->pipe, line))
-{
-if (saved_output != -1)
-{
-if (dup2(saved_output, STDOUT_FILENO) == -1)
-perror("dup2");
-close(saved_output);
-}
-return (2);  // Builtin was executed
-}
-if (saved_output != -1)
-{
-if (dup2(saved_output, STDOUT_FILENO) == -1)
-perror("dup2");
-close(saved_output);
-}
-return (0);
-}
-return (1);
+	int saved_output = -1;
+	if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
+	{
+		if (line->pipe->redir != NULL)
+			if (!redirection_in_pipe(line->pipe, &saved_output, env))
+				return (0);
+		if (!execute_builtins(env, line->pipe, line))
+		{
+			if (saved_output != -1)
+			{
+				if (dup2(saved_output, STDOUT_FILENO) == -1)
+					perror("dup2");
+				close(saved_output);
+			}
+			return (2);
+		}
+		if (saved_output != -1)
+		{
+			if (dup2(saved_output, STDOUT_FILENO) == -1)
+				perror("dup2");
+			close(saved_output);
+		}
+		return (0);
+	}
+	return (1);
 }

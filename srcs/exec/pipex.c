@@ -30,7 +30,7 @@ int	setup_io(int input_fd, int output_fd)
 }
 
 int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
-				t_line *line)
+				t_line *line, char *str)
 {
 	pid_t	pid;
 
@@ -41,27 +41,34 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 	{
 		signal(SIGQUIT, SIG_DFL);
 		if (setup_io(input_fd, output_fd) == 0)
+		{
+			free_env(env);
+			cleanup(line);
 			exit(EXIT_FAILURE);
+		}
 		if (pipe->redir != NULL && handle_redirection(pipe, env) != 1)
 		{
+			free_env(env);
 			cleanup_exec(line);
 		}
 		if (parse_builtin(pipe))
 		{
 			execute_builtins(env, pipe, line);
-			cleanup(line);
-			exit(pipe->ret_val);
+			free_env(env);
+			cleanup_exec(line);
 		}
 		if (pipe->arg && pipe->arg[0])
-			execute_cmd(env, pipe, line);
-		cleanup(line);
-		exit(pipe->ret_val);
+			execute_cmd(env, pipe, line, str);
+		if (str)
+			free(str);
+		free_env(env);
+		cleanup_exec(line);
 	}
 	return (pid);
 }
 
 int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
-				t_line *line, int cat_count)
+				t_line *line, int cat_count, char *str)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -70,11 +77,11 @@ int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
 		return (perror("pipe"), 0);
 	if (cat_count > 0)
 	{
-		pid = handle_cat_process(pipe_fd);
+		pid = handle_cat_process(pipe_fd, line);
 		(cat_count)--;
 	}
 	else
-		pid = create_process(env, current, *input_fd, pipe_fd[1], line);
+		pid = create_process(env, current, *input_fd, pipe_fd[1], line, str);
 	close(pipe_fd[1]);
 	if (*input_fd != 0)
 		close(*input_fd);
@@ -82,7 +89,7 @@ int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
 	return (pid);
 }
 
-int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid_t *last_pid)
+int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid_t *last_pid, char *str)
 {
 	t_pipe	*current;
 	pid_t	pid;
@@ -98,10 +105,10 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	while (current != NULL)
 	{
 		if (current->next != NULL)
-			pid = process_pipe(env, current, input_fd, line, cat_count);
+			pid = process_pipe(env, current, input_fd, line, cat_count, str);
 		else
 		{
-			pid = create_process(env, current, *input_fd, 1, line);
+			pid = create_process(env, current, *input_fd, 1, line, str);
 			if (*input_fd != 0)
 				close(*input_fd);
 		}
@@ -111,7 +118,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	return (1);
 }
 
-int	call_childs(t_env *env,	t_line *line)
+int	call_childs(t_env *env,	t_line *line, char *str)
 {
 	int		input_fd;
 	int		cat_count;
@@ -125,7 +132,7 @@ int	call_childs(t_env *env,	t_line *line)
 	builtin_result = parse_and_execute_solo_builtins(env, line);
 	if (builtin_result != 1)
 		return (builtin_result);
-	if (!process_commands(env, line, &input_fd, cat_count, &last_pid))
+	if (!process_commands(env, line, &input_fd, cat_count, &last_pid, str))
 		return (0);
 	sigend();
 	while ((wpid = wait(&line->exit_status)) > 0)
@@ -136,10 +143,10 @@ int	call_childs(t_env *env,	t_line *line)
 	return (handle_remaining_processes(cat_count));
 }
 
-int	pipex(t_env	*env, t_line *line,	int	*status)
+int	pipex(t_env	*env, t_line *line,	int	*status, char *str)
 {
 	line->pipe->ret_val = *status;
-	if (!call_childs(env, line))
+	if (!call_childs(env, line, str))
 		return (0);
 	return (1);
 }

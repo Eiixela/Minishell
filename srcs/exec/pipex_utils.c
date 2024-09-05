@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int handle_cat_process(int pipe_fd[2])
+int handle_cat_process(int pipe_fd[2], t_line *line)
 {
 	pid_t pid;
 	char buf[1024];
@@ -25,6 +25,7 @@ int handle_cat_process(int pipe_fd[2])
 		close(pipe_fd[1]);
 		if (read(STDIN_FILENO, buf, sizeof(buf)) > 0)
 			write(STDOUT_FILENO, buf, ft_strlen(buf));
+		cleanup(line);
 		exit(0);
 	}
 	return (pid);

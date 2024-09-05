@@ -17,6 +17,7 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *lin
 	(void)pipe;
 	clear_history();
 	free_env(line->env);
+	cleanup(line);
 	if (error_message)
 		print_error(0, error_message);
 	if (indice == 0)
