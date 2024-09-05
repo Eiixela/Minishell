@@ -60,7 +60,11 @@ int	main(int ac, char **av, char **envp)
 					perror("execve");
 				line.exit_status = line.pipe->ret_val;
 				if (str && str != cpy)
+				{
+					// fprintf(stderr, "%s\n", str);
 					free(str - line.skipped_char);
+					str = NULL;
+				}
 				cleanup(&line);
 			}
 			else

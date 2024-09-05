@@ -20,7 +20,8 @@ char	*handle_exit_status(char *input, t_line *line, char **str_head)
 	if (!value)
 		return (NULL);
 	input = towards_expand(input, line, *str_head, value);
-	free(*str_head);
+	free(*str_head - line->skipped_char);
+	line->skipped_char = 0;
 	*str_head = input;
 	return (input);
 }
