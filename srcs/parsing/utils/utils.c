@@ -43,15 +43,11 @@ bool	is_quote(char c, char quote)
 
 char	*skip_quote_content(char *str, char quote)
 {
-	if (*str == '\'' || *str == '"')
+	if (*str == quote)
 		str += 1;
-	while (*str && (!is_quote(*str, quote) || *str == '|'))
-	{
-		if (*str == '|')
-			*str *= -1;
+	while (*str && !is_quote(*str, quote))
 		str++;
-	}
-	if (*str == '\'' || *str == '"')
+	if (*str == quote)
 		return (str + 1);
 	return (str);
 }

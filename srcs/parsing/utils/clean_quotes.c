@@ -37,7 +37,7 @@ bool	clean_surrounding_quotes(t_line *line)
 	{
 		dst = 0;
 		src = 0;
-		while (line->argv->node[dst] && line->argv->node)
+		while (line->argv->node && line->argv->node[dst])
 		{
 			if (!line->argv->node[src])
 				line->argv->node[dst] = '\0';

@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+void	get_value_back(char *str)
+{
+	while (*str)
+	{
+		if (*str < 0)
+			*str *= -1;
+		str += 1;
+	}
+}
+
 bool	tag_arg(t_line *line)
 {
 	char	**cpy;
@@ -37,6 +47,7 @@ bool	tag_arg(t_line *line)
 		return (false);
 	}
 	line->pipe->arg[tablen + 1] = NULL;
+	get_value_back(line->pipe->arg[tablen]);
 	return (true);
 }
 
@@ -79,7 +90,7 @@ bool	tag_tokens(t_line *line, char *first_redirection, int status)
 	line = init_line_pipe(line, status);
 	while (line->argv)
 	{
-		if (*line->argv->node == '|')
+		if (*line->argv->node == '|' && line->argv->true_pipe == true)
 		{
 			line->nm_arg++;
 			if (!handle_pipe(line, first_redirection))

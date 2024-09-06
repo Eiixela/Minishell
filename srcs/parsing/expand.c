@@ -79,12 +79,16 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head, \
 char	*expand(char *input, t_line *line, char *value, short squote_mode)
 {
 	char		*str_head;
+	short		dquote;
 
 	str_head = input;
+	dquote = -1;
 	while (input && *input)
 	{
 		value = NULL;
-		if (input[0] == '\'')
+		if (input[0] == '"' && squote_mode == -1)
+			dquote *= -1;
+		if (input[0] == '\'' && dquote == -1)
 			squote_mode *= -1;
 		if (is_env_var_format(input, squote_mode))
 		{

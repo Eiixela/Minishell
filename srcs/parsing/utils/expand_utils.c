@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+void	turn_value_negative(char *value)
+{
+	while (*value)
+	{
+		if (*value == '|')
+			*value *= -1;
+		// *value *= -1;
+		value += 1;
+	}
+}
+
 char	*get_value(char *dollar_index, t_line *line, char	*name, \
 	int *name_len)
 {
@@ -28,7 +39,7 @@ char	*get_value(char *dollar_index, t_line *line, char	*name, \
 	if (!value)
 		return (false);
 	free(name);
-	turn_extra_dollar_negative(&value);
+	turn_value_negative(value);
 	return (value);
 }
 

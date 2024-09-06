@@ -21,6 +21,7 @@ t_line	*first_argv(char *input, size_t len, t_line *line)
 	line->argv->prev = NULL;
 	line->argv->next = NULL;
 	line->argv->node_index = line->argc;
+	line->argv->true_pipe = false;
 	line->argv->node = ft_substr(input, 0, len);
 	if (!line->argv->node)
 		return (NULL);
@@ -46,6 +47,7 @@ t_line	*make_argv_node(char *input, size_t len, t_line *line)
 		line->argv = next_node;
 		line->argv->next = NULL;
 		line->argv->node_index = line->argc;
+		line->argv->true_pipe = false;
 		line->argv->node = ft_substr(input, 0, len);
 		if (!line->argv->node)
 			return (NULL);

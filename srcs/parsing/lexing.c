@@ -46,6 +46,9 @@ char	*which_token(char *input, t_line *line)
 	if (*ptr == '|')
 	{
 		ptr = fill_argv(input, line, 1);
+		if (!ptr)
+			return (NULL);
+		line->argv->true_pipe = true;
 		ptr += 1;
 	}
 	else
