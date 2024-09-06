@@ -12,21 +12,21 @@
 
 #include "minishell.h"
 
-ssize_t print_senv(char **arr)
+ssize_t	print_senv(char **arr)
 {
-    size_t i;
+	size_t	i;
 
-    i = 0;
-    while (arr[i])
-    {
-        if (arr[i][0] != '\0')
-        {
-            if (printf("declare -x %s\n", arr[i]) < 0)
-                return (-1);
-        }
-        i++;
-    }
-    return (1);
+	i = 0;
+	while (arr[i])
+	{
+		if (arr[i][0] != '\0')
+		{
+			if (printf("export %s\n", arr[i]) < 0)
+				return (-1);
+		}
+		i++;
+	}
+	return (1);
 }
 
 char	*cut_string(const char *input_string, char cut_char)
