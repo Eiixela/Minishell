@@ -33,8 +33,6 @@ static void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
 	}
 	if (i == 2)
 	{
-	fprintf(stderr, "here!\n");
-
 		print_error_message("bash: ", line->pipe->arg[0], \
 			" Is a directory\n");
 		cleanup(line);
@@ -66,7 +64,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
-			if (str)
+			if (str != NULL)
 			{
 				free(str);
 				str = NULL;

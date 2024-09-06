@@ -65,6 +65,8 @@ void	dirtier_redir(char *str)
 		{
 			str += 2;
 			skip_white_spaces(&str);
+			if (str[0] == '"')
+				str++;
 			if (str[0] == '$')
 				str[0] *= -1;
 		}

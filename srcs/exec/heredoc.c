@@ -27,7 +27,6 @@ static char	*gen_filename(int fn)
 	return (filename);
 }
 
-// Function to find the value of a variable in the custom environment list
 static char *get_env_value_heredoc(t_env *env, const char *var_name)
 {
 	t_env *current;
@@ -44,7 +43,6 @@ static char *get_env_value_heredoc(t_env *env, const char *var_name)
 	return (NULL);
 }
 
-// Function to expand variables in a string using the custom environment list
 char *expand_variables(const char *input, t_env *env)
 {
     char *result;
@@ -74,11 +72,12 @@ char *expand_variables(const char *input, t_env *env)
             free(result);
             result = new_result;
         }
+        else
+            break ;
         free(var_name);
     }
     return (result);
 }
-
 
 static int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
 {
@@ -139,14 +138,14 @@ int redir_heredoc(t_pipe *pipe, t_env *env)
         current_redir->fd = ensure_positive_chars(current_redir->fd);
         if (!handle_single_heredoc(current_redir->fd, temp_file, env))
         {
-            free(temp_file);  // Free temp_file if handle_single_heredoc fails
+            free(temp_file);
             return (0);
         }
-        free(temp_file);  // Free temp_file after each iteration
+        free(temp_file);
         current_redir = current_redir->next;
         heredoc_count++;
     }
-    temp_file = gen_filename(heredoc_count - 1);  // Generate filename for the last heredoc
+    temp_file = gen_filename(heredoc_count - 1);
     if (!temp_file)
         return (0);
     fd_file_heredoc = open(temp_file, O_RDONLY);

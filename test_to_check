@@ -57,7 +57,6 @@ TESTS OK =
 
 valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.%p.txt --suppressions=supp.supp ./minishell
 
-
 139/142/218 : leaks of actual_expand-->strjoin :
 
 $HOMEdskjhfkdshfsd
@@ -68,3 +67,9 @@ export HOLA="l"
 $HOLAs
 
 
+TODO :
+check echo | << EOF (stuck in a loop, doesn't give the prompt back)
+check cat | rev (should be blocking command but it gets out after one "enter")
+check cat | ls | cat
+check heredoc with $? as EOF and all combination with quotes ----> if EOF = "$?" the EOF is expand and it shouldn't so the EOF is transformed in 0
+check invaldid pointer when [spaces]+random char

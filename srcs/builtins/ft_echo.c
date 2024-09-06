@@ -29,8 +29,7 @@ static int	count_nb_arg(char *arg)
 	return (0);
 }
 
-//echo builting
-//function return 0 if all went well, 1 if problems occured
+
 int	ft_echo(char **arg)
 {
 	bool	indice_flag;

@@ -120,17 +120,15 @@ void create_env(char **envp, t_env **env)
 
     i = 0;
     new = NULL;
-    if (!envp || !*envp)
+    new = env_newnode("");
+    if (!new)
     {
-        new = env_newnode("");
-        if (!new)
-        {
-            print_error(errno, "minishell: parsing");
-            exit(EXIT_FAILURE);
-        }
-        env_addback(env, new);
-        return;
+        print_error(errno, "minishell: parsing");
+        exit(EXIT_FAILURE);
     }
+    env_addback(env, new);
+    if (!envp || !*envp)
+        return; // We already have the empty node, so we can return
     while (envp[i])
     {
         new = env_newnode(envp[i]);
@@ -141,9 +139,10 @@ void create_env(char **envp, t_env **env)
             exit(EXIT_FAILURE);
         }
         env_addback(env, new);
-		i++;
+        i++;
     }
 }
+
 
 int ft_env(t_env *env, t_pipe *pipe)
 {
