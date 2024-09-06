@@ -1,14 +1,15 @@
 /* ************************************************************************** */
-/**/
-/*:::  ::::::::   */
-/*   parse_and_execute_builtins.c   :+:  :+::+:   */
-/*+:+ +:+ +:+ */
-/*   By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+*/
-/*+#+#+#+#+#+   +#+   */
-/*   Created: 2024/06/18 10:41:10 by aljulien  #+##+# */
-/*   Updated: 2024/09/02 11:15:50 by aljulien ###   ########.fr   */
-/**/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_and_execute_builtins.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/06 18:22:20 by aljulien          #+#    #+#             */
+/*   Updated: 2024/09/06 18:22:21 by aljulien         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -62,7 +63,7 @@ int parse_and_execute_solo_builtins(t_env *env, t_line *line)
 	if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
 	{
 		if (line->pipe->redir != NULL)
-			if (!redirection_in_pipe(line->pipe, &saved_output, env))
+			if (!redirection_in_pipe(line->pipe, &saved_output))
 				return (0);
 		if (!execute_builtins(env, line->pipe, line))
 		{

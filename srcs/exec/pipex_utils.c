@@ -64,12 +64,12 @@ int _cat_count(t_pipe *current, t_line *line)
 	return (cat_count);
 }
 
-int handle_redirection(t_pipe *pipe, t_env *env)
+int handle_redirection(t_pipe *pipe)
 {
 	int saved_output;
 	int redir_result;
 
-	redir_result = redirection_in_pipe(pipe, &saved_output, env);
+	redir_result = redirection_in_pipe(pipe, &saved_output);
 	if (redir_result == 0)
 		return (0);
 	if (redir_result == 2)

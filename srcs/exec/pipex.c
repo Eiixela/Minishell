@@ -29,50 +29,59 @@ int	setup_io(int input_fd, int output_fd)
 	return (1);
 }
 
-int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
-				t_line *line, char *str, int pipe_fd)
+int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
+                   t_line *line, char *str, int pipe_fd)
 {
-	pid_t	pid;
+    pid_t pid = fork();
+    if (pid == 0)  // Child process
+    {
+        // Close the write end of the pipe if it exists
+        if (pipe_fd > -1)
+            close(pipe_fd);
 
-	pid = fork();
-	if (pid == -1)
-		return (perror("fork"), 0);
-	if (pid == 0)
-	{
-		signal(SIGQUIT, SIG_DFL);
-		if (pipe_fd > -1)
-			close(pipe_fd);
-		if (setup_io(input_fd, output_fd) == 0)
-		{
-			free_env(env);
-			cleanup(line);
-			exit(EXIT_FAILURE);
-		}
-		if (pipe->redir != NULL && handle_redirection(pipe, env) != 1)
-		{
-			free_env(env);
-			cleanup_exec(line);
-		}
-		if (parse_builtin(pipe))
-		{
-			execute_builtins(env, pipe, line);
-			free_env(env);
-			if (str)
-			{
-				free(str);
-				str = NULL;
-			}
-			cleanup_exec(line);
-		}
-		if (pipe->arg && pipe->arg[0])
-			execute_cmd(env, pipe, line, str);
-		if (str)
-			free(str);
-		free_env(env);
-		cleanup_exec(line);
-	}
-	return (pid);
+        // Set up input redirection
+        if (input_fd != STDIN_FILENO)
+        {
+            dup2(input_fd, STDIN_FILENO);
+            close(input_fd);
+        }
+
+        // Set up output redirection
+        if (output_fd != STDOUT_FILENO)
+        {
+            dup2(output_fd, STDOUT_FILENO);
+            close(output_fd);
+        }
+
+        // Handle heredoc if present
+        t_redir *redir = pipe->redir;
+        while (redir)
+        {
+            if (redir->type == HEREDOC)
+            {
+                int fd = open(redir->fd, O_RDONLY);
+                if (fd != -1)
+                {
+                    dup2(fd, STDIN_FILENO);
+                    close(fd);
+                }
+                break;  // Use only the last heredoc if multiple exist
+            }
+            redir = redir->next;
+        }
+
+        // Execute the command
+        if (pipe->arg && pipe->arg[0])
+            execute_cmd(env, pipe, line, str);
+
+        // If we reach here, execution failed
+        exit(EXIT_FAILURE);
+    }
+
+    // Parent process
+    return pid;
 }
+
 
 int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
 				t_line *line, int cat_count, char *str)
@@ -150,10 +159,83 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 	return (handle_remaining_processes(cat_count));
 }
 
-int	pipex(t_env	*env, t_line *line,	int	*status, char *str)
+int redir_heredoc(t_pipe *pipe, t_env *env)
 {
-	line->pipe->ret_val = *status;
-	if (!call_childs(env, line, str))
-		return (0);
-	return (1);
+    char *temp_file;
+    int heredoc_count = 0;
+    t_redir *current_redir = pipe->redir;
+
+    while (current_redir && current_redir->type == HEREDOC)
+    {
+        temp_file = gen_filename(heredoc_count);
+        if (!temp_file)
+            return (0);
+        if (!handle_single_heredoc(current_redir->fd, temp_file, env))
+        {
+            free(temp_file);
+            return (0);
+        }
+        free(current_redir->fd);
+        current_redir->fd = temp_file;
+
+        current_redir = current_redir->next;
+        heredoc_count++;
+    }
+    if (heredoc_count > 0)
+    {
+        int fd_file_heredoc = open(pipe->redir->fd, O_RDONLY);
+        if (fd_file_heredoc == -1)
+            return (perror("error on open for reading"), 0);
+        if (dup2(fd_file_heredoc, STDIN_FILENO) == -1)
+        {
+            close(fd_file_heredoc);
+            return (perror("dup2 heredoc"), 0);
+        }
+        close(fd_file_heredoc);
+    }
+    return (1);
+}
+
+int process_heredocs(t_line *line, t_env *env)
+{
+    t_pipe *current_pipe = line->pipe;
+    int heredoc_count = 0;
+
+    while (current_pipe)
+    {
+        t_redir *current_redir = current_pipe->redir;
+        while (current_redir)
+        {
+            if (current_redir->type == HEREDOC)
+            {
+                char *temp_file = gen_filename(heredoc_count);
+                if (!temp_file)
+                    return 0;
+                if (!handle_single_heredoc(current_redir->fd, temp_file, env))
+                {
+                    free(temp_file);
+                    return 0;
+                }
+                free(current_redir->fd);
+                current_redir->fd = temp_file;
+                heredoc_count++;
+            }
+            current_redir = current_redir->next;
+        }
+        current_pipe = current_pipe->next;
+    }
+    return 1;
+}
+
+
+int pipex(t_env *env, t_line *line, int *status, char *str)
+{
+    line->pipe->ret_val = *status;
+
+    if (!process_heredocs(line, env))
+        return 1;
+    if (!call_childs(env, line, str))
+        return 0;
+
+    return 1;
 }

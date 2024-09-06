@@ -14,11 +14,12 @@
 
 void	turn_value_negative(char *value)
 {
+	if (!*value)
+		*value = -1;
 	while (*value)
 	{
 		if (*value == '|')
 			*value *= -1;
-		// *value *= -1;
 		value += 1;
 	}
 }
@@ -37,7 +38,7 @@ char	*get_value(char *dollar_index, t_line *line, char	*name, \
 		return (NULL);
 	value = get_env_value(line, name);
 	if (!value)
-		return (false);
+		return (NULL);
 	free(name);
 	turn_value_negative(value);
 	return (value);
@@ -57,7 +58,7 @@ char	*get_env_value(t_line *line, char *name)
 			&& *(env->env + name_len) == '=')
 		{
 			if (*(env->env + name_len + 1) == '\0')
-				return (ft_calloc(1, 1));
+				return (ft_calloc(2, 2));
 			value = ft_strdup(env->env + name_len + 1);
 			if (!value)
 				return (NULL);
@@ -65,5 +66,5 @@ char	*get_env_value(t_line *line, char *name)
 		}
 		env = env->next;
 	}
-	return (ft_calloc(1, 1));
+	return (ft_calloc(2, 2));
 }

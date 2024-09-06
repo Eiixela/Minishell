@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*gen_filename(int fn)
+char	*gen_filename(int fn)
 {
 	char	*strfn;
 	char	*filename;
@@ -27,7 +27,7 @@ static char	*gen_filename(int fn)
 	return (filename);
 }
 
-static char *get_env_value_heredoc(t_env *env, const char *var_name)
+char *get_env_value_heredoc(t_env *env, const char *var_name)
 {
 	t_env *current;
 	size_t var_name_len;
@@ -79,36 +79,55 @@ char *expand_variables(const char *input, t_env *env)
     return (result);
 }
 
-static int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
+int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
 {
-	int fd_file_heredoc;
-	char *line_heredoc;
-	char *expanded_line;
+    int fd_file_heredoc;
+    char *line;
 
-	fd_file_heredoc = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_file_heredoc == -1)
-		return (ft_putstr_fd("error: cannot open file\n", 2), 0);
-	while (1)
-	{
-		line_heredoc = readline("> ");
-		if (!line_heredoc || ft_strcmp(line_heredoc, delimiter) == 0)
-		{
-			free(line_heredoc);
-			break;
-		}
-		expanded_line = expand_variables(line_heredoc, env);
-		if (!expanded_line)
-		{
-			free(line_heredoc);
-			return (ft_putstr_fd("error: cannot expand variable\n", 2), 0);
-		}
-		write(fd_file_heredoc, expanded_line, ft_strlen(expanded_line));
-		write(fd_file_heredoc, "\n", 1);
-		free(expanded_line);
-		free(line_heredoc);
-	}
-	close(fd_file_heredoc);
-	return (1);
+    fd_file_heredoc = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd_file_heredoc == -1)
+        return (ft_putstr_fd("error: cannot open file\n", 2), 0);
+
+    while (1)
+    {
+        line = readline("  > MiniHere$ ");
+        if (!line || ft_strcmp(line, delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+
+        if (expand_variables(line, env))
+        {
+            char *expanded_line = expand_variables(line, env);
+            if (!expanded_line)
+            {
+                free(line);
+                return (ft_putstr_fd("error: cannot expand variable\n", 2), 0);
+            }
+            if (write(fd_file_heredoc, expanded_line, ft_strlen(expanded_line)) == -1 ||
+                write(fd_file_heredoc, "\n", 1) == -1)
+            {
+                free(expanded_line);
+                free(line);
+                return (ft_putstr_fd("error: write to heredoc failed\n", 2), 0);
+            }
+            free(expanded_line);
+        }
+        else
+        {
+            if (write(fd_file_heredoc, line, ft_strlen(line)) == -1 ||
+                write(fd_file_heredoc, "\n", 1) == -1)
+            {
+                free(line);
+                return (ft_putstr_fd("error: write to heredoc failed\n", 2), 0);
+            }
+        }
+        free(line);
+    }
+
+    close(fd_file_heredoc);
+    return (1);
 }
 
 char *ensure_positive_chars(char* str)
@@ -122,55 +141,3 @@ char *ensure_positive_chars(char* str)
     }
     return (str);
 }
-
-int redir_heredoc(t_pipe *pipe, t_env *env)
-{
-    char *temp_file;
-    int heredoc_count = 0;
-    int fd_file_heredoc;
-    t_redir *current_redir = pipe->redir;
-
-    while (current_redir && current_redir->type == HEREDOC)
-    {
-        temp_file = gen_filename(heredoc_count);
-        if (!temp_file)
-            return (0);
-        current_redir->fd = ensure_positive_chars(current_redir->fd);
-        if (!handle_single_heredoc(current_redir->fd, temp_file, env))
-        {
-            free(temp_file);
-            return (0);
-        }
-        free(temp_file);
-        current_redir = current_redir->next;
-        heredoc_count++;
-    }
-    temp_file = gen_filename(heredoc_count - 1);
-    if (!temp_file)
-        return (0);
-    fd_file_heredoc = open(temp_file, O_RDONLY);
-    if (fd_file_heredoc == -1)
-    {
-        free(temp_file);
-        return (perror("error on open for reading"), 0);
-    }
-    if (dup2(fd_file_heredoc, STDIN_FILENO) == -1)
-    {
-        close(fd_file_heredoc);
-        free(temp_file);
-        return (perror("dup2 heredoc"), 0);
-    }
-    close(fd_file_heredoc);
-    for (int i = 0; i < heredoc_count; i++)
-    {
-        char *file_to_unlink = gen_filename(i);
-        if (file_to_unlink)
-        {
-            unlink(file_to_unlink);
-            free(file_to_unlink);
-        }
-    }
-    free(temp_file);
-    return (1);
-}
-

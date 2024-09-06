@@ -31,7 +31,7 @@ char	*actual_expand(char **s1, char *value, char *rest)
 	char	*final_input;
 	char	*s2;
 
-	if (s1 && *s1)
+	if (s1 && *s1 && **s1)
 	{
 		turn_extra_dollar_negative(s1);
 		s2 = ft_strjoin(value, rest);
@@ -42,6 +42,7 @@ char	*actual_expand(char **s1, char *value, char *rest)
 		s2 = NULL;
 		return (final_input);
 	}
+
 	final_input = ft_strjoin(value, rest);
 	return (final_input);
 }
@@ -57,6 +58,7 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head, \
 
 	name = NULL;
 	name_len = 0;
+	s1 = NULL;
 	s1 = ft_substr(str_head, 0, dollar_index - str_head);
 	if (!value)
 	{
@@ -70,8 +72,6 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head, \
 	if (!rest)
 		return (false);
 	final_input = actual_expand(&s1, value, rest);
-	if (!final_input)
-		return (false);
 	free_s1_value_rest(s1, value, rest);
 	return (final_input);
 }

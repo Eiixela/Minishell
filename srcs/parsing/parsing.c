@@ -16,6 +16,8 @@ void	get_value_back(char *str)
 {
 	while (*str)
 	{
+		// if (*str == -1)
+		// 	*str = 0;
 		if (*str < 0)
 			*str *= -1;
 		str += 1;

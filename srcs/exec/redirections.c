@@ -74,32 +74,19 @@ static int	last_redir(t_redir *last_out_redir)
 	return (1);
 }
 
-int	redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env)
+int	redirection_in_pipe(t_pipe *pipe, int *saved_output)
 {
 	t_redir	*current_redir;
 	t_redir	*last_out_redir;
-	int		heredoc_processed;
-	int		heredoc_result;
 
 	last_out_redir = NULL;
-	heredoc_processed = 0;
 	*saved_output = dup(STDOUT_FILENO);
 	if (*saved_output == -1)
 		return (perror("dup"), 0);
 	current_redir = pipe->redir;
 	while (current_redir != NULL)
 	{
-		if (current_redir->type == HEREDOC && !heredoc_processed)
-		{
-			heredoc_result = redir_heredoc(pipe, env);
-			if (heredoc_result == 0)
-				return (ft_putstr_fd("here heredoc\n", 2), 0);
-			else if (heredoc_result == 1 && pipe->redir->next == NULL
-				&& pipe->arg == NULL)
-					return (2);
-			heredoc_processed = 1;
-		}
-		else if (current_redir->type == OUT_REDIR
+		if (current_redir->type == OUT_REDIR
 			|| current_redir->type == APPEND)
 			last_out_redir = redirection_append_and_out(current_redir);
 		else if (current_redir->type == IN_REDIR)
