@@ -30,7 +30,7 @@ int	setup_io(int input_fd, int output_fd)
 }
 
 int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
-				t_line *line, char *str)
+				t_line *line, char *str, int pipe_fd)
 {
 	pid_t	pid;
 
@@ -40,6 +40,8 @@ int	create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL);
+		if (pipe_fd > -1)
+			close(pipe_fd);
 		if (setup_io(input_fd, output_fd) == 0)
 		{
 			free_env(env);
@@ -86,7 +88,7 @@ int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
 		(cat_count)--;
 	}
 	else
-		pid = create_process(env, current, *input_fd, pipe_fd[1], line, str);
+		pid = create_process(env, current, *input_fd, pipe_fd[1], line, str, pipe_fd[0]);
 	close(pipe_fd[1]);
 	if (*input_fd != 0)
 		close(*input_fd);
@@ -113,7 +115,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 			pid = process_pipe(env, current, input_fd, line, cat_count, str);
 		else
 		{
-			pid = create_process(env, current, *input_fd, 1, line, str);
+			pid = create_process(env, current, *input_fd, 1, line, str, -1);
 			if (*input_fd != 0)
 				close(*input_fd);
 		}

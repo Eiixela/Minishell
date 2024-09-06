@@ -43,6 +43,7 @@ int	main(int ac, char **av, char **envp)
 	line.env = env;
 	while (1)
 	{
+	fprintf(stderr, "\n\nenv = %s\n\n", env->env);
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
@@ -56,12 +57,11 @@ int	main(int ac, char **av, char **envp)
 			if (str)
 			{
 				line.pipe->ret_val = status;
-				if (!pipex(env, &line, &status, str))
+			 	if (!pipex(env, &line, &status, str))
 					perror("execve");
 				line.exit_status = line.pipe->ret_val;
 				if (str && str != cpy)
 				{
-					// fprintf(stderr, "%s\n", str);
 					free(str - line.skipped_char);
 					str = NULL;
 				}

@@ -31,7 +31,7 @@ static t_redir	*redirection_append_and_out(t_redir *current_redir)
 	return (current_redir);
 }
 
-static int redirection_in(t_redir *current_redir)
+static int redirection_in(t_redir *current_redir, int saved_output)
 {
     int fd;
 
@@ -39,6 +39,7 @@ static int redirection_in(t_redir *current_redir)
         ft_putstr_fd("minishell: ", STDERR_FILENO);
         ft_putstr_fd(current_redir->fd, STDERR_FILENO);
         ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		close(saved_output);
         return 0;
     }
     fd = open(current_redir->fd, O_RDONLY);
@@ -103,7 +104,7 @@ int	redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env)
 			|| current_redir->type == APPEND)
 			last_out_redir = redirection_append_and_out(current_redir);
 		else if (current_redir->type == IN_REDIR)
-			if (!redirection_in(current_redir))
+			if (!redirection_in(current_redir, *saved_output))
 			{
 				pipe->ret_val = 1;
 				return (0);

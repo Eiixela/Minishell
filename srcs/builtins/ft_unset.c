@@ -30,6 +30,7 @@ static char	*comp_keys(char *to_find, char *key)
 	return (to_find);
 }
 
+
 static t_env	*env_rmone(t_env **sup, t_env **head)
 {
 	t_env	*tmp;
@@ -57,7 +58,7 @@ static t_env	*env_rmone(t_env **sup, t_env **head)
 	return (*sup);
 }
 
-void	ft_remove_env_var(t_env **head, char *arg)
+t_env	*ft_remove_env_var(t_env **head, char *arg)
 {
 	t_env	*env;
 
@@ -71,6 +72,7 @@ void	ft_remove_env_var(t_env **head, char *arg)
 		}
 		env = env->next;
 	}
+	return (*head);
 }
 
 int	ft_unset(t_line **line, t_env *env)
@@ -91,7 +93,7 @@ int	ft_unset(t_line **line, t_env *env)
 		if (!is_valid_identifier((*line)->pipe->arg[i]))
 			return (print_error_message("bash: unset: `",
 					(*line)->pipe->arg[i], "': not a valid identifier\n"), 1);
-		ft_remove_env_var(&head, (*line)->pipe->arg[i]);
+		env = ft_remove_env_var(&head, (*line)->pipe->arg[i]);
 		i++;
 	}
 	return (0);

@@ -55,15 +55,16 @@ TESTS OK =
 140
 176 
 
-add free(path) in execute command
-
 valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.%p.txt --suppressions=supp.supp ./minishell
 
-tests to re_check :
-545
 
+139/142/218 : leaks of actual_expand-->strjoin :
 
-ACTUALLY WORKING ON 442
-> bonjour | echo hola
-cat bonjour ----> leaking
+$HOMEdskjhfkdshfsd
+
+$DONTEXIST
+
+export HOLA="l" 
+$HOLAs
+
 

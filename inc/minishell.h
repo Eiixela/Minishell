@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/05 17:41:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/06 13:25:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ typedef struct s_line
 	t_env			*env;
 	int				nm_arg;
 	int				exit_status;
-	t_env			*env_head;
 }	t_line;
 
 
@@ -217,7 +216,7 @@ int			pipex(t_env *env, t_line *line, int *status, char *str);
 int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line);
-int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line, char *str);
+int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line, char *str, int pipe_fd);
 void		create_env(char **envp, t_env **env);
 int			call_childs(t_env *env, t_line *line, char *str);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
