@@ -29,6 +29,12 @@ int	setup_io(int input_fd, int output_fd)
 	return (1);
 }
 
+/* void	while_redir(t_pipe *pipe)
+{
+
+} */
+
+
 int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
     t_line *line, char *str, int pipe_fd)
 {
@@ -114,7 +120,6 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
             }
             redir = redir->next;
         }
-
         if (pipe->arg && pipe->arg[0])
             execute_cmd(env, pipe, line, str);
         free_env(env);
@@ -172,7 +177,6 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 		*last_pid = pid;
 		current = current->next;
 	}
-
 	return (1);
 }
 
@@ -199,23 +203,6 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 			handle_exit_status_child(line, line->exit_status, 0, &cat_count);
 	}
 	return (handle_remaining_processes(cat_count));
-}
-
-
-char *back_to_positive(char *s)
-{
-    int i;
-
-    i = 0;
-    while(s[i])
-    {
-        if (s[i] == -1)
-            s[i] = 36;
-        if (s[i] < 0)
-            s[i] *= -1;
-        i++;
-    }
-    return (s);
 }
 
 int	pipex(t_env *env, t_line *line, int *status, char *str)

@@ -76,3 +76,19 @@ int	handle_redirection(t_pipe *pipe)
 		return (2);
 	return (1);
 }
+
+char	*back_to_positive(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == -1)
+			s[i] = 36;
+		if (s[i] < 0)
+			s[i] *= -1;
+		i++;
+	}
+	return (s);
+}

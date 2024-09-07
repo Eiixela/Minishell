@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 19:08:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 20:26:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ int			check_file_permissions(char *cmd);
 void		cleanup_resources(char **env_now, char *str, char *path);
 int			execute_external_command(t_env *env, t_pipe *pipe, char **env_now, \
 	char *str);
-void		error_and_free_for_exec(t_env *env, t_line *line, char *path, \
+void		error_and_free_for_exec(t_env *env, t_line *line, char *path,
 	int i);
 
 // =================================== EXEC ================================

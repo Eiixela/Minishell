@@ -1,5 +1,0 @@
-aljulien@z3r8p5:~/goinfre/minishell$ echo hola > bonjour
-aljulien@z3r8p5:~/goinfre/minishell$ echo que tal >> bonjour
-aljulien@z3r8p5:~/goinfre/minishell$ cat < bonjour
-exit
-aljulien@z3r8p5:~/goinfre/minishell$ 
