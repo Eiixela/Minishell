@@ -24,7 +24,7 @@ size_t	skip_white_spaces(char **input)
 	size_t	wspace_len;
 
 	wspace_len = 0;
-	if (!*input || !**input || !input)
+	if (!input || !*input || !**input)
 		return (0);
 	while (is_white_space(**input))
 	{

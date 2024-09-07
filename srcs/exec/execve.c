@@ -63,6 +63,11 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
+			if (str)
+			{
+				free(str);
+				str = NULL;
+			}
 			free_double_tab(env_now);
 			error_and_free_for_exec(env, line, path, 1);
 		}
@@ -77,6 +82,5 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 			error_and_free_for_exec(env, line, path, 2);
 		}
 	}
-	free_double_tab(env_now);
 	return (1);
 }

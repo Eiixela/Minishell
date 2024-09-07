@@ -55,15 +55,15 @@ int	main(int ac, char **av, char **envp)
 			str = big_parse(&line, &str, status);
 			if (str)
 			{
-				line.pipe->ret_val = status;
-  			 	if (!pipex(env, &line, &status, str))
-					perror("execve");
-				line.exit_status = line.pipe->ret_val;
-				if (str && str != cpy)
+			 	if (str && str != cpy)
 				{
 					free(str - line.skipped_char);
 					str = NULL;
 				}
+				line.pipe->ret_val = status;
+  			 	if (!pipex(env, &line, &status, str))
+					perror("execve");
+				line.exit_status = line.pipe->ret_val;
 				cleanup(&line);
 			}
 			else

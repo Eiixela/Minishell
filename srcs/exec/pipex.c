@@ -118,7 +118,7 @@ int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
 	}
 	else
 		pid = create_process(env, current, *input_fd, pipe_fd[1], line, str, pipe_fd[0]);
-	close(pipe_fd[1]);
+    close(pipe_fd[1]);
 	if (*input_fd != 0)
 		close(*input_fd);
 	*input_fd = pipe_fd[0];
@@ -142,7 +142,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	{
 		if (current->next != NULL)
 			pid = process_pipe(env, current, input_fd, line, cat_count, str);
-		else
+        else
 		{
 			pid = create_process(env, current, *input_fd, 1, line, str, -1);
 			if (*input_fd != 0)
@@ -151,6 +151,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 		*last_pid = pid;
 		current = current->next;
 	}
+    
 	return (1);
 }
 

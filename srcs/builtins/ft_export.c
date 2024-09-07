@@ -100,7 +100,7 @@ static int	exec_export(t_pipe **pipe, t_env *head, t_env *env, int status)
 	return (status);
 }
 
-int	export(t_pipe **pipe, t_env *env)
+int	ft_export(t_pipe **pipe, t_env *env)
 {
 	t_env	*head;
 	int		status;

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 12:00:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 15:22:28 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ char		*find_var_env(t_env *env, char *var);
 size_t		ft_arrlen(char **arr);
 char		*split_wsep(char *str, char sep);
 void		*exprt_inenv(t_env **env, char *data);
-int			export(t_pipe **pipe, t_env *env);
+int			ft_export(t_pipe **pipe, t_env *env);
 int			sort_env(t_env	*env);
 void		*exprt_inenv_export(t_env **env, char *data, bool has_equals);
 char		*cut_string(const char *input_string, char cut_char);

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 18:22:20 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 12:06:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 14:43:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 	else if (!ft_strcmp(pipe->arg[0], "pwd"))
 		line->pipe->ret_val = ft_pwd(env);
 	else if (!ft_strcmp(pipe->arg[0], "export"))
-		line->pipe->ret_val = export(&pipe, env);
+		line->pipe->ret_val = ft_export(&pipe, env);
 	else if (!ft_strcmp(pipe->arg[0], "unset"))
 		line->pipe->ret_val = ft_unset(&line, env);
 	else if (!ft_strcmp(pipe->arg[0], "env"))
