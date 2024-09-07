@@ -51,6 +51,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/builtins/ft_unset.c\
 		srcs/exec/error.c\
 		srcs/exec/execve.c\
+		srcs/exec/execve_utils.c\
 		srcs/exec/free.c\
 		srcs/exec/get_path.c\
 		srcs/exec/parse_and_execute_builtins.c\

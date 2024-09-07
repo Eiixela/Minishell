@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 17:10:13 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/07 19:00:13 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,16 @@ int			handle_cat_process(int pipe_fd[2], t_line *line);
 int			handle_remaining_processes(int cat_count);
 int			_cat_count(t_pipe *current, t_line *line);
 int			handle_redirection(t_pipe *pipe);
+
+// EXECVE_UTILS
+int			check_command_exists(char **arg);
+int			handle_builtin_execution(t_env *env, t_pipe *pipe, t_line *line);
+int			check_file_permissions(char *cmd);
+void		cleanup_resources(char **env_now, char *str, char *path);
+int			execute_external_command(t_env *env, t_pipe *pipe, char **env_now, \
+	char *str);
+void		error_and_free_for_exec(t_env *env, t_line *line, char *path, \
+	int i);
 
 // =================================== EXEC ================================
 
