@@ -33,6 +33,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/parsing/utils/lexing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
 		srcs/parsing/utils/utils.c\
+		srcs/parsing/utils/utils1.c\
 		srcs/parsing/utils/expand_utils.c\
 		srcs/parsing/utils/expand_utils1.c\
 		srcs/parsing/utils/expand_utils2.c\
@@ -43,6 +44,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/builtins/ft_cd.c\
 		srcs/builtins/ft_echo.c\
 		srcs/builtins/ft_env.c\
+		srcs/builtins/ft_env1.c\
 		srcs/builtins/ft_exit.c\
 		srcs/builtins/ft_export.c\
 		srcs/builtins/ft_pwd.c\

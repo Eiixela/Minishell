@@ -29,7 +29,6 @@ static int	count_nb_arg(char *arg)
 	return (0);
 }
 
-
 int	ft_echo(char **arg)
 {
 	bool	indice_flag;

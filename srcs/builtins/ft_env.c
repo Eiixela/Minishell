@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static size_t	env_len(t_env *env)
+size_t	env_len(t_env *env)
 {
 	t_env	*tmp;
 	size_t	n_nodes;
@@ -25,54 +25,6 @@ static size_t	env_len(t_env *env)
 		tmp = tmp->next;
 	}
 	return (n_nodes);
-}
-
-char	**arenvlst(t_env *env)
-{
-	char	**arenv;
-	size_t	i;
-	t_env	*tmp;
-
-	tmp = env;
-	if (!tmp)
-		return (NULL);
-	arenv = NULL;
-	i = 0;
-	arenv = malloc(sizeof(char *) * (env_len(env) + 1));
-	if (!arenv)
-		return (print_error(errno, "minishell"));
-	arenv[env_len(env)] = 0;
-	while (tmp)
-	{
-		arenv[i] = _strdup(tmp->env);
-		if (!arenv[i])
-		{
-			free_dtab(arenv);
-			return (print_error(errno, "minishell"));
-		}
-		i++;
-		tmp = tmp->next;
-	}
-	return (arenv);
-}
-
-void	env_freelst(t_env **env)
-{
-	t_env	*tmp;
-
-	tmp = NULL;
-	if (env && (*env))
-	{
-		while (*env)
-		{
-			free((*env)->env);
-			tmp = (*env)->next;
-			free(*env);
-			(*env) = tmp;
-		}
-	}
-	*env = NULL;
-	env = NULL;
 }
 
 void	env_addback(t_env **env, t_env *node)
@@ -113,53 +65,23 @@ t_env	*env_newnode(char *data)
 	return (node);
 }
 
-void create_env(char **envp, t_env **env)
+int	ft_env(t_env *env, t_pipe *pipe)
 {
-    size_t i;
-    t_env *new;
+	t_env	*env_now;
 
-    i = 0;
-    new = NULL;
-    new = env_newnode("");
-    if (!new)
-    {
-        print_error(errno, "minishell: parsing");
-        exit(EXIT_FAILURE);
-    }
-    env_addback(env, new);
-    if (!envp || !*envp)
-        return; // We already have the empty node, so we can return
-    while (envp[i])
-    {
-        new = env_newnode(envp[i]);
-        if (!new)
-        {
-            env_freelst(env);
-            print_error(errno, "minishell: parsing");
-            exit(EXIT_FAILURE);
-        }
-        env_addback(env, new);
-        i++;
-    }
+	env_now = env;
+	if (pipe->arg[1])
+		return (print_error_message("minishell: ", "env: ", strerror(E2BIG)));
+	while (env_now)
+	{
+		if (!env_now->is_exported && env_now->env && *(env_now->env))
+		{
+			if (g_ret == SIGPIPE \
+				|| ft_putendl_fd(env_now->env, STDOUT_FILENO) == -1)
+				return (print_error_message("minishell: ", "env: ", \
+					strerror(errno)));
+		}
+		env_now = env_now->next;
+	}
+	return (0);
 }
-
-
-int ft_env(t_env *env, t_pipe *pipe)
-{
-    t_env *env_now;
-
-    env_now = env;
-    if (pipe->arg[1])
-        return (print_error_message("minishell: ", "env: ", strerror(E2BIG)));
-    while (env_now)
-    {
-        if (!env_now->is_exported && env_now->env && *(env_now->env))
-        {
-            if (g_ret == SIGPIPE || ft_putendl_fd(env_now->env, STDOUT_FILENO) == -1)
-                return (print_error_message("minishell: ", "env: ", strerror(errno)));
-        }
-        env_now = env_now->next;
-    }
-    return (0);
-}
-

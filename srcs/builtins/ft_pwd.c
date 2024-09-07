@@ -32,4 +32,3 @@ int	ft_pwd(t_env *env)
 		return (free(str), 1);
 	return (0);
 }
-	

@@ -42,7 +42,6 @@ char	*actual_expand(char **s1, char *value, char *rest)
 		s2 = NULL;
 		return (final_input);
 	}
-
 	final_input = ft_strjoin(value, rest);
 	return (final_input);
 }
@@ -79,23 +78,17 @@ char	*towards_expand(char *dollar_index, t_line *line, char *str_head, \
 char	*expand(char *input, t_line *line, char *value, short squote_mode)
 {
 	char		*str_head;
-	short		dquote;
+	short		dquote_mode;
 
 	str_head = input;
-	dquote = -1;
+	dquote_mode = -1;
 	while (input && *input)
 	{
 		value = NULL;
-		if (input[0] == '"' && squote_mode == -1)
-			dquote *= -1;
-		if (input[0] == '\'' && dquote == -1)
-			squote_mode *= -1;
+		quote_mode(input, &squote_mode, &dquote_mode);
 		if (is_env_var_format(input, squote_mode))
 		{
-			input = towards_expand(input, line, str_head, value);
-			free(str_head - line->skipped_char);
-			line->skipped_char = 0;
-			str_head = input;
+			input = handle_env_var(input, line, &str_head, value);
 			continue ;
 		}
 		if (is_exit_status_format(input, squote_mode))

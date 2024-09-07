@@ -14,10 +14,8 @@
 
 int	g_ret = 0;
 
-static int init_env(t_env **env, char **envp)
+static int	init_env(t_env **env, char **envp)
 {
-	/*if (!isatty(0) || isatty(1))
-		return (print_error(errno, "minishell"), 0);*/
 	*env = NULL;
 	create_env(envp, env);
 	siglisten();
@@ -55,13 +53,13 @@ int	main(int ac, char **av, char **envp)
 			str = big_parse(&line, &str, status);
 			if (str)
 			{
-			 	if (str && str != cpy)
+				if (str && str != cpy)
 				{
 					free(str - line.skipped_char);
 					str = NULL;
 				}
 				line.pipe->ret_val = status;
-  			 	if (!pipex(env, &line, &status, str))
+				if (!pipex(env, &line, &status, str))
 					perror("execve");
 				line.exit_status = line.pipe->ret_val;
 				cleanup(&line);

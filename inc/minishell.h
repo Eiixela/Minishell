@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 15:22:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 17:10:13 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_env
 {
 	char			*env;
 	struct s_env	*prev;
-	int 			is_exported;
+	int				is_exported;
 	struct s_env	*next;
 }	t_env;
 
@@ -88,7 +88,6 @@ typedef struct s_line
 	int				nm_arg;
 	int				exit_status;
 }	t_line;
-
 
 // =================================== PARSING ================================
 
@@ -131,10 +130,14 @@ void		free_s1_value_rest(char *s1, char *value, char *rest);
 char		*handle_exit_status(char *input, t_line *line, char **str_head);
 char		*get_env_value(t_line *line, char *name);
 void		turn_extra_dollar_negative(char	**s1);
+char		*handle_env_var(char *input, t_line *line, char **str_head, \
+	char *value);
+void		quote_mode(char *input, short *squote_mode, short *dquote_mode);
 
 // PARSING_UTILS
 size_t		ft_tablen(char **str);
 t_line		*init_line_pipe(t_line *line, int status);
+void		get_value_back(char *str);
 
 // STRUCT
 t_line		*make_argv_node(char *input, size_t len, t_line *line);
@@ -153,8 +156,9 @@ void		dirtier_redir(char *str);
 // CLEANUP
 void		cleanup(t_line *line);
 void		free_env(t_env *env);
+void		free_argv(t_argv *argv);
+void		free_pipe(t_pipe *pipe);
 // =================================== PARSING ================================
-
 
 //======================================EXEC===================================
 
@@ -163,10 +167,10 @@ int			ft_echo(char **arg);
 int			ft_pwd(t_env *env);
 int			ft_cd(t_env *env, t_line *line);
 int			ft_env(t_env *env, t_pipe *pipe);
-int			ft_exit (t_pipe *pipe, t_line *line);
+int			ft_exit(t_pipe *pipe, t_line *line);
 int			ft_unset(t_line **line, t_env *env);
 int			parse_builtin(t_pipe *pipe);
-char		**arenvlst(t_env	*env);
+char		**arenvlst(t_env *env);
 int			check_directory(char *var, char *path);
 int			pwds(t_env *env, char *path);
 char		*check_len(char	*path, t_env *env);
@@ -186,6 +190,7 @@ char		*expand_tilde(const char *arg, t_env *env);
 int			is_valid_identifier(const char *str);
 size_t		env_len_unset(t_env *env);
 size_t		ft_arrlen(char **arr);
+size_t		env_len(t_env *env);
 
 //ERROR
 void		*errjoin(int error_code, char *error_message);
@@ -199,36 +204,39 @@ void		env_addback(t_env **env, t_env *node);
 t_env		*env_newnode(char *data);
 void		free_all_tab(char **s_cmd, char **allpath);
 void		free_double_tab(char **s);
-void	cleanup_exec(t_line *line);
+void		cleanup_exec(t_line *line);
 
 //SIGNALS
 char		*send_eof(char *line);
 void		siglisten(void);
 void		sigend(void);
 void		sighandler(int sig);
-void 		handle_exit_status_child(t_line *line, int status, int quit_message_printed, int *cat_count);
+void		handle_exit_status_child(t_line *line, int status, \
+	int quit_message_printed, int *cat_count);
 
 //REDIRECTIONS
-int	redirection_in_pipe(t_pipe *pipe, int *saved_output);
+int			redirection_in_pipe(t_pipe *pipe, int *saved_output);
 int			redir_heredoc(t_pipe *pipe, t_env *env);
-int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env);
-char *expand_variables(const char *input, t_env *env);
-char *get_env_value_heredoc(t_env *env, const char *var_name);
-char	*gen_filename(int fn);
+int			handle_single_heredoc(char *delimiter, const char *temp_file, \
+	t_env *env);
+char		*expand_variables(const char *input, t_env *env);
+char		*get_env_value_heredoc(t_env *env, const char *var_name);
+char		*gen_filename(int fn);
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status, char *str);
 int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line);
-int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line, char *str, int pipe_fd);
+int			create_process(t_env *env, t_pipe *pipe, int input_fd, \
+	int output_fd, t_line *line, char *str, int pipe_fd);
 void		create_env(char **envp, t_env **env);
 int			call_childs(t_env *env, t_line *line, char *str);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 int			handle_cat_process(int pipe_fd[2], t_line *line);
 int			handle_remaining_processes(int cat_count);
 int			_cat_count(t_pipe *current, t_line *line);
-int handle_redirection(t_pipe *pipe);
+int			handle_redirection(t_pipe *pipe);
 
 // =================================== EXEC ================================
 

@@ -23,7 +23,7 @@ char	*expand_tilde(const char *arg, t_env *env)
 			return (ft_strdup(arg));
 		if (arg[1] == '\0')
 			return (ft_strdup(home));
-		return ft_strjoin(home, arg + 1);
+		return (ft_strjoin(home, arg + 1));
 	}
 	return (ft_strdup(arg));
 }
@@ -83,8 +83,8 @@ static int	change_pwds(t_env **env, char *path, char *var)
 int	pwds(t_env *env, char *path)
 {
 	char	*temp;
-	temp = find_var_env(env, "PWD=");
 
+	temp = find_var_env(env, "PWD=");
 	if (temp)
 	{
 		if (!find_var_env(env, "OLDPWD="))

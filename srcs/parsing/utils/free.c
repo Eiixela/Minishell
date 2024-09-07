@@ -81,32 +81,6 @@ void	free_argv(t_argv *argv)
 	}
 }
 
-void	cleanup_exec(t_line *line)
-{
-	int	status;
-
-	status = line->pipe->ret_val;
-	if (line->pipe)
-	{
-		while (line->pipe)
-		{
-			if (line->pipe->redir && line->pipe->redir_head)
-				line->pipe->redir = line->pipe->redir_head;
-			line->pipe = line->pipe->next;
-		}
-		if (line->pipe_head)
-			line->pipe = line->pipe_head;
-	}
-	if (line->argv)
-		line->argv = line->argv_head;
-	free_argv(line->argv);
-	if (line->pipe)
-		free_pipe(line->pipe);
-	line->argv = NULL;
-	line->pipe = NULL;
-	exit(status);
-}
-
 void	cleanup(t_line *line)
 {
 	if (line->pipe)
