@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 16:09:03 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/07 16:13:19 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_env
 {
 	char			*env;
 	struct s_env	*prev;
-	int 			is_exported;
+	int				is_exported;
 	struct s_env	*next;
 }	t_env;
 
@@ -88,7 +88,6 @@ typedef struct s_line
 	int				nm_arg;
 	int				exit_status;
 }	t_line;
-
 
 // =================================== PARSING ================================
 
@@ -161,7 +160,6 @@ void		free_argv(t_argv *argv);
 void		free_pipe(t_pipe *pipe);
 // =================================== PARSING ================================
 
-
 //======================================EXEC===================================
 
 //BUILTINS
@@ -169,7 +167,7 @@ int			ft_echo(char **arg);
 int			ft_pwd(t_env *env);
 int			ft_cd(t_env *env, t_line *line);
 int			ft_env(t_env *env, t_pipe *pipe);
-int			ft_exit (t_pipe *pipe, t_line *line);
+int			ft_exit(t_pipe *pipe, t_line *line);
 int			ft_unset(t_line **line, t_env *env);
 int			parse_builtin(t_pipe *pipe);
 char		**arenvlst(t_env	*env);
@@ -212,29 +210,32 @@ char		*send_eof(char *line);
 void		siglisten(void);
 void		sigend(void);
 void		sighandler(int sig);
-void 		handle_exit_status_child(t_line *line, int status, int quit_message_printed, int *cat_count);
+void		handle_exit_status_child(t_line *line, int status, \
+	int quit_message_printed, int *cat_count);
 
 //REDIRECTIONS
-int	redirection_in_pipe(t_pipe *pipe, int *saved_output);
+int			redirection_in_pipe(t_pipe *pipe, int *saved_output);
 int			redir_heredoc(t_pipe *pipe, t_env *env);
-int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env);
-char *expand_variables(const char *input, t_env *env);
-char *get_env_value_heredoc(t_env *env, const char *var_name);
-char	*gen_filename(int fn);
+int			handle_single_heredoc(char *delimiter, const char *temp_file, \
+	t_env *env);
+char		*expand_variables(const char *input, t_env *env);
+char		*get_env_value_heredoc(t_env *env, const char *var_name);
+char		*gen_filename(int fn);
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status, char *str);
 int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line);
-int			create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd, t_line *line, char *str, int pipe_fd);
+int			create_process(t_env *env, t_pipe *pipe, int input_fd, \
+	int output_fd, t_line *line, char *str, int pipe_fd);
 void		create_env(char **envp, t_env **env);
 int			call_childs(t_env *env, t_line *line, char *str);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 int			handle_cat_process(int pipe_fd[2], t_line *line);
 int			handle_remaining_processes(int cat_count);
 int			_cat_count(t_pipe *current, t_line *line);
-int handle_redirection(t_pipe *pipe);
+int			handle_redirection(t_pipe *pipe);
 
 // =================================== EXEC ================================
 
