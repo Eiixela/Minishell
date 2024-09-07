@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-int handle_cat_process(int pipe_fd[2], t_line *line)
+int	handle_cat_process(int pipe_fd[2], t_line *line)
 {
-	pid_t pid;
-	char buf[1024];
+	pid_t	pid;
+	char	buf[1024];
 
 	pid = fork();
 	if (pid == 0)
@@ -31,10 +31,10 @@ int handle_cat_process(int pipe_fd[2], t_line *line)
 	return (pid);
 }
 
-int handle_remaining_processes(int cat_count)
+int	handle_remaining_processes(int cat_count)
 {
-	int status;
-	char buf[2];
+	int		status;
+	char	buf[2];
 
 	while (wait(&status) > 0)
 		;
@@ -49,14 +49,14 @@ int handle_remaining_processes(int cat_count)
 	return (1);
 }
 
-int _cat_count(t_pipe *current, t_line *line)
+int	_cat_count(t_pipe *current, t_line *line)
 {
-	int cat_count;
+	int	cat_count;
 
 	cat_count = 0;
 	while (current && ft_strcmp(current->arg[0], "cat") == 0
 		&& current->arg[1] == NULL && !current->redir)
-	{	
+	{
 		cat_count++;
 		current = current->next;
 	}
@@ -64,10 +64,10 @@ int _cat_count(t_pipe *current, t_line *line)
 	return (cat_count);
 }
 
-int handle_redirection(t_pipe *pipe)
+int	handle_redirection(t_pipe *pipe)
 {
-	int saved_output;
-	int redir_result;
+	int	saved_output;
+	int	redir_result;
 
 	redir_result = redirection_in_pipe(pipe, &saved_output);
 	if (redir_result == 0)

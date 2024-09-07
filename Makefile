@@ -57,6 +57,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/exec/pipex.c\
 		srcs/exec/redirections.c\
 		srcs/exec/signal.c\
+		srcs/exec/signal1.c\
 		srcs/builtins/ft_export_utils.c\
 		srcs/exec/heredoc.c\
 		srcs/exec/pipex_utils.c\
