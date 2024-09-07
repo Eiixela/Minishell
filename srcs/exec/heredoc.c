@@ -12,133 +12,98 @@
 
 #include "minishell.h"
 
-char	*gen_filename(int fn)
+int	process_heredoc_line(int fd, char *line, t_env *env)
 {
-	char	*strfn;
-	char	*filename;
+	char	*expanded_line;
+	int		result;
 
-	strfn = ft_itoa(fn);
-	if (!strfn)
-		return (print_error(errno, "minishell: heredoc"));
-	filename = ft_strjoin("/tmp/tmp_", strfn);
-	free(strfn);
-	if (!filename)
-		return (print_error(errno, "minishell: heredoc"));
-	return (filename);
+	expanded_line = expand_variables(line, env);
+	if (expanded_line)
+		result = process_expanded_line(fd, expanded_line);
+	else
+		result = write_to_heredoc(fd, line);
+	return (result);
 }
 
-char *get_env_value_heredoc(t_env *env, const char *var_name)
+static int	process_single_heredoc(t_redir *redir, int count, t_env *env)
 {
-	t_env *current;
-	size_t var_name_len;
+	char	*temp_file;
 
-	var_name_len = ft_strlen(var_name);
-	current = env;
-	while (current)
+	redir->fd = back_to_positive(redir->fd);
+	temp_file = gen_filename(count);
+	if (!temp_file)
+		return (0);
+	if (!handle_single_heredoc(redir->fd, temp_file, env))
 	{
-		if (ft_strncmp(current->env, var_name, var_name_len) == 0 && current->env[var_name_len] == '=')
-			return (current->env + var_name_len + 1);
-		current = current->next;
+		free(temp_file);
+		return (0);
 	}
-	return (NULL);
+	free(redir->fd);
+	redir->fd = temp_file;
+	return (1);
 }
 
-char *expand_variables(const char *input, t_env *env)
+int	process_heredocs(t_line *line, t_env *env)
 {
-    char *result;
-    char *var_start, *var_end;
-    char *var_name, *var_value;
-    size_t new_size, current_len;
-    char *new_result;
+	int		heredoc_count;
+	t_pipe	*current_pipe;
+	t_redir	*current_redir;
 
-    result = ft_strdup(input);
-    while ((var_start = ft_strchr(result, '$')) != NULL)
-    {
-        var_end = var_start + 1;
-        while (*var_end && (ft_isalnum(*var_end) || *var_end == '_'))
-            var_end++;
-        var_name = ft_strndup(var_start + 1, var_end - var_start - 1);
-        var_value = get_env_value_heredoc(env, var_name);
-        if (var_value)
-        {
-            new_size = ft_strlen(result) - ft_strlen(var_name) + ft_strlen(var_value);
-            new_result = malloc(new_size + 1);
-            if (!new_result) 
-                return (free(var_name), free(result), perror("malloc"), NULL);
-            current_len = var_start - result;
-            ft_strlcpy(new_result, result, current_len + 1);
-            ft_strlcat(new_result, var_value, new_size + 1);
-            ft_strlcat(new_result, var_end, new_size + 1);
-            free(result);
-            result = new_result;
-        }
-        else
-            break ;
-        free(var_name);
-    }
-    return (result);
-}
-
-int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
-{
-    int fd_file_heredoc;
-    char *line;
-    char *expanded_line;
-
-    fd_file_heredoc = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd_file_heredoc == -1)
-        return (ft_putstr_fd("error: cannot open file\n", 2), 0);
-
-    while (1)
-    {
-        line = readline("> ");
-        if (!line || ft_strcmp(line, delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        expanded_line = expand_variables(line, env);
-        if (expanded_line)
-        {
-            if (!expanded_line)
-            {
-                free(expanded_line);
-                free(line);
-                return (ft_putstr_fd("error: cannot expand variable\n", 2), 0);
-            }
-            if (write(fd_file_heredoc, expanded_line, ft_strlen(expanded_line)) == -1 ||
-                write(fd_file_heredoc, "\n", 1) == -1)
-            {
-                free(expanded_line);
-                free(line);
-                return (ft_putstr_fd("error: write to heredoc failed\n", 2), 0);
-            }
-            free(expanded_line);
-        }
-        else
-        {
-            free(expanded_line);
-            if (write(fd_file_heredoc, line, ft_strlen(line)) == -1 ||
-                write(fd_file_heredoc, "\n", 1) == -1)
-            {
-                free(line);
-                return (ft_putstr_fd("error: write to heredoc failed\n", 2), 0);
-            }
-        }
-        free(line);
-    }
-    close(fd_file_heredoc);
-    return (1);
-}
-
-char *ensure_positive_chars(char* str)
-{
-    size_t i = 0;
-    while (str[i] != '\0') 
+	current_pipe = line->pipe;
+	heredoc_count = 0;
+	while (current_pipe)
 	{
-        if (str[i] < 0)
-            str[i] = (unsigned char)str[i];
-        i++;
-    }
-    return (str);
+		current_redir = current_pipe->redir;
+		while (current_redir)
+		{
+			if (current_redir->type == HEREDOC)
+			{
+				if (!process_single_heredoc(current_redir, heredoc_count, env))
+					return (0);
+				heredoc_count++;
+			}
+			current_redir = current_redir->next;
+		}
+		current_pipe = current_pipe->next;
+	}
+	return (1);
+}
+
+int	process_heredoc_redir(t_redir *redir, int count, t_env *env)
+{
+	char	*temp_file;
+
+	temp_file = gen_filename(count);
+	if (!temp_file)
+		return (0);
+	if (!handle_single_heredoc(redir->fd, temp_file, env))
+	{
+		free(temp_file);
+		return (0);
+	}
+	free(redir->fd);
+	redir->fd = temp_file;
+	return (1);
+}
+
+int	redir_heredoc(t_pipe *pipe, t_env *env)
+{
+	int		heredoc_count;
+	t_redir	*current_redir;
+
+	heredoc_count = 0;
+	current_redir = pipe->redir;
+	while (current_redir && current_redir->type == HEREDOC)
+	{
+		if (!process_heredoc_redir(current_redir, heredoc_count, env))
+			return (0);
+		current_redir = current_redir->next;
+		heredoc_count++;
+	}
+	if (heredoc_count > 0)
+	{
+		if (!open_and_dup_heredoc(pipe->redir->fd))
+			return (0);
+	}
+	return (1);
 }

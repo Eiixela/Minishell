@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 18:22:20 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 14:43:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 19:03:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 {
-	if (!ft_strcmp(pipe->arg[0], "echo"))	
+	if (!ft_strcmp(pipe->arg[0], "echo"))
 		line->pipe->ret_val = ft_echo(pipe->arg);
 	else if (!ft_strcmp(pipe->arg[0], "cd"))
 		line->pipe->ret_val = ft_cd(env, line);
@@ -33,7 +33,7 @@ int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 	return (0);
 }
 
-int	parse_builtin(t_pipe *pipe)
+int	pbuilt(t_pipe *pipe)
 {
 	if (pipe->arg)
 	{
@@ -55,11 +55,9 @@ int	parse_builtin(t_pipe *pipe)
 	return (0);
 }
 
-//TODO make struct env for ome builtins
-int parse_and_execute_solo_builtins(t_env *env, t_line *line)
+int	parse_and_execute_solo_builtins(t_env *env, t_line *line, int saved_output)
 {
-	int saved_output = -1;
-	if (line->pipe->next == NULL && parse_builtin(line->pipe) == 1 && line->pipe->arg)
+	if (line->pipe->next == NULL && pbuilt(line->pipe) == 1 && line->pipe->arg)
 	{
 		if (line->pipe->redir != NULL)
 			if (!redirection_in_pipe(line->pipe, &saved_output))

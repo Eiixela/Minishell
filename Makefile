@@ -62,6 +62,8 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/exec/pipex_utils.c\
 		srcs/builtins/unset_utils.c\
 		srcs/builtins/builtins_libft.c\
+		srcs/exec/heredoc_utils.c\
+		srcs/exec/heredoc_expand.c\
 							)
 
 OBJ_SUBDIRS = $(sort $(dir ${OBJECTS}))

@@ -1,20 +1,35 @@
-==427174== Memcheck, a memory error detector
-==427174== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==427174== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==427174== Command: cat
-==427174== Parent PID: 427172
-==427174== 
-==427174== 
-==427174== FILE DESCRIPTORS: 1 open (0 std) at exit.
-==427174== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/test
-==427174==    <inherited from parent>
-==427174== 
-==427174== 
-==427174== HEAP SUMMARY:
-==427174==     in use at exit: 0 bytes in 0 blocks
-==427174==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
-==427174== 
-==427174== All heap blocks were freed -- no leaks are possible
-==427174== 
-==427174== For lists of detected and suppressed errors, rerun with: -s
-==427174== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==807347== Memcheck, a memory error detector
+==807347== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==807347== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==807347== Command: cat
+==807347== Parent PID: 807345
+==807347== 
+==807347== 
+==807347== FILE DESCRIPTORS: 6 open (0 std) at exit.
+==807347== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==807347==    <inherited from parent>
+==807347== 
+==807347== Open file descriptor 40: /dev/ptmx
+==807347==    <inherited from parent>
+==807347== 
+==807347== Open AF_UNIX socket 39: <unknown>
+==807347==    <inherited from parent>
+==807347== 
+==807347== Open file descriptor 38: /home/aljulien/.config/Code/logs/20240907T115637/ptyhost.log
+==807347==    <inherited from parent>
+==807347== 
+==807347== Open file descriptor 37: /usr/share/code/resources/app/node_modules.asar
+==807347==    <inherited from parent>
+==807347== 
+==807347== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/test
+==807347==    <inherited from parent>
+==807347== 
+==807347== 
+==807347== HEAP SUMMARY:
+==807347==     in use at exit: 0 bytes in 0 blocks
+==807347==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==807347== 
+==807347== All heap blocks were freed -- no leaks are possible
+==807347== 
+==807347== For lists of detected and suppressed errors, rerun with: -s
+==807347== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
