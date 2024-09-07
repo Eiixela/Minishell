@@ -6,16 +6,15 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 18:22:20 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/06 18:22:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 12:06:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
 int	execute_builtins(t_env *env, t_pipe *pipe, t_line *line)
 {
-	if (!ft_strcmp(pipe->arg[0], "echo"))
+	if (!ft_strcmp(pipe->arg[0], "echo"))	
 		line->pipe->ret_val = ft_echo(pipe->arg);
 	else if (!ft_strcmp(pipe->arg[0], "cd"))
 		line->pipe->ret_val = ft_cd(env, line);

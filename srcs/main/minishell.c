@@ -56,7 +56,7 @@ int	main(int ac, char **av, char **envp)
 			if (str)
 			{
 				line.pipe->ret_val = status;
-			 	if (!pipex(env, &line, &status, str))
+  			 	if (!pipex(env, &line, &status, str))
 					perror("execve");
 				line.exit_status = line.pipe->ret_val;
 				if (str && str != cpy)

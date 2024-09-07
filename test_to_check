@@ -34,27 +34,6 @@ Fix expand in EOF du heredoc (test 534) EXEC
 Need to fix exit status test 468, 469, 470, 475, 476 EXEC
 
 
-CHILD LEAK APPAREMMENT echo " $ " | cat -e 	:'( FIXED ??
-
-
-
-TESTS OK =
-334
-335
-337
-338
-351 (leaks sur 'echo $?' apres le test ?)
-537
-535
-540
-541
-485
-486
-538
-
-140
-176 
-
 valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.%p.txt --suppressions=supp.supp ./minishell
 
 139/142/218 : leaks of actual_expand-->strjoin :
@@ -73,3 +52,48 @@ check cat | rev (should be blocking command but it gets out after one "enter")
 check cat | ls | cat
 check heredoc with $? as EOF and all combination with quotes ----> if EOF = "$?" the EOF is expand and it shouldn't so the EOF is transformed in 0
 check invaldid pointer when [spaces]+random char
+
+
+Leaks sur :
+
+$?
+$?$?
+?$HOME
+$HOMEdskjhfkdshfsd
+"$HOMEdskjhfkdshfsd"
+$DONTEXIST
+$LESS$VAR
+
+export HOLA="bonjour      "  
+echo $HOLA | cat -e
+
+export HOLA="  bonjour  hey  "  
+echo $HOLA | cat -e
+
+export HOLA="  bonjour  hey  "  
+echo """$HOLA""" | cat -e
+
+export HOLA="  bonjour  hey  "  
+echo wesh"$HOLA" | cat -e
+
+export HOLA="s -la" 
+l"$HOLA"
+
+export HOLA="l" 
+$HOLAs
+
+export HOLA=p
+export BYE=w
+$HOLA"BYE"d
+
+export HOLA=p
+export BYE=w
+$"HOLA"$"BYE"d
+
+export HOLA=-n
+"echo $HOLA" hey
+
+export hola | unset hola | echo $?
+
+   cd / | echo $?
+pwd

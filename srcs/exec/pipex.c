@@ -33,54 +33,74 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
                    t_line *line, char *str, int pipe_fd)
 {
     pid_t pid = fork();
-    if (pid == 0)  // Child process
+    if (pid == 0)
     {
-        // Close the write end of the pipe if it exists
         if (pipe_fd > -1)
             close(pipe_fd);
-
-        // Set up input redirection
         if (input_fd != STDIN_FILENO)
         {
-            dup2(input_fd, STDIN_FILENO);
+            if (dup2(input_fd, STDIN_FILENO) == -1)
+            {
+                perror("dup2 input");
+                exit(1);
+            }
             close(input_fd);
         }
-
-        // Set up output redirection
         if (output_fd != STDOUT_FILENO)
         {
-            dup2(output_fd, STDOUT_FILENO);
+            if (dup2(output_fd, STDOUT_FILENO) == -1)
+            {
+                perror("dup2 output");
+                exit(1);
+            }
             close(output_fd);
         }
-
-        // Handle heredoc if present
         t_redir *redir = pipe->redir;
         while (redir)
         {
-            if (redir->type == HEREDOC)
+            if (redir->type == IN_REDIR)
             {
                 int fd = open(redir->fd, O_RDONLY);
-                if (fd != -1)
+                if (fd == -1)
                 {
-                    dup2(fd, STDIN_FILENO);
-                    close(fd);
+                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
+                    free_env(env);
+                    cleanup(line);
+                    exit(1);
                 }
-                break;  // Use only the last heredoc if multiple exist
+                if (dup2(fd, STDIN_FILENO) == -1)
+                {
+                    perror("dup2 input file");
+                    exit(1);
+                }
+                close(fd);
+            }
+            else if (redir->type == OUT_REDIR || redir->type == APPEND)
+            {
+                int flags = (redir->type == APPEND) ? (O_WRONLY | O_CREAT | O_APPEND) : (O_WRONLY | O_CREAT | O_TRUNC);
+                int fd = open(redir->fd, flags, 0644);
+                if (fd == -1)
+                {
+                    perror("open output file");
+                    exit(1);
+                }
+                if (dup2(fd, STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 output file");
+                    exit(1);
+                }
+                close(fd);
             }
             redir = redir->next;
         }
-
-        // Execute the command
         if (pipe->arg && pipe->arg[0])
             execute_cmd(env, pipe, line, str);
-
-        // If we reach here, execution failed
-        exit(EXIT_FAILURE);
+        free_env(env);
+        cleanup_exec(line);
     }
-
-    // Parent process
     return pid;
 }
+
 
 
 int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,

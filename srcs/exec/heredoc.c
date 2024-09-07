@@ -90,7 +90,7 @@ int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
 
     while (1)
     {
-        line = readline("  > MiniHere$ ");
+        line = readline("> ");
         if (!line || ft_strcmp(line, delimiter) == 0)
         {
             free(line);

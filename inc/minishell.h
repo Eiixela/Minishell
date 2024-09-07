@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/06 18:21:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 12:00:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,8 +209,12 @@ void		sighandler(int sig);
 void 		handle_exit_status_child(t_line *line, int status, int quit_message_printed, int *cat_count);
 
 //REDIRECTIONS
-int			redirection_in_pipe(t_pipe *pipe, int *saved_output, t_env *env);
+int	redirection_in_pipe(t_pipe *pipe, int *saved_output);
 int			redir_heredoc(t_pipe *pipe, t_env *env);
+int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env);
+char *expand_variables(const char *input, t_env *env);
+char *get_env_value_heredoc(t_env *env, const char *var_name);
+char	*gen_filename(int fn);
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status, char *str);
@@ -224,7 +228,7 @@ int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 int			handle_cat_process(int pipe_fd[2], t_line *line);
 int			handle_remaining_processes(int cat_count);
 int			_cat_count(t_pipe *current, t_line *line);
-int			handle_redirection(t_pipe *pipe, t_env *env);
+int handle_redirection(t_pipe *pipe);
 
 // =================================== EXEC ================================
 

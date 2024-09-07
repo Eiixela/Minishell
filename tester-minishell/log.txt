@@ -1,0 +1,152 @@
+
+
+
+
+
+[33mRunning 505 tests...[0m
+[31mIgnoring stderr errors...[0m
+[31mIgnoring status errors...
+
+[36mRunning test[0m tests/0.sh [32mOK[0m
+
+[36mRunning test[0m tests/1.sh [32mOK[0m
+
+[36mRunning test[0m tests/2.sh [32mOK[0m
+
+[36mRunning test[0m tests/3.sh [32mOK[0m
+
+[36mRunning test[0m tests/4.sh [32mOK[0m
+
+[36mRunning test[0m tests/5.sh [32mOK[0m
+
+[36mRunning test[0m tests/6.sh [32mOK[0m
+
+[36mRunning test[0m tests/7.sh [32mOK[0m
+
+[36mRunning test[0m tests/8.sh [32mOK[0m
+
+[36mRunning test[0m tests/9.sh [32mOK[0m
+
+[36mRunning test[0m tests/10.sh [32mOK[0m
+
+[36mRunning test[0m tests/11.sh [32mOK[0m
+
+[36mRunning test[0m tests/12.sh [32mOK[0m
+
+[36mRunning test[0m tests/13.sh [32mOK[0m
+
+[36mRunning test[0m tests/14.sh [32mOK[0m
+
+[36mRunning test[0m tests/15.sh [32mOK[0m
+
+[36mRunning test[0m tests/16.sh [32mOK[0m
+
+[36mRunning test[0m tests/17.sh [32mOK[0m
+
+[36mRunning test[0m tests/18.sh [32mOK[0m
+
+[36mRunning test[0m tests/19.sh [32mOK[0m
+
+[36mRunning test[0m tests/20.sh [32mOK[0m
+
+[36mRunning test[0m tests/21.sh [32mOK[0m
+
+[36mRunning test[0m tests/22.sh [32mOK[0m
+
+[36mRunning test[0m tests/23.sh [32mOK[0m
+
+[36mRunning test[0m tests/24.sh [32mOK[0m
+
+[36mRunning test[0m tests/25.sh [32mOK[0m
+
+[36mRunning test[0m tests/26.sh [32mOK[0m
+
+[36mRunning test[0m tests/27.sh [32mOK[0m
+
+[36mRunning test[0m tests/28.sh [32mOK[0m
+
+[36mRunning test[0m tests/29.sh [32mOK[0m
+
+[36mRunning test[0m tests/30.sh [32mOK[0m
+
+[36mRunning test[0m tests/31.sh [32mOK[0m
+
+[36mRunning test[0m tests/32.sh [32mOK[0m
+
+[36mRunning test[0m tests/33.sh [32mOK[0m
+
+[36mRunning test[0m tests/34.sh [32mOK[0m
+
+[36mRunning test[0m tests/35.sh [32mOK[0m
+
+[36mRunning test[0m tests/36.sh [32mOK[0m
+
+[36mRunning test[0m tests/37.sh [32mOK[0m
+
+[36mRunning test[0m tests/38.sh [32mOK[0m
+
+[36mRunning test[0m tests/39.sh [32mOK[0m
+
+[36mRunning test[0m tests/40.sh [32mOK[0m
+
+[36mRunning test[0m tests/41.sh [32mOK[0m
+
+[36mRunning test[0m tests/42.sh [32mOK[0m
+
+[36mRunning test[0m tests/43.sh [32mOK[0m
+
+[36mRunning test[0m tests/44.sh [31mKO[0m
+
+[33m========== [0mtests/44.sh[33m ==========[0m
+echo "         " | cat -e
+[33m=================================[0m
+
+ERROR DIFF:
+--- bash_outputs/err	2024-09-07 13:44:18.004389781 +0200
++++ user_outputs/err	2024-09-07 13:44:18.008389775 +0200
+@@ -0,0 +1 @@
++here!
+
+[36mRunning test[0m tests/45.sh [31mKO[0m
+
+[33m========== [0mtests/45.sh[33m ==========[0m
+echo           | cat -e
+[33m=================================[0m
+
+ERROR DIFF:
+--- bash_outputs/err	2024-09-07 13:44:18.116389613 +0200
++++ user_outputs/err	2024-09-07 13:44:18.120389607 +0200
+@@ -0,0 +1 @@
++here!
+
+[36mRunning test[0m tests/46.sh [32mOK[0m
+
+[36mRunning test[0m tests/47.sh [32mOK[0m
+
+[36mRunning test[0m tests/48.sh [32mOK[0m
+
+[36mRunning test[0m tests/49.sh [32mOK[0m
+
+[36mRunning test[0m tests/50.sh [32mOK[0m
+
+[36mRunning test[0m tests/51.sh [32mOK[0m
+
+[36mRunning test[0m tests/52.sh [32mOK[0m
+
+[36mRunning test[0m tests/53.sh [32mOK[0m
+
+[36mRunning test[0m tests/54.sh [32mOK[0m
+
+[36mRunning test[0m tests/55.sh [32mOK[0m
+
+[36mRunning test[0m tests/56.sh [32mOK[0m
+
+[36mRunning test[0m tests/57.sh [32mOK[0m
+
+[36mRunning test[0m tests/58.sh [32mOK[0m
+
+[36mRunning test[0m tests/59.sh [32mOK[0m
+
+[36mRunning test[0m tests/60.sh [32mOK[0m
+
+[36mRunning test[0m tests/61.sh
