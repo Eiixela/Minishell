@@ -30,7 +30,6 @@ static char	*comp_keys(char *to_find, char *key)
 	return (to_find);
 }
 
-
 static t_env	*env_rmone(t_env **sup, t_env **head)
 {
 	t_env	*tmp;

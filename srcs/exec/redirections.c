@@ -91,14 +91,11 @@ int	redirection_in_pipe(t_pipe *pipe, int *saved_output)
 			last_out_redir = redirection_append_and_out(current_redir);
 		else if (current_redir->type == IN_REDIR)
 			if (!redirection_in(current_redir))
-			{
-				pipe->ret_val = 1;
-				return (0);
-			}
+				return (pipe->ret_val = 1, 0);
 		current_redir = current_redir->next;
 	}
 	if (last_out_redir)
 		if (!last_redir(last_out_redir))
-			return (0);	
+			return (0);
 	return (1);
 }

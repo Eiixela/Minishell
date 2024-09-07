@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *line, int indice)
+void	lethal_exit(int arg_of_exit, char *error_message, \
+	t_line *line, int indice)
 {
-	(void)pipe;
 	clear_history();
 	free_env(line->env);
 	cleanup(line);
@@ -28,18 +28,20 @@ void	lethal_exit(t_pipe *pipe, int arg_of_exit, char *error_message, t_line *lin
 		exit(EXIT_SUCCESS);
 }
 
-static bool overflow(const char *str)
+static bool	overflow(const char *str)
 {
-    char *max = "9223372036854775807";
-    char *min = "-9223372036854775808";
-    size_t len = ft_strlen(str);
-    
-    if (str[0] == '-')
-        return (len <= ft_strlen(min) && ft_strcmp(str, min) <= 0);
-    else
-        return (len <= ft_strlen(max) && ft_strcmp(str, max) <= 0);
-}
+	char	*max;
+	char	*min;
+	size_t	len;
 
+	len = ft_strlen(str);
+	min = "-9223372036854775808";
+	max = "9223372036854775807";
+	if (str[0] == '-')
+		return (len <= ft_strlen(min) && ft_strcmp(str, min) <= 0);
+	else
+		return (len <= ft_strlen(max) && ft_strcmp(str, max) <= 0);
+}
 
 static bool	not_num(char *str)
 {
@@ -76,29 +78,28 @@ int	print_error_message(char *s1, char *s2, char *s3)
 	return (1);
 }
 
-
-int ft_exit(t_pipe *pipe, t_line *line)
+int	ft_exit(t_pipe *pipe, t_line *line)
 {
-    long long arg_of_exit = 0;
+	long long	arg_of_exit;
 
-    if (pipe && pipe->arg[1])
-    {
-        if (!not_num(pipe->arg[1]) || !overflow(pipe->arg[1]))
-        {
-            printf("exit\n");
-            print_error_message("minishell: exit: ", pipe->arg[1],
-                                ": numeric argument required\n");
-            lethal_exit(pipe, 2, NULL, line, 1);
-        }
-        if (ft_dstrlen(pipe->arg) > 2)
-            return (printf("exit\nbash: exit: too many arguments\n"), 1);
-        
-        arg_of_exit = ft_atoll(pipe->arg[1]);
-        pipe->ret_val = (unsigned char)arg_of_exit;
-        lethal_exit(pipe, pipe->ret_val, NULL, line, 0);
-        return pipe->ret_val;
-    }
-    arg_of_exit = pipe->ret_val;
-    lethal_exit(pipe, arg_of_exit, NULL, line, 0);
-    return arg_of_exit;
+	arg_of_exit = 0;
+	if (pipe && pipe->arg[1])
+	{
+		if (!not_num(pipe->arg[1]) || !overflow(pipe->arg[1]))
+		{
+			printf("exit\n");
+			print_error_message("minishell: exit: ", pipe->arg[1],
+				": numeric argument required\n");
+			lethal_exit(2, NULL, line, 1);
+		}
+		if (ft_dstrlen(pipe->arg) > 2)
+			return (printf("exit\nbash: exit: too many arguments\n"), 1);
+		arg_of_exit = ft_atoll(pipe->arg[1]);
+		pipe->ret_val = (unsigned char)arg_of_exit;
+		lethal_exit(pipe->ret_val, NULL, line, 0);
+		return (pipe->ret_val);
+	}
+	arg_of_exit = pipe->ret_val;
+	lethal_exit(arg_of_exit, NULL, line, 0);
+	return (arg_of_exit);
 }
