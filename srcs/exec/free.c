@@ -70,3 +70,22 @@ void	cleanup_exec(t_line *line)
 	line->pipe = NULL;
 	exit(status);
 }
+
+void	env_freelst(t_env **env)
+{
+	t_env	*tmp;
+
+	tmp = NULL;
+	if (env && (*env))
+	{
+		while (*env)
+		{
+			free((*env)->env);
+			tmp = (*env)->next;
+			free(*env);
+			(*env) = tmp;
+		}
+	}
+	*env = NULL;
+	env = NULL;
+}

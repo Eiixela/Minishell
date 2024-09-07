@@ -56,25 +56,6 @@ char	**arenvlst(t_env *env)
 	return (arenv);
 }
 
-void	env_freelst(t_env **env)
-{
-	t_env	*tmp;
-
-	tmp = NULL;
-	if (env && (*env))
-	{
-		while (*env)
-		{
-			free((*env)->env);
-			tmp = (*env)->next;
-			free(*env);
-			(*env) = tmp;
-		}
-	}
-	*env = NULL;
-	env = NULL;
-}
-
 void	env_addback(t_env **env, t_env *node)
 {
 	t_env	*head;
