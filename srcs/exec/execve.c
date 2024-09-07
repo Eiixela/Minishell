@@ -12,19 +12,19 @@
 
 #include "minishell.h"
 
-static void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
+void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
 {
 	free_env(env);
 	if (i == 0)
 	{
 		print_error_message("minishell: ", line->pipe->arg[0], \
-			" Permission denied\n");;
+			" Permission denied\n");
 		cleanup(line);
 		exit(126);
 	}
 	if (i == 1)
 	{
- 		print_error_message("minishell: ", line->pipe->arg[0], \
+		print_error_message("minishell: ", line->pipe->arg[0], \
 			": command not found\n");
 		free(path);
 		cleanup(line);
@@ -42,45 +42,18 @@ static void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
 
 int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 {
-	char	*path;
 	char	**env_now;
 
-	env_now = NULL;
-	path = NULL;
-	if (!pipe->arg || !pipe->arg[0])
-		return (ft_putstr_fd("minishell: %s:command not found\n", 2), 0);
-	if (execute_builtins(env, pipe, line) == 1)
+	if (!check_command_exists(pipe->arg))
+		return (0);
+	if (!handle_builtin_execution(env, pipe, line))
+		return (1);
+	env_now = arenvlst(env);
+	if (!check_file_permissions(pipe->arg[0]))
 	{
-		env_now = arenvlst(env);
-		if (!access(pipe->arg[0], F_OK))
-		{
-			if (access(pipe->arg[0], F_OK | X_OK))
-			{
-				free_double_tab(env_now);
-				error_and_free_for_exec(env, line, path, 0);
-			}
-		}
-		path = get_path(pipe, env_now, -1);
-		if (path == NULL)
-		{
-			if (str)
-			{
-				free(str);
-				str = NULL;
-			}
-			free_double_tab(env_now);
-			error_and_free_for_exec(env, line, path, 1);
-		}
-		if (execve(path, pipe->arg, env_now) == -1)
-		{
-			if (str)
-			{
-				free(str);
-				str = NULL;
-			}
-			free_double_tab(env_now);
-			error_and_free_for_exec(env, line, path, 2);
-		}
+		cleanup_resources(env_now, NULL, NULL);
+		error_and_free_for_exec(env, line, NULL, 0);
+		return (0);
 	}
-	return (1);
+	return (execute_external_command(env, pipe, env_now, str));
 }

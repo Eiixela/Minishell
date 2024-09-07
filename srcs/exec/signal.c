@@ -12,27 +12,6 @@
 
 #include "minishell.h"
 
-void	handle_exit_status_child(t_line *line, int status,
-		int quit_message_printed, int *cat_count)
-{
-	(void)cat_count;
-	if (WIFEXITED(status))
-	{
-		cat_count = 0;
-		line->pipe->ret_val = WEXITSTATUS(status);
-	}
-	else if (WIFSIGNALED(status))
-	{
-		line->pipe->ret_val = 128 + WTERMSIG(status);
-		if (WTERMSIG(status) == SIGQUIT && !(quit_message_printed))
-		{
-			cat_count = 0;
-			printf("Quit (core dumped)\n");
-			quit_message_printed = 1;
-		}
-	}
-}
-
 static int	get_nonull(void)
 {
 	return (1);

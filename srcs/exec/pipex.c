@@ -30,7 +30,7 @@ int	setup_io(int input_fd, int output_fd)
 }
 
 int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
-                   t_line *line, char *str, int pipe_fd)
+    t_line *line, char *str, int pipe_fd)
 {
     pid_t pid = fork();
     if (pid == 0)
@@ -153,7 +153,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 
 	current = line->pipe;
 	while (current && current->arg && ft_strcmp(current->arg[0], "cat") == 0
-           && current->arg[1] == NULL && !current->redir)
+		&& current->arg[1] == NULL && !current->redir)
 	{
 		(cat_count)++;
 		current = current->next;
@@ -163,7 +163,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	{
 		if (current->next != NULL)
 			pid = process_pipe(env, current, input_fd, line, cat_count, str);
-        else
+		else
 		{
 			pid = create_process(env, current, *input_fd, 1, line, str, -1);
 			if (*input_fd != 0)
@@ -172,7 +172,7 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 		*last_pid = pid;
 		current = current->next;
 	}
-    
+
 	return (1);
 }
 
@@ -202,7 +202,6 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 }
 
 
-
 char *back_to_positive(char *s)
 {
     int i;
@@ -219,16 +218,14 @@ char *back_to_positive(char *s)
     return (s);
 }
 
-
-
-int pipex(t_env *env, t_line *line, int *status, char *str)
+int	pipex(t_env *env, t_line *line, int *status, char *str)
 {
-    line->pipe->ret_val = *status;
+	line->pipe->ret_val = *status;
 
-    if (!process_heredocs(line, env))
-        return 1;
-    if (!call_childs(env, line, str))
-        return 0;
+	if (!process_heredocs(line, env))
+		return (1);
+	if (!call_childs(env, line, str))
+		return (0);
 
-    return 1;
+	return (1);
 }

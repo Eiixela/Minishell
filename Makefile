@@ -51,12 +51,14 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/builtins/ft_unset.c\
 		srcs/exec/error.c\
 		srcs/exec/execve.c\
+		srcs/exec/execve_utils.c\
 		srcs/exec/free.c\
 		srcs/exec/get_path.c\
 		srcs/exec/parse_and_execute_builtins.c\
 		srcs/exec/pipex.c\
 		srcs/exec/redirections.c\
 		srcs/exec/signal.c\
+		srcs/exec/signal1.c\
 		srcs/builtins/ft_export_utils.c\
 		srcs/exec/heredoc.c\
 		srcs/exec/pipex_utils.c\
