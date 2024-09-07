@@ -83,6 +83,7 @@ int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
 {
     int fd_file_heredoc;
     char *line;
+    char *expanded_line;
 
     fd_file_heredoc = open(temp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd_file_heredoc == -1)
@@ -96,12 +97,12 @@ int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
             free(line);
             break;
         }
-
-        if (expand_variables(line, env))
+        expanded_line = expand_variables(line, env);
+        if (expanded_line)
         {
-            char *expanded_line = expand_variables(line, env);
             if (!expanded_line)
             {
+                free(expanded_line);
                 free(line);
                 return (ft_putstr_fd("error: cannot expand variable\n", 2), 0);
             }
@@ -116,6 +117,7 @@ int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
         }
         else
         {
+            free(expanded_line);
             if (write(fd_file_heredoc, line, ft_strlen(line)) == -1 ||
                 write(fd_file_heredoc, "\n", 1) == -1)
             {
@@ -125,7 +127,6 @@ int handle_single_heredoc(char *delimiter, const char *temp_file, t_env *env)
         }
         free(line);
     }
-
     close(fd_file_heredoc);
     return (1);
 }

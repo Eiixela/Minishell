@@ -56,6 +56,7 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
             close(output_fd);
         }
         t_redir *redir = pipe->redir;
+        int heredoc_applied = 0;
         while (redir)
         {
             if (redir->type == IN_REDIR)
@@ -64,13 +65,15 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
                 if (fd == -1)
                 {
                     print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
-                    free_env(env);
                     cleanup(line);
+                    free_env(env);
                     exit(1);
                 }
                 if (dup2(fd, STDIN_FILENO) == -1)
                 {
-                    perror("dup2 input file");
+                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
+                    cleanup(line);
+                    free_env(env);
                     exit(1);
                 }
                 close(fd);
@@ -81,18 +84,37 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
                 int fd = open(redir->fd, flags, 0644);
                 if (fd == -1)
                 {
-                    perror("open output file");
+                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
+                    cleanup(line);
+                    free_env(env);
                     exit(1);
                 }
                 if (dup2(fd, STDOUT_FILENO) == -1)
                 {
-                    perror("dup2 output file");
+                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
+                    cleanup(line);
+                    free_env(env);
                     exit(1);
                 }
                 close(fd);
             }
+            else if (redir->type == HEREDOC && !heredoc_applied)
+            {
+                int fd = open(redir->fd, O_RDONLY);
+                if (fd != -1)
+                {
+                    if (dup2(fd, STDIN_FILENO) == -1)
+                    {
+                        perror("dup2 heredoc");
+                        exit(1);
+                    }
+                    close(fd);
+                    heredoc_applied = 1;
+                }
+            }
             redir = redir->next;
         }
+
         if (pipe->arg && pipe->arg[0])
             execute_cmd(env, pipe, line, str);
         free_env(env);
@@ -100,7 +122,6 @@ int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
     }
     return pid;
 }
-
 
 
 int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
@@ -169,7 +190,7 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 	builtin_result = parse_and_execute_solo_builtins(env, line);
 	if (builtin_result != 1)
 		return (builtin_result);
-	if (!process_commands(env, line, &input_fd, cat_count, &last_pid, str))
+    if (!process_commands(env, line, &input_fd, cat_count, &last_pid, str))
 		return (0);
 	sigend();
 	while ((wpid = wait(&line->exit_status)) > 0)
@@ -217,6 +238,22 @@ int redir_heredoc(t_pipe *pipe, t_env *env)
     return (1);
 }
 
+char *back_to_positive(char *s)
+{
+    int i;
+
+    i = 0;
+    while(s[i])
+    {
+        if (s[i] == -1)
+            s[i] = 36;
+        if (s[i] < 0)
+            s[i] *= -1;
+        i++;
+    }
+    return (s);
+}
+
 int process_heredocs(t_line *line, t_env *env)
 {
     t_pipe *current_pipe = line->pipe;
@@ -229,6 +266,8 @@ int process_heredocs(t_line *line, t_env *env)
         {
             if (current_redir->type == HEREDOC)
             {
+                line->pipe->redir->fd = back_to_positive(line->pipe->redir->fd);
+                fprintf(stderr, "%s\n", line->pipe->redir->fd);
                 char *temp_file = gen_filename(heredoc_count);
                 if (!temp_file)
                     return 0;
