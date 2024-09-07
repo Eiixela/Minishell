@@ -12,165 +12,237 @@
 
 #include "minishell.h"
 
-int	setup_io(int input_fd, int output_fd)
+
+int	setup_io(t_io_fds *fds)
 {
-	if (input_fd != STDIN_FILENO)
+	if (fds->input_fd != STDIN_FILENO)
 	{
-		if (dup2(input_fd, STDIN_FILENO) == -1)
+		if (dup2(fds->input_fd, STDIN_FILENO) == -1)
 			return (perror("dup2 input_fd"), 0);
-		close(input_fd);
+		close(fds->input_fd);
 	}
-	if (output_fd != STDOUT_FILENO)
+	if (fds->output_fd != STDOUT_FILENO)
 	{
-		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		if (dup2(fds->output_fd, STDOUT_FILENO) == -1)
 			return (perror("dup2 output_fd"), 0);
-		close(output_fd);
+		close(fds->output_fd);
 	}
 	return (1);
 }
 
-/* void	while_redir(t_pipe *pipe)
+static int	handle_input_redirection(char *filename, t_line *line, t_env *env)
 {
+	int	fd;
 
-} */
-
-
-int create_process(t_env *env, t_pipe *pipe, int input_fd, int output_fd,
-    t_line *line, char *str, int pipe_fd)
-{
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        if (pipe_fd > -1)
-            close(pipe_fd);
-        if (input_fd != STDIN_FILENO)
-        {
-            if (dup2(input_fd, STDIN_FILENO) == -1)
-            {
-                perror("dup2 input");
-                exit(1);
-            }
-            close(input_fd);
-        }
-        if (output_fd != STDOUT_FILENO)
-        {
-            if (dup2(output_fd, STDOUT_FILENO) == -1)
-            {
-                perror("dup2 output");
-                exit(1);
-            }
-            close(output_fd);
-        }
-        t_redir *redir = pipe->redir;
-        int heredoc_applied = 0;
-        while (redir)
-        {
-            if (redir->type == IN_REDIR)
-            {
-                int fd = open(redir->fd, O_RDONLY);
-                if (fd == -1)
-                {
-                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
-                    cleanup(line);
-                    free_env(env);
-                    exit(1);
-                }
-                if (dup2(fd, STDIN_FILENO) == -1)
-                {
-                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
-                    cleanup(line);
-                    free_env(env);
-                    exit(1);
-                }
-                close(fd);
-            }
-            else if (redir->type == OUT_REDIR || redir->type == APPEND)
-            {
-                int flags = (redir->type == APPEND) ? (O_WRONLY | O_CREAT | O_APPEND) : (O_WRONLY | O_CREAT | O_TRUNC);
-                int fd = open(redir->fd, flags, 0644);
-                if (fd == -1)
-                {
-                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
-                    cleanup(line);
-                    free_env(env);
-                    exit(1);
-                }
-                if (dup2(fd, STDOUT_FILENO) == -1)
-                {
-                    print_error_message("minishell: ", line->pipe->redir->fd, ": No such file or directory\n");
-                    cleanup(line);
-                    free_env(env);
-                    exit(1);
-                }
-                close(fd);
-            }
-            else if (redir->type == HEREDOC && !heredoc_applied)
-            {
-                int fd = open(redir->fd, O_RDONLY);
-                if (fd != -1)
-                {
-                    if (dup2(fd, STDIN_FILENO) == -1)
-                    {
-                        perror("dup2 heredoc");
-                        exit(1);
-                    }
-                    close(fd);
-                    heredoc_applied = 1;
-                }
-            }
-            redir = redir->next;
-        }
-        if (pipe->arg && pipe->arg[0])
-            execute_cmd(env, pipe, line, str);
-        free_env(env);
-        cleanup_exec(line);
-    }
-    return pid;
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		print_error_message("minishell: ", filename,
+			": No such file or directory\n");
+		cleanup(line);
+		free_env(env);
+		exit(1);
+	}
+	return (fd);
 }
 
-
-int	process_pipe(t_env *env, t_pipe	*current, int *input_fd,
-				t_line *line, int cat_count, char *str)
+static int	handle_output_redirection(char *filename, t_redir *redir,
+				t_line *line, t_env *env)
 {
-	int		pipe_fd[2];
+	int	flags;
+	int	fd;
+
+	if (redir->type == APPEND)
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	fd = open(filename, flags, 0644);
+	if (fd == -1)
+	{
+		print_error_message("minishell: ", filename,
+			": Failed to open output file\n");
+		cleanup(line);
+		free_env(env);
+		exit(1);
+	}
+	return (fd);
+}
+
+static int	handle_heredoc(const char *filename, t_line *line, t_env *env)
+{
+	int	fd;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		perror("heredoc");
+		cleanup(line);
+		free_env(env);
+		exit(1);
+	}
+	return (fd);
+}
+
+static void	apply_redirection(int *fd, int target_fd, t_line *line, t_env *env)
+{
+	if (*fd != target_fd)
+	{
+		if (dup2(*fd, target_fd) == -1)
+		{
+			perror("dup2");
+			close(*fd);
+			cleanup(line);
+			free_env(env);
+			exit(1);
+		}
+		close(*fd);
+		*fd = target_fd;
+	}
+}
+
+static void	handle_redir_type(t_redir *redir, t_io_fds *fds,
+				t_line *line, t_env *env)
+{
+	if (redir->type == IN_REDIR)
+	{
+		if (fds->input_fd != STDIN_FILENO)
+			close(fds->input_fd);
+		fds->input_fd = handle_input_redirection(redir->fd, line, env);
+	}
+	else if (redir->type == OUT_REDIR || redir->type == APPEND)
+	{
+		if (fds->output_fd != STDOUT_FILENO)
+			close(fds->output_fd);
+		fds->output_fd = handle_output_redirection(redir->fd, redir, line, env);
+	}
+	else if (redir->type == HEREDOC)
+	{
+		if (fds->input_fd != STDIN_FILENO)
+			close(fds->input_fd);
+		fds->input_fd = handle_heredoc(redir->fd, line, env);
+	}
+}
+
+void	while_redir(t_line *line, t_pipe *pipe, t_env *env)
+{
+	t_redir		*redir;
+	t_io_fds	fds;
+
+	fds.input_fd = STDIN_FILENO;
+	fds.output_fd = STDOUT_FILENO;
+	redir = pipe->redir;
+	while (redir)
+	{
+		handle_redir_type(redir, &fds, line, env);
+		redir = redir->next;
+	}
+	apply_redirection(&fds.input_fd, STDIN_FILENO, line, env);
+	apply_redirection(&fds.output_fd, STDOUT_FILENO, line, env);
+}
+
+static void	setup_child_io(t_io_fds *fds, int pipe_fd)
+{
+	if (pipe_fd > -1)
+		close(pipe_fd);
+	if (fds->input_fd != STDIN_FILENO)
+	{
+		if (dup2(fds->input_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 input");
+			exit(1);
+		}
+		close(fds->input_fd);
+	}
+	if (fds->output_fd != STDOUT_FILENO)
+	{
+		if (dup2(fds->output_fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 output");
+			exit(1);
+		}
+		close(fds->output_fd);
+	}
+}
+
+int	create_process(t_process_info *info, t_io_fds *fds, t_pipe *pipe)
+{
 	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		setup_child_io(fds, info->pipe_fd);
+		while_redir(info->line, pipe, info->env);
+		if (pipe->arg && pipe->arg[0])
+			execute_cmd(info->env, pipe, info->line, info->str);
+		free_env(info->env);
+		cleanup_exec(info->line);
+	}
+	return (pid);
+}
+
+int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd,
+		int cat_count)
+{
+	int			pipe_fd[2];
+	pid_t		pid;
+	t_io_fds	fds;
 
 	if (pipe(pipe_fd) == -1)
 		return (perror("pipe"), 0);
+	fds.input_fd = *input_fd;
+	fds.output_fd = pipe_fd[1];
 	if (cat_count > 0)
 	{
-		pid = handle_cat_process(pipe_fd, line);
-		(cat_count)--;
+		pid = handle_cat_process(pipe_fd, info->line);
+		cat_count--;
 	}
 	else
-		pid = create_process(env, current, *input_fd, pipe_fd[1], line, str, pipe_fd[0]);
-    close(pipe_fd[1]);
+	{
+		info->pipe_fd = pipe_fd[0];
+		pid = create_process(info, &fds, current);
+	}
+	close(pipe_fd[1]);
 	if (*input_fd != 0)
 		close(*input_fd);
 	*input_fd = pipe_fd[0];
 	return (pid);
 }
 
-int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid_t *last_pid, char *str)
+static int	count_cat_commands(t_pipe *current)
 {
-	t_pipe	*current;
-	pid_t	pid;
+	int	count;
 
-	current = line->pipe;
+	count = 0;
 	while (current && current->arg && ft_strcmp(current->arg[0], "cat") == 0
 		&& current->arg[1] == NULL && !current->redir)
 	{
-		(cat_count)++;
+		count++;
 		current = current->next;
 	}
-	current = line->pipe;
+	return (count);
+}
+
+int	process_commands(t_process_info *info, int *input_fd,
+		int cat_count, pid_t *last_pid)
+{
+	t_pipe		*current;
+	pid_t		pid;
+	t_io_fds	fds;
+
+	current = info->line->pipe;
+	cat_count = count_cat_commands(current);
+	current = info->line->pipe;
 	while (current != NULL)
 	{
 		if (current->next != NULL)
-			pid = process_pipe(env, current, input_fd, line, cat_count, str);
+			pid = process_pipe(info, current, input_fd, cat_count);
 		else
 		{
-			pid = create_process(env, current, *input_fd, 1, line, str, -1);
+			fds.input_fd = *input_fd;
+			fds.output_fd = STDOUT_FILENO;
+			info->pipe_fd = -1;
+			pid = create_process(info, &fds, current);
 			if (*input_fd != 0)
 				close(*input_fd);
 		}
@@ -180,13 +252,14 @@ int	process_commands(t_env *env, t_line	*line, int *input_fd, int cat_count, pid
 	return (1);
 }
 
-int	call_childs(t_env *env,	t_line *line, char *str)
+int	call_childs(t_env *env, t_line *line, char *str)
 {
-	int		input_fd;
-	int		cat_count;
-	int		builtin_result;
-	pid_t	last_pid;
-	pid_t	wpid;
+	int				input_fd;
+	int				cat_count;
+	int				builtin_result;
+	pid_t			last_pid;
+	pid_t			wpid;
+	t_process_info	info;
 
 	input_fd = 0;
 	cat_count = 0;
@@ -194,7 +267,10 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 	builtin_result = parse_and_execute_solo_builtins(env, line, -1);
 	if (builtin_result != 1)
 		return (builtin_result);
-    if (!process_commands(env, line, &input_fd, cat_count, &last_pid, str))
+	info.env = env;
+	info.line = line;
+	info.str = str;
+	if (!process_commands(&info, &input_fd, cat_count, &last_pid))
 		return (0);
 	sigend();
 	while ((wpid = wait(&line->exit_status)) > 0)
@@ -208,11 +284,9 @@ int	call_childs(t_env *env,	t_line *line, char *str)
 int	pipex(t_env *env, t_line *line, int *status, char *str)
 {
 	line->pipe->ret_val = *status;
-
 	if (!process_heredocs(line, env))
 		return (1);
 	if (!call_childs(env, line, str))
 		return (0);
-
 	return (1);
 }

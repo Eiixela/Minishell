@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 20:26:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 21:19:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,21 @@ typedef struct s_line
 	int				exit_status;
 }	t_line;
 
+typedef struct s_io_fds
+{
+	int	input_fd;
+	int	output_fd;
+}	t_io_fds;
+
+typedef struct s_process_info
+{
+	t_env	*env;
+	t_line	*line;
+	char	*str;
+	int		pipe_fd;
+	int		cat_count;
+}	t_process_info;
+
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
@@ -127,7 +142,7 @@ bool		is_exit_status_format(char *input, short squote_mode);
 char		*get_value(char *dollar_index, t_line *line, char	*name, \
 	int *name_len);
 void		free_s1_value_rest(char *s1, char *value, char *rest);
-char		*handle_exit_status(char *input, t_line *line, char **str_head);
+void	handle_exit_status_exec(t_line *line, int status);
 char		*get_env_value(t_line *line, char *name);
 void		turn_extra_dollar_negative(char	**s1);
 char		*handle_env_var(char *input, t_line *line, char **str_head, \
@@ -235,8 +250,7 @@ int			pipex(t_env *env, t_line *line, int *status, char *str);
 int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line, int saved_output);
-int			create_process(t_env *env, t_pipe *pipe, int input_fd, \
-	int output_fd, t_line *line, char *str, int pipe_fd);
+int	create_process(t_process_info *info, t_io_fds *fds, t_pipe *pipe);
 void		create_env(char **envp, t_env **env);
 int			call_childs(t_env *env, t_line *line, char *str);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);

@@ -1,20 +1,20 @@
-==1078336== Memcheck, a memory error detector
-==1078336== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1078336== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==1078336== Command: cat
-==1078336== Parent PID: 1078334
-==1078336== 
-==1078336== 
-==1078336== FILE DESCRIPTORS: 1 open (0 std) at exit.
-==1078336== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/test
-==1078336==    <inherited from parent>
-==1078336== 
-==1078336== 
-==1078336== HEAP SUMMARY:
-==1078336==     in use at exit: 0 bytes in 0 blocks
-==1078336==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
-==1078336== 
-==1078336== All heap blocks were freed -- no leaks are possible
-==1078336== 
-==1078336== For lists of detected and suppressed errors, rerun with: -s
-==1078336== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1188508== Memcheck, a memory error detector
+==1188508== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1188508== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1188508== Command: cat
+==1188508== Parent PID: 1188506
+==1188508== 
+==1188508== 
+==1188508== FILE DESCRIPTORS: 1 open (0 std) at exit.
+==1188508== Open file descriptor 3: /home/aljulien/Documents/C/C3/Minishell/tester-minishell/test
+==1188508==    <inherited from parent>
+==1188508== 
+==1188508== 
+==1188508== HEAP SUMMARY:
+==1188508==     in use at exit: 0 bytes in 0 blocks
+==1188508==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1188508== 
+==1188508== All heap blocks were freed -- no leaks are possible
+==1188508== 
+==1188508== For lists of detected and suppressed errors, rerun with: -s
+==1188508== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
