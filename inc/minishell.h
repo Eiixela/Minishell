@@ -6,7 +6,7 @@
 /*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 16:13:19 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/07 17:10:13 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int			ft_env(t_env *env, t_pipe *pipe);
 int			ft_exit(t_pipe *pipe, t_line *line);
 int			ft_unset(t_line **line, t_env *env);
 int			parse_builtin(t_pipe *pipe);
-char		**arenvlst(t_env	*env);
+char		**arenvlst(t_env *env);
 int			check_directory(char *var, char *path);
 int			pwds(t_env *env, char *path);
 char		*check_len(char	*path, t_env *env);
@@ -190,6 +190,7 @@ char		*expand_tilde(const char *arg, t_env *env);
 int			is_valid_identifier(const char *str);
 size_t		env_len_unset(t_env *env);
 size_t		ft_arrlen(char **arr);
+size_t		env_len(t_env *env);
 
 //ERROR
 void		*errjoin(int error_code, char *error_message);
