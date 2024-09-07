@@ -37,3 +37,20 @@ void	free_s1_value_rest(char *s1, char *value, char *rest)
 	if (rest)
 		free(rest);
 }
+
+char	*handle_env_var(char *input, t_line *line, char **str_head, char *value)
+{
+	input = towards_expand(input, line, *str_head, value);
+	free(*str_head - line->skipped_char);
+	line->skipped_char = 0;
+	*str_head = input;
+	return (input);
+}
+
+void	quote_mode(char *input, short *squote_mode, short *dquote_mode)
+{
+	if (input[0] == '"' && *squote_mode == -1)
+		*dquote_mode *= -1;
+	if (input[0] == '\'' && *dquote_mode == -1)
+		*squote_mode *= -1;
+}

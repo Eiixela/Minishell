@@ -44,3 +44,29 @@ void	free_all_tab(char **s_cmd, char **allpath)
 	}
 	free(allpath);
 }
+
+void	cleanup_exec(t_line *line)
+{
+	int	status;
+
+	status = line->pipe->ret_val;
+	if (line->pipe)
+	{
+		while (line->pipe)
+		{
+			if (line->pipe->redir && line->pipe->redir_head)
+				line->pipe->redir = line->pipe->redir_head;
+			line->pipe = line->pipe->next;
+		}
+		if (line->pipe_head)
+			line->pipe = line->pipe_head;
+	}
+	if (line->argv)
+		line->argv = line->argv_head;
+	free_argv(line->argv);
+	if (line->pipe)
+		free_pipe(line->pipe);
+	line->argv = NULL;
+	line->pipe = NULL;
+	exit(status);
+}

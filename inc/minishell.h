@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 15:22:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/07 16:09:03 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,14 @@ void		free_s1_value_rest(char *s1, char *value, char *rest);
 char		*handle_exit_status(char *input, t_line *line, char **str_head);
 char		*get_env_value(t_line *line, char *name);
 void		turn_extra_dollar_negative(char	**s1);
+char		*handle_env_var(char *input, t_line *line, char **str_head, \
+	char *value);
+void		quote_mode(char *input, short *squote_mode, short *dquote_mode);
 
 // PARSING_UTILS
 size_t		ft_tablen(char **str);
 t_line		*init_line_pipe(t_line *line, int status);
+void		get_value_back(char *str);
 
 // STRUCT
 t_line		*make_argv_node(char *input, size_t len, t_line *line);
@@ -153,6 +157,8 @@ void		dirtier_redir(char *str);
 // CLEANUP
 void		cleanup(t_line *line);
 void		free_env(t_env *env);
+void		free_argv(t_argv *argv);
+void		free_pipe(t_pipe *pipe);
 // =================================== PARSING ================================
 
 
@@ -199,7 +205,7 @@ void		env_addback(t_env **env, t_env *node);
 t_env		*env_newnode(char *data);
 void		free_all_tab(char **s_cmd, char **allpath);
 void		free_double_tab(char **s);
-void	cleanup_exec(t_line *line);
+void		cleanup_exec(t_line *line);
 
 //SIGNALS
 char		*send_eof(char *line);

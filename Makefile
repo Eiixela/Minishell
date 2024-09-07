@@ -33,6 +33,7 @@ OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/parsing/utils/lexing_utils.c \
 		srcs/parsing/utils/clean_quotes.c\
 		srcs/parsing/utils/utils.c\
+		srcs/parsing/utils/utils1.c\
 		srcs/parsing/utils/expand_utils.c\
 		srcs/parsing/utils/expand_utils1.c\
 		srcs/parsing/utils/expand_utils2.c\
