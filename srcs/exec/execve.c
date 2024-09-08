@@ -25,8 +25,6 @@ static void	free_for_no_access(t_env *env, t_line *line, char **env_now)
 static void	free_for_no_path(t_env *env, t_line *line,
 	char *path, char **env_now)
 {
-	print_error_message("minishell: ", line->pipe->arg[0], \
-			": command not found\n");
 	free(path);
 	free_env(env);
 	free_double_tab(env_now);
@@ -63,7 +61,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 	env_now = NULL;
 	path = NULL;
 	if (!pipe->arg || !pipe->arg[0])
-		return (ft_putstr_fd("minishell: %s:command not found\n", 2), 0);
+		return (ft_putstr_fd("minishell: command not found\n", 2), 0);
 	if (execute_builtins(env, pipe, line) == 1)
 	{
 		env_now = arenvlst(env);
@@ -73,6 +71,8 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
+			print_error_message("minishell: ", pipe->arg[0],
+				": command not found\n");
 			free_str(str);
 			free_for_no_path(env, line, path, env_now);
 		}

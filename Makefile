@@ -15,7 +15,7 @@ CC = cc
 INCLUDE_DIR = inc/
 LIBFT_DIR = libft/
 
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Werror
 IFLAGS = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 DFLAGS = -MMD -MP
 LFLAGS = -L$(LIBFT_DIR) -lft -lreadline

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/08 15:33:16 by saperrie         ###   ########.fr       */
+/*   Updated: 2024/09/08 16:40:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,11 @@ typedef struct s_process_info
 // =================================== PARSING ================================
 
 int			main(int argc, char *argv[], char *exp[]);
+int			init_env(t_env **env, char **envp);
+void		initialize(t_line *line, int *status);
+int			setup_environment(t_env **env, char **envp, t_line *line);
+void		handle_exit(t_line *line, t_env *env);
+void		update_status(int *status, t_line *line);
 char		*big_parse(t_line *line, char **input, int status);
 char		*expand(char *input, t_line *line, char *value, short squote_mode);
 bool		lex(char *input, t_line *line);
@@ -142,7 +147,7 @@ bool		is_exit_status_format(char *input, short squote_mode);
 char		*get_value(char *dollar_index, t_line *line, char	*name, \
 	int *name_len);
 void		free_s1_value_rest(char *s1, char *value, char *rest);
-void	handle_exit_status_exec(t_line *line, int status);
+void		handle_exit_status_exec(t_line *line, int status);
 char		*get_env_value(t_line *line, char *name);
 void		turn_extra_dollar_negative(char	**s1);
 char		*handle_env_var(char *input, t_line *line, char **str_head, \
@@ -259,13 +264,13 @@ int			handle_single_heredoc(char *delimiter, const char *temp_file, \
 	t_env *env);
 int			handle_redirection(t_pipe *pipe);
 int			handle_heredoc(const char *filename, t_line *line, t_env *env);
-int			handle_output_redirection(char *filename, t_redir *redir,
+int			handle_output_redirection(char *filename, t_redir *redir, \
 	t_line *line, t_env *env);
 int			handle_input_redirection(char *filename, t_line *line, t_env *env);
 void		setup_child_io(t_io_fds *fds, int pipe_fd);
 int			setup_io(t_io_fds *fds);
 void		apply_redirection(int *fd, int target_fd, t_line *line, t_env *env);
-void		handle_redir_type(t_redir *redir, t_io_fds *fds,
+void		handle_redir_type(t_redir *redir, t_io_fds *fds, \
 	t_line *line, t_env *env);
 void		while_redir(t_line *line, t_pipe *pipe, t_env *env);
 
@@ -296,7 +301,7 @@ int			check_file_permissions(char *cmd);
 void		cleanup_resources(char **env_now, char *str, char *path);
 int			execute_external_command(t_env *env, t_pipe *pipe, char **env_now, \
 	char *str);
-void		error_and_free_for_exec(t_env *env, t_line *line, char *path,
+void		error_and_free_for_exec(t_env *env, t_line *line, char *path, \
 	int i);
 
 // =================================== EXEC ================================

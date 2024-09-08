@@ -107,7 +107,7 @@ int	call_childs(t_env *env, t_line *line, char *str, pid_t last_pid)
 	while (1)
 	{
 		wpid = wait(&line->exit_status);
-		if (wpid <= 0)
+		if (wpid > 0)
 			break ;
 		if (wpid == last_pid)
 			handle_exit_status_child(line, line->exit_status, 0, &cat_count);
