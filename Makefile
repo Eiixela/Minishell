@@ -24,6 +24,7 @@ OBJECT_DIR = .obj/
 
 OBJECTS = $(patsubst srcs/%.c,$(OBJECT_DIR)%.o,\
 		srcs/main/minishell.c\
+		srcs/main/minishell_utils.c\
 		srcs/parsing/big_parse.c\
 		srcs/parsing/lexing.c\
 		srcs/parsing/expand.c\

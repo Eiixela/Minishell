@@ -14,29 +14,59 @@
 
 int	g_ret = 0;
 
-static int	init_env(t_env **env, char **envp)
+static void	handle_exit(t_line *line, t_env *env, int status)
 {
-	*env = NULL;
-	create_env(envp, env);
-	siglisten();
-	return (1);
+	printf("exit\n");
+	cleanup(line);
+	free_env(env);
+	clear_history();
+	exit(status);
+}
+
+static void	process_input(t_line *line, t_env *env, char *str, int *status)
+{
+	char	*cpy;
+
+	cpy = str;
+	add_history(str);
+	str = big_parse(line, &str, *status);
+	if (str)
+	{
+		if (str && str != cpy)
+		{
+			free(str - line->skipped_char);
+			str = NULL;
+		}
+		line->pipe->ret_val = *status;
+		if (!pipex(env, line, status, str))
+			perror("execve");
+		line->exit_status = line->pipe->ret_val;
+		cleanup(line);
+	}
+	else
+		cleanup(line);
+}
+
+static void	update_status(int *status, t_line *line)
+{
+	if (g_ret == SIGINT)
+		*status = 128 + g_ret;
+	else
+		*status = line->exit_status;
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	char			*str;
-	char			*cpy;
-	static t_line	line;
-	t_env			*env;
-	int				status;
+	char	*str;
+	t_line	line;
+	t_env	*env;
+	int		status;
 
 	(void)av;
-	line.skipped_char = 0;
-	str = NULL;
-	status = 0;
+	initialize_variables(&line, &status);
 	if (ac != 1)
 		return (print_error(errno, "minishell: too many arguments"), 1);
-	if (!init_env(&env, envp))
+	if (!initialize_environment(&env, envp))
 		return (1);
 	line.env = env;
 	while (1)
@@ -44,36 +74,11 @@ int	main(int ac, char **av, char **envp)
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
-			return (printf("exit\n"), cleanup(&line), free_env(env), 0);
+			handle_exit(&line, env, status);
 		line.exit_status = status;
 		if (str && *str && g_ret != SIGINT)
-		{
-			cpy = str;
-			add_history(str);
-			str = big_parse(&line, &str, status);
-			if (str)
-			{
-				if (str && str != cpy)
-				{
-					free(str - line.skipped_char);
-					str = NULL;
-				}
-				line.pipe->ret_val = status;
-				if (!pipex(env, &line, &status, str))
-					perror("execve");
-				line.exit_status = line.pipe->ret_val;
-				cleanup(&line);
-			}
-			else
-				cleanup(&line);
-		}
-		if (g_ret == SIGINT)
-			status = 128 + g_ret;
-		else
-			status = line.exit_status;
+			process_input(&line, env, str, &status);
+		update_status(&status, &line);
 	}
-	free_env(env);
-	clear_history();
-	exit(status);
 	return (0);
 }

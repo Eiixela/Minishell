@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: saperrie <saperrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/08 13:50:21 by ubuntu           ###   ########.fr       */
+/*   Updated: 2024/09/08 15:33:16 by saperrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ size_t		env_len_unset(t_env *env);
 //EXPORT
 int			ft_export(t_pipe **pipe, t_env *env);
 int			sort_env(t_env	*env);
-xchar		*cut_string(const char *input_string, char cut_char);
+char		*cut_string(const char *input_string, char cut_char);
 void		free_for_export(int index, char **s, char **temp);
 int			check_arg(char *var);
 char		*find_var_env(t_env *env, char *var);
@@ -285,6 +285,9 @@ int			handle_redirection(t_pipe *pipe);
 
 //UTILS
 char		*back_to_positive(char *s);
+void		initialize_variables(t_line *line, int *status);
+int			initialize_environment(t_env **env, char **envp);
+int			count_cat_commands(t_pipe *current);
 
 // EXECVE_UTILS
 int			check_command_exists(char **arg);
