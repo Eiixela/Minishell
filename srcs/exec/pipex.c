@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 int	setup_io(t_io_fds *fds)
 {
 	if (fds->input_fd != STDIN_FILENO)
@@ -252,29 +251,29 @@ int	process_commands(t_process_info *info, int *input_fd,
 	return (1);
 }
 
-int	call_childs(t_env *env, t_line *line, char *str)
+int	call_childs(t_env *env, t_line *line, char *str, pid_t last_pid)
 {
 	int				input_fd;
 	int				cat_count;
-	int				builtin_result;
-	pid_t			last_pid;
 	pid_t			wpid;
 	t_process_info	info;
 
 	input_fd = 0;
+	cat_count = parse_and_execute_solo_builtins(env, line, -1);
+	if (cat_count != 1)
+		return (cat_count);
 	cat_count = 0;
-	last_pid = 0;
-	builtin_result = parse_and_execute_solo_builtins(env, line, -1);
-	if (builtin_result != 1)
-		return (builtin_result);
 	info.env = env;
 	info.line = line;
 	info.str = str;
 	if (!process_commands(&info, &input_fd, cat_count, &last_pid))
 		return (0);
 	sigend();
-	while ((wpid = wait(&line->exit_status)) > 0)
+	while (1)
 	{
+		wpid = wait(&line->exit_status);
+		if (wpid <= 0)
+			break ;
 		if (wpid == last_pid)
 			handle_exit_status_child(line, line->exit_status, 0, &cat_count);
 	}
@@ -283,10 +282,13 @@ int	call_childs(t_env *env, t_line *line, char *str)
 
 int	pipex(t_env *env, t_line *line, int *status, char *str)
 {
+	pid_t			last_pid;
+
+	last_pid = 0;
 	line->pipe->ret_val = *status;
 	if (!process_heredocs(line, env))
 		return (1);
-	if (!call_childs(env, line, str))
+	if (!call_childs(env, line, str, last_pid))
 		return (0);
 	return (1);
 }
