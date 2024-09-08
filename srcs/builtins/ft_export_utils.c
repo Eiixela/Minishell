@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-ssize_t	print_senv(char **arr)
+static ssize_t	print_senv(char **arr)
 {
 	size_t	i;
 

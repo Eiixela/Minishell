@@ -57,7 +57,7 @@ static t_env	*env_rmone(t_env **sup, t_env **head)
 	return (*sup);
 }
 
-t_env	*ft_remove_env_var(t_env **head, char *arg)
+static t_env	*ft_remove_env_var(t_env **head, char *arg)
 {
 	t_env	*env;
 

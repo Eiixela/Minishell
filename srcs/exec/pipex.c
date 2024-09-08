@@ -57,8 +57,6 @@ int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd,
 	return (pid);
 }
 
-
-
 int	process_commands(t_process_info *info, int *input_fd,
 		int cat_count, pid_t *last_pid)
 {

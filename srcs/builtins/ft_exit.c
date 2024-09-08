@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	lethal_exit(int arg_of_exit, char *error_message, \
+static void	lethal_exit(int arg_of_exit, char *error_message, \
 	t_line *line, int indice)
 {
 	clear_history();

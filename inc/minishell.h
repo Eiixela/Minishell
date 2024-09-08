@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/08 13:07:42 by ubuntu           ###   ########.fr       */
+/*   Updated: 2024/09/08 13:50:21 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,45 +178,58 @@ void		free_pipe(t_pipe *pipe);
 //======================================EXEC===================================
 
 //BUILTINS
+//ECH0
 int			ft_echo(char **arg);
+
+//PWD
 int			ft_pwd(t_env *env);
+
+//CD
 int			ft_cd(t_env *env, t_line *line);
-int			ft_env(t_env *env, t_pipe *pipe);
-int			ft_exit(t_pipe *pipe, t_line *line);
-int			ft_unset(t_line **line, t_env *env);
-int			parse_builtin(t_pipe *pipe);
-char		**arenvlst(t_env *env);
-int			check_directory(char *var, char *path);
-int			pwds(t_env *env, char *path);
 char		*check_len(char	*path, t_env *env);
+int			pwds(t_env *env, char *path);
+int			check_directory(char *var, char *path);
 char		*prep_path(char *var, char *path);
-char		*find_var_env(t_env *env, char *var);
-size_t		ft_arrlen(char **arr);
 char		*split_wsep(char *str, char sep);
-void		*exprt_inenv(t_env **env, char *data);
-int			ft_export(t_pipe **pipe, t_env *env);
-int			sort_env(t_env	*env);
-void		*exprt_inenv_export(t_env **env, char *data, bool has_equals);
-char		*cut_string(const char *input_string, char cut_char);
-ssize_t		print_senv(char **arr);
-void		free_for_export(int index, char **s, char **temp);
-int			check_arg(char *var);
 char		*expand_tilde(const char *arg, t_env *env);
+
+//ENV
+int			ft_env(t_env *env, t_pipe *pipe);
+t_env		*env_newnode(char *data);
+void		env_addback(t_env **env, t_env *node);
+size_t		env_len(t_env *env);
+void		create_env(char **envp, t_env **env);
+char		**arenvlst(t_env *env);
+
+//EXIT
+int			ft_exit(t_pipe *pipe, t_line *line);
+int			print_error_message(char *s1, char *s2, char *s3);
+
+//UNSET
+int			ft_unset(t_line **line, t_env *env);
 int			is_valid_identifier(const char *str);
 size_t		env_len_unset(t_env *env);
+
+//EXPORT
+int			ft_export(t_pipe **pipe, t_env *env);
+int			sort_env(t_env	*env);
+xchar		*cut_string(const char *input_string, char cut_char);
+void		free_for_export(int index, char **s, char **temp);
+int			check_arg(char *var);
+char		*find_var_env(t_env *env, char *var);
+
+//BUILTINS UTILS
+void		*exprt_inenv(t_env **env, char *data);
+int			parse_builtin(t_pipe *pipe);
 size_t		ft_arrlen(char **arr);
-size_t		env_len(t_env *env);
 
 //ERROR
 void		*errjoin(int error_code, char *error_message);
 void		*print_error(int error_code, char *error_message);
-int			print_error_message(char *s1, char *s2, char *s3);
 int			verror(char *s1, char *s2, char *s3);
 
 //FREE
 void		env_freelst(t_env **env);
-void		env_addback(t_env **env, t_env *node);
-t_env		*env_newnode(char *data);
 void		free_all_tab(char **s_cmd, char **allpath);
 void		free_double_tab(char **s);
 void		cleanup_exec(t_line *line);
@@ -263,7 +276,6 @@ int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
 int			parse_and_execute_solo_builtins(t_env *env, t_line *line, int saved_output);
 int			create_process(t_process_info *info, t_io_fds *fds, t_pipe *pipe);
-void		create_env(char **envp, t_env **env);
 int			call_childs(t_env *env, t_line *line, char *str, pid_t last_pid);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
 int			handle_cat_process(int pipe_fd[2], t_line *line);

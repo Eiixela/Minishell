@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	*exprt_inenv_export(t_env **env, char *data, bool has_equals)
+static void	*exprt_inenv_export(t_env **env, char *data, bool has_equals)
 {
 	t_env	*new;
 
