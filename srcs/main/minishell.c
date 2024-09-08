@@ -14,31 +14,22 @@
 
 int	g_ret = 0;
 
-static void	handle_exit(t_line *line, t_env *env, int status)
-{
-	printf("exit\n");
-	cleanup(line);
-	free_env(env);
-	clear_history();
-	exit(status);
-}
-
-static void	process_input(t_line *line, t_env *env, char *str, int *status)
+static void	process_input(char **str, t_line *line, t_env *env, int *status)
 {
 	char	*cpy;
 
-	cpy = str;
-	add_history(str);
-	str = big_parse(line, &str, *status);
-	if (str)
+	cpy = *str;
+	add_history(*str);
+	*str = big_parse(line, str, *status);
+	if (*str)
 	{
-		if (str && str != cpy)
+		if (*str && *str != cpy)
 		{
-			free(str - line->skipped_char);
-			str = NULL;
+			free(*str - line->skipped_char);
+			*str = NULL;
 		}
 		line->pipe->ret_val = *status;
-		if (!pipex(env, line, status, str))
+		if (!pipex(env, line, status, *str))
 			perror("execve");
 		line->exit_status = line->pipe->ret_val;
 		cleanup(line);
@@ -47,38 +38,31 @@ static void	process_input(t_line *line, t_env *env, char *str, int *status)
 		cleanup(line);
 }
 
-static void	update_status(int *status, t_line *line)
-{
-	if (g_ret == SIGINT)
-		*status = 128 + g_ret;
-	else
-		*status = line->exit_status;
-}
-
 int	main(int ac, char **av, char **envp)
 {
-	char	*str;
-	t_line	line;
-	t_env	*env;
-	int		status;
+	char			*str;
+	static t_line	line;
+	t_env			*env;
+	int				status;
 
 	(void)av;
-	initialize_variables(&line, &status);
+	initialize(&line, &status);
 	if (ac != 1)
-		return (print_error(errno, "minishell: too many arguments"), 1);
-	if (!initialize_environment(&env, envp))
-		return (1);
-	line.env = env;
+	{
+		print_error(errno, "minishell: too many arguments");
+		return (0);
+	}
+	if (!setup_environment(&env, envp, &line))
+		return (0);
 	while (1)
 	{
 		sigend();
 		str = readline("aljulien@z3r8p5:~/goinfre/minishell$ ");
 		if (!str)
-			handle_exit(&line, env, status);
+			handle_exit(&line, env);
 		line.exit_status = status;
 		if (str && *str && g_ret != SIGINT)
-			process_input(&line, env, str, &status);
+			process_input(&str, &line, env, &status);
 		update_status(&status, &line);
 	}
-	return (0);
 }
