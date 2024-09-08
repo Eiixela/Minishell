@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 21:19:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/08 13:07:42 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,18 @@ int			redirection_in_pipe(t_pipe *pipe, int *saved_output);
 int			redir_heredoc(t_pipe *pipe, t_env *env);
 int			handle_single_heredoc(char *delimiter, const char *temp_file, \
 	t_env *env);
+int			handle_redirection(t_pipe *pipe);
+int			handle_heredoc(const char *filename, t_line *line, t_env *env);
+int			handle_output_redirection(char *filename, t_redir *redir,
+	t_line *line, t_env *env);
+int			handle_input_redirection(char *filename, t_line *line, t_env *env);
+void		setup_child_io(t_io_fds *fds, int pipe_fd);
+int			setup_io(t_io_fds *fds);
+void		apply_redirection(int *fd, int target_fd, t_line *line, t_env *env);
+void		handle_redir_type(t_redir *redir, t_io_fds *fds,
+	t_line *line, t_env *env);
+void		while_redir(t_line *line, t_pipe *pipe, t_env *env);
+
 
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status, char *str);

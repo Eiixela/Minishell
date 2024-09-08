@@ -12,31 +12,46 @@
 
 #include "minishell.h"
 
-void	error_and_free_for_exec(t_env *env, t_line *line, char *path, int i)
+static void	free_for_no_access(t_env *env, t_line *line, char **env_now)
 {
+	print_error_message("minishell: ", line->pipe->arg[0], \
+			" Permission denied\n");
 	free_env(env);
-	if (i == 0)
-	{
-		print_error_message("minishell: ", line->pipe->arg[0], \
-			" Permission denied\n");;
-		cleanup(line);
-		exit(126);
-	}
-	if (i == 1)
-	{
- 		print_error_message("minishell: ", line->pipe->arg[0], \
+	cleanup(line);
+	free_double_tab(env_now);
+	exit(126);
+}
+
+static void	free_for_no_path(t_env *env, t_line *line,
+	char *path, char **env_now)
+{
+	print_error_message("minishell: ", line->pipe->arg[0], \
 			": command not found\n");
-		free(path);
-		cleanup(line);
-		exit(127);
-	}
-	if (i == 2)
-	{
-		print_error_message("bash: ", line->pipe->arg[0], \
+	free(path);
+	free_env(env);
+	free_double_tab(env_now);
+	cleanup(line);
+	exit(127);
+}
+
+static void	free_for_fail_execve(t_env *env, t_line *line,
+	char *path, char **env_now)
+{
+	print_error_message("bash: ", line->pipe->arg[0], \
 			" Is a directory\n");
-		cleanup(line);
-		free(path);
-		exit(126);
+	free_env(env);
+	free_double_tab(env_now);
+	free(path);
+	cleanup(line);
+	exit(126);
+}
+
+static void	free_str(char *str)
+{
+	if (str)
+	{
+		free(str);
+		str = NULL;
 	}
 }
 
@@ -53,34 +68,16 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 	{
 		env_now = arenvlst(env);
 		if (!access(pipe->arg[0], F_OK))
-		{
 			if (access(pipe->arg[0], F_OK | X_OK))
-			{
-				free_double_tab(env_now);
-				error_and_free_for_exec(env, line, path, 0);
-			}
-		}
+				free_for_no_access(env, line, env_now);
 		path = get_path(pipe, env_now, -1);
 		if (path == NULL)
 		{
-			if (str)
-			{
-				free(str);
-				str = NULL;
-			}
-			free_double_tab(env_now);
-			error_and_free_for_exec(env, line, path, 1);
+			free_str(str);
+			free_for_no_path(env, line, path, env_now);
 		}
 		if (execve(path, pipe->arg, env_now) == -1)
-		{
-			if (str)
-			{
-				free(str);
-				str = NULL;
-			}
-			free_double_tab(env_now);
-			error_and_free_for_exec(env, line, path, 2);
-		}
+			free_for_fail_execve(env, line, path, env_now);
 	}
 	return (1);
 }

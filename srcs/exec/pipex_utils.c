@@ -64,17 +64,18 @@ int	_cat_count(t_pipe *current, t_line *line)
 	return (cat_count);
 }
 
-int	handle_redirection(t_pipe *pipe)
+int	count_cat_commands(t_pipe *current)
 {
-	int	saved_output;
-	int	redir_result;
+	int	count;
 
-	redir_result = redirection_in_pipe(pipe, &saved_output);
-	if (redir_result == 0)
-		return (0);
-	if (redir_result == 2)
-		return (2);
-	return (1);
+	count = 0;
+	while (current && current->arg && ft_strcmp(current->arg[0], "cat") == 0
+		&& current->arg[1] == NULL && !current->redir)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
 }
 
 char	*back_to_positive(char *s)
