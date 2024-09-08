@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/**/
-/*:::  ::::::::   */
-/*   signal.c   :+:  :+::+:   */
-/*+:+ +:+ +:+ */
-/*   By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+*/
-/*+#+#+#+#+#+   +#+   */
-/*   Created: 2024/07/16 11:20:29 by aljulien  #+##+# */
-/*   Updated: 2024/09/03 11:21:40 by aljulien ###   ########.fr   */
-/**/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/08 17:26:33 by aljulien          #+#    #+#             */
+/*   Updated: 2024/09/08 18:27:25 by aljulien         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -34,7 +34,7 @@ void	siglisten(void)
 {
 	rl_event_hook = get_nonull;
 	signal(SIGINT, sighandler);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, sighandler);
 }
 
 char	*send_eof(char *line)

@@ -29,8 +29,7 @@ int	create_process(t_process_info *info, t_io_fds *fds, t_pipe *pipe)
 	return (pid);
 }
 
-int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd,
-		int cat_count)
+int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd)
 {
 	int			pipe_fd[2];
 	pid_t		pid;
@@ -40,16 +39,8 @@ int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd,
 		return (perror("pipe"), 0);
 	fds.input_fd = *input_fd;
 	fds.output_fd = pipe_fd[1];
-	if (cat_count > 0)
-	{
-		pid = handle_cat_process(pipe_fd, info->line);
-		cat_count--;
-	}
-	else
-	{
-		info->pipe_fd = pipe_fd[0];
-		pid = create_process(info, &fds, current);
-	}
+	info->pipe_fd = pipe_fd[0];
+	pid = create_process(info, &fds, current);
 	close(pipe_fd[1]);
 	if (*input_fd != 0)
 		close(*input_fd);
@@ -57,20 +48,18 @@ int	process_pipe(t_process_info *info, t_pipe *current, int *input_fd,
 	return (pid);
 }
 
-int	process_commands(t_process_info *info, int *input_fd,
-		int cat_count, pid_t *last_pid)
+int	process_commands(t_process_info *info, int *input_fd, pid_t *last_pid)
 {
 	t_pipe		*current;
 	pid_t		pid;
 	t_io_fds	fds;
 
 	current = info->line->pipe;
-	cat_count = count_cat_commands(current);
 	current = info->line->pipe;
 	while (current != NULL)
 	{
 		if (current->next != NULL)
-			pid = process_pipe(info, current, input_fd, cat_count);
+			pid = process_pipe(info, current, input_fd);
 		else
 		{
 			fds.input_fd = *input_fd;
@@ -101,18 +90,18 @@ int	call_childs(t_env *env, t_line *line, char *str, pid_t last_pid)
 	info.env = env;
 	info.line = line;
 	info.str = str;
-	if (!process_commands(&info, &input_fd, cat_count, &last_pid))
+	if (!process_commands(&info, &input_fd, &last_pid))
 		return (0);
 	sigend();
 	while (1)
 	{
 		wpid = wait(&line->exit_status);
-		if (wpid > 0)
+		if (wpid < 0)
 			break ;
 		if (wpid == last_pid)
-			handle_exit_status_child(line, line->exit_status, 0, &cat_count);
+			handle_exit_status_child(line, line->exit_status, 0);
 	}
-	return (handle_remaining_processes(cat_count));
+	return (1);
 }
 
 int	pipex(t_env *env, t_line *line, int *status, char *str)

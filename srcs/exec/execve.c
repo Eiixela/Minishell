@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/**/
-/*:::  ::::::::   */
-/*   execve.c   :+:  :+::+:   */
-/*+:+ +:+ +:+ */
-/*   By: aljulien <aljulien@student.42.fr>  +#+  +:+   +#+*/
-/*+#+#+#+#+#+   +#+   */
-/*   Created: 2024/05/28 14:14:35 by aljulien  #+##+# */
-/*   Updated: 2024/09/02 16:23:48 by aljulien ###   ########.fr   */
-/**/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execve.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/08 17:27:20 by aljulien          #+#    #+#             */
+/*   Updated: 2024/09/08 17:27:23 by aljulien         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -61,7 +61,7 @@ int	execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str)
 	env_now = NULL;
 	path = NULL;
 	if (!pipe->arg || !pipe->arg[0])
-		return (ft_putstr_fd("minishell: command not found\n", 2), 0);
+		return (ft_putstr_fd("minishell:command not found\n", 2), 0);
 	if (execute_builtins(env, pipe, line) == 1)
 	{
 		env_now = arenvlst(env);

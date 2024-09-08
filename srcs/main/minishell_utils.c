@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 21:25:40 by saperrie          #+#    #+#             */
-/*   Updated: 2024/09/08 16:40:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/08 19:15:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	init_env(t_env **env, char **envp)
 {
 	*env = NULL;
 	create_env(envp, env);
-	siglisten();
 	return (1);
 }
 

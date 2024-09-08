@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_handle_redir.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 12:59:23 by ubuntu            #+#    #+#             */
-/*   Updated: 2024/09/08 13:50:46 by ubuntu           ###   ########.fr       */
+/*   Updated: 2024/09/08 19:19:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ int	handle_input_redirection(char *filename, t_line *line, t_env *env)
 {
 	int	fd;
 
+	if (!access(filename, R_OK))
+	{
+		print_error_message("minishell: ", filename,
+			": Permission denied\n");
+		cleanup(line);
+		free_env(env);
+		exit(1);
+	}
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -38,6 +46,14 @@ int	handle_output_redirection(char *filename, t_redir *redir,
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	if (access(filename, F_OK | W_OK))
+	{
+		print_error_message("minishell: ", filename,
+			": Permission denied\n");
+		cleanup(line);
+		free_env(env);
+		exit(1);
+	}
 	fd = open(filename, flags, 0644);
 	if (fd == -1)
 	{

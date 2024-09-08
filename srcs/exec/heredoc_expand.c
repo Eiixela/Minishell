@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 18:37:57 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/07 18:58:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:36:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*expand_variables(const char *input, t_env *env)
 	if (!result)
 		return (NULL);
 	var_start = ft_strchr(result, '$');
-	while (var_start != NULL)
+	while (var_start != NULL && ft_strcmp(var_start, "$"))
 	{
 		var_end = var_start + 1;
 		if (!process_variable(&result, var_start, var_end, env))

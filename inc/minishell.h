@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:59:32 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/08 16:40:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/08 19:20:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ typedef struct s_process_info
 	t_line	*line;
 	char	*str;
 	int		pipe_fd;
-	int		cat_count;
 }	t_process_info;
 
 // =================================== PARSING ================================
@@ -245,7 +244,7 @@ void		siglisten(void);
 void		sigend(void);
 void		sighandler(int sig);
 void		handle_exit_status_child(t_line *line, int status, \
-	int quit_message_printed, int *cat_count);
+	int quit_message_printed);
 
 //HEREDOC
 char		*expand_variables(const char *input, t_env *env);
@@ -274,25 +273,21 @@ void		handle_redir_type(t_redir *redir, t_io_fds *fds, \
 	t_line *line, t_env *env);
 void		while_redir(t_line *line, t_pipe *pipe, t_env *env);
 
-
 //EXECUTING
 int			pipex(t_env *env, t_line *line, int *status, char *str);
 int			execute_cmd(t_env *env, t_pipe *pipe, t_line *line, char *str);
 char		*get_path(t_pipe *pipe, char **env, int i);
-int			parse_and_execute_solo_builtins(t_env *env, t_line *line, int saved_output);
+int			parse_and_execute_solo_builtins(t_env *env, t_line *line, \
+	int saved_output);
 int			create_process(t_process_info *info, t_io_fds *fds, t_pipe *pipe);
 int			call_childs(t_env *env, t_line *line, char *str, pid_t last_pid);
 int			execute_builtins(t_env *env, t_pipe *pipe, t_line *line);
-int			handle_cat_process(int pipe_fd[2], t_line *line);
-int			handle_remaining_processes(int cat_count);
-int			_cat_count(t_pipe *current, t_line *line);
 int			handle_redirection(t_pipe *pipe);
 
 //UTILS
 char		*back_to_positive(char *s);
 void		initialize_variables(t_line *line, int *status);
 int			initialize_environment(t_env **env, char **envp);
-int			count_cat_commands(t_pipe *current);
 
 // EXECVE_UTILS
 int			check_command_exists(char **arg);

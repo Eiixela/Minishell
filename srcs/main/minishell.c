@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:39:24 by aljulien          #+#    #+#             */
-/*   Updated: 2024/09/08 16:39:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2024/09/08 18:27:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	process_input(char **str, t_line *line, t_env *env, int *status)
 	char	*cpy;
 
 	cpy = *str;
+	siglisten();
 	add_history(*str);
 	*str = big_parse(line, str, *status);
 	if (*str)

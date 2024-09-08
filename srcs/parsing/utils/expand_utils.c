@@ -18,7 +18,7 @@ void	turn_value_negative(char *value)
 		*value = -1;
 	while (*value)
 	{
-		if (*value == '|')
+		if (*value == '|' || is_quote(*value, '\'') || is_quote(*value, '\"'))
 			*value *= -1;
 		value += 1;
 	}
